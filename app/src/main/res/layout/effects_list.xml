@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/bReset"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="30dip"
+        android:onClick="clickReset"
+        android:text="Réinitialiser"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="6sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toStartOf="@id/switch1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dimensionsLabel" />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="30dip"
+        android:text="     "
+        app:layout_constraintBottom_toBottomOf="@+id/bReset"
+        app:layout_constraintEnd_toEndOf="@id/switchText"
+        app:layout_constraintStart_toEndOf="@+id/bReset"
+        app:layout_constraintTop_toTopOf="@+id/bReset" />
+
+
+    <TextView
+        android:id="@+id/switchText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="30dip"
+        android:text="Accélération"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="6sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toBottomOf="@+id/bReset"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/switch1"
+        app:layout_constraintTop_toTopOf="@+id/bReset" />
+
+    <TextView
+        android:id="@+id/dimensionsLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:text="Dimensions :"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:autoSizeMaxTextSize="24sp"
+        app:autoSizeMinTextSize="6sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/bReset"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:text="Faites glisser sur les côtés la liste d'effets:"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        app:autoSizeMaxTextSize="14sp"
+        app:autoSizeMinTextSize="4sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bReset" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <HorizontalScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline">
+
+        <LinearLayout
+            android:id="@+id/effects"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/bGray"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onClickEffect"
+                android:text="Gris"
+                />
+
+            <Button
+                android:id="@+id/bColor"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onClickEffect"
+                android:text="Couleur" />
+
+            <Button
+                android:id="@+id/bHue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onClickEffect"
+                android:text="Teinte 1" />
+
+            <Button
+                android:id="@+id/bTranslateHue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onClickEffect"
+                android:text="Teinte 2" />
+
+            <Button
+                android:id="@+id/bLinearContrast"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onClickEffect"
+                android:text="Contraste 1" />
+
+            <Button
+                android:id="@+id/bFlatteningContrast"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onClickEffect"
+                android:text="Contraste 2" />
+
+            <Button
+                android:id="@+id/bsimpleBlurr"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onClickEffect"
+                android:text="Flou" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
