@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/imageInfo"
-        android:icon="@android:drawable/ic_dialog_info"
+        android:icon="@android:drawable/ic_menu_info_details"
         android:title="@string/load_image_from_gallery"
         android:visible="true"
         app:showAsAction="always" />
