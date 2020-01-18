@@ -1,5 +1,6 @@
 package fr.ubordeaux.pimp.io;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -152,6 +153,17 @@ public class BitmapIO {
         }
     }
 
+    /**
+     * Starts intent to pick an image from gallery
+     */
+    public static void startGalleryActivity(){
+        //Photo intent
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+
+        photoPickerIntent.setType("image/*");
+        //Start activity and wait for result
+        context.startActivityForResult(photoPickerIntent, MainActivity.REQUEST_GET_SINGLE_FILE);
+    }
 
     /**Async Task LoadImage**/
 

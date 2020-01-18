@@ -16,9 +16,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private Bitmap currentImage; //Temporary champ waiting for others decision about Picture class
-    private static final int REQUEST_GET_SINGLE_FILE = 64;
-
-
+    public static final int REQUEST_GET_SINGLE_FILE = 64;
 
     /**
      * Inflate upper menu
@@ -68,12 +66,8 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             //Load photo from gallery
             case R.id.loadFromGallery:
-                //Photo intent
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
 
-                photoPickerIntent.setType("image/*");
-                //Start activity and wait for result
-                this.startActivityForResult(photoPickerIntent, REQUEST_GET_SINGLE_FILE);
+                BitmapIO.startGalleryActivity();
 
                 return true;
             case R.id.imageInfo:
