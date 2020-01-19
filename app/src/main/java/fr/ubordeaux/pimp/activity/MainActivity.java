@@ -7,16 +7,33 @@ import fr.ubordeaux.pimp.util.MainSingleton;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.github.chrisbanes.photoview.PhotoView;
+
 public class MainActivity extends AppCompatActivity {
     private Bitmap currentImage; //Temporary champ waiting for others decision about Picture class
+    private PhotoView iv;
+
+    public PhotoView getIv() {
+        return iv;
+    }
+
+    public void setIv(PhotoView iv) {
+        this.iv = iv;
+    }
+
     public static final int REQUEST_GET_SINGLE_FILE = 64;
+    public static final int REQUEST_TAKE_PHOTO = 1;
+
 
     /**
      * Inflate upper menu
@@ -52,6 +69,22 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
             }
         }
+
+        if (reqCode == REQUEST_TAKE_PHOTO) {
+            if (resultCode == RESULT_OK) {
+                try {
+                    Uri imageUri = BitmapIO.getUriFromCameraFile();
+                    BitmapIO.LoadImageTask(imageUri, this);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
+                }
+
+            } else {
+                Toast.makeText(this, "You haven't took picture", Toast.LENGTH_LONG).show();
+
+            }
+        }
     }
 
     /**
@@ -71,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
             case R.id.imageInfo:
-
+                BitmapIO.dispatchTakePictureIntent();
                 //Display width and height from bitmap
                 return true;
 
@@ -94,8 +127,11 @@ public class MainActivity extends AppCompatActivity {
         //Loading default image from resources
         Bitmap bmp = BitmapIO. decodeAndScaleBitmapFromResource(R.drawable.starwars);
 
+        iv = findViewById(R.id.imageView);
 
-        ImageView iv = (ImageView) findViewById(R.id.imageView);
+
+        //Allow more zooming
+        iv.setMaximumScale(10);
         iv.setImageBitmap(bmp);
     }
 
