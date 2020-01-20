@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         this.iv = iv;
     }
 
-    public static final int REQUEST_GET_SINGLE_FILE = 1001;
+    public static final int REQUEST_GET_SINGLE_FILE = 202;
     public static final int REQUEST_TAKE_PHOTO = 12;
 
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
      * @param data Event given by user to display something
      */
     @Override
-    public void onActivityResult(int reqCode, int resultCode, Intent data) {
+    protected void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
         if (reqCode == REQUEST_GET_SINGLE_FILE) {
             if (resultCode == RESULT_OK) {
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 BitmapIO.startGalleryActivity();
 
                 return true;
-            case R.id.imageInfo:
+            case R.id.loadFromCamera:
                 BitmapIO.dispatchTakePictureIntent();
                 //Display width and height from bitmap
                 return true;
@@ -126,21 +126,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        iv = findViewById(R.id.imageView);
         //Initialize MainSingleton
         MainSingleton.INSTANCE.setContext(this);
 
         //Loading default image from resources
         Bitmap bmp = BitmapIO. decodeAndScaleBitmapFromResource(R.drawable.starwars);
 
-        iv = findViewById(R.id.imageView);
-
-
         //Allow more zooming
         iv.setMaximumScale(10);
         iv.setImageBitmap(bmp);
     }
 
-
+    //BugFix loadImage
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
 
 
 }
