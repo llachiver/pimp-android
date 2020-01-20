@@ -9,18 +9,23 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
 public class MainActivity extends AppCompatActivity {
     private Bitmap currentImage; //Temporary champ waiting for others decision about Picture class
+
+    public Bitmap getCurrentImage() {
+        return currentImage;
+    }
+
+    public void setCurrentImage(Bitmap currentImage) {
+        this.currentImage = currentImage;
+    }
+
     private PhotoView iv;
 
     public PhotoView getIv() {
@@ -31,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
         this.iv = iv;
     }
 
-    public static final int REQUEST_GET_SINGLE_FILE = 64;
-    public static final int REQUEST_TAKE_PHOTO = 1;
+    public static final int REQUEST_GET_SINGLE_FILE = 1001;
+    public static final int REQUEST_TAKE_PHOTO = 12;
 
 
     /**
@@ -121,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Initialize Singleton
-        MainSingleton.setContext(this);
+        //Initialize MainSingleton
+        MainSingleton.INSTANCE.setContext(this);
 
         //Loading default image from resources
         Bitmap bmp = BitmapIO. decodeAndScaleBitmapFromResource(R.drawable.starwars);

@@ -1,6 +1,5 @@
 package fr.ubordeaux.pimp.io;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,33 +8,27 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
+import java.util.Locale;
 
 import androidx.core.content.FileProvider;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.util.MainSingleton;
 
-import static fr.ubordeaux.pimp.activity.MainActivity.REQUEST_TAKE_PHOTO;
-
 
 public class BitmapIO {
 
-    private static MainActivity context = MainSingleton.getContext();
+    private static MainActivity context = MainSingleton.INSTANCE.getContext();
 
     /**
      *
@@ -61,7 +54,6 @@ public class BitmapIO {
         Point size = getScreenSize();
 
         //Loads the image
-        Bitmap bmp;
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inJustDecodeBounds = true;
         //InScaled set to false because it matches in target density
@@ -225,6 +217,7 @@ public class BitmapIO {
             activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 
             activity.getIv().setImageBitmap(bmp);
+            activity.setCurrentImage(bmp);
 
 
         }
@@ -246,7 +239,7 @@ public class BitmapIO {
 
     private static File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.FRANCE).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
