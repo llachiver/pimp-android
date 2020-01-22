@@ -2,6 +2,7 @@ package fr.ubordeaux.pimp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import fr.ubordeaux.pimp.R;
+import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.io.BitmapIO;
 import fr.ubordeaux.pimp.util.MainSingleton;
 
@@ -9,8 +10,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.renderscript.RenderScript;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -136,12 +139,59 @@ public class MainActivity extends AppCompatActivity {
         //Allow more zooming
         iv.setMaximumScale(10);
         iv.setImageBitmap(bmp);
+
+        setCurrentImage(bmp);
+
+        listeners();
     }
+
+
 
     //BugFix loadImage
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
+    }
+
+    public void listeners(){
+        SeekBar sbBrightness = this.findViewById(R.id.sbBrightness);
+        SeekBar sbSaturation = this.findViewById(R.id.sbSaturation);
+
+        sbBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                Retouching.setBrightness(currentImage, progress, MainActivity.this);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+        });
+
+        sbSaturation.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                Retouching.setSaturation(currentImage, progress-127, MainActivity.this);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+        });
     }
 
 

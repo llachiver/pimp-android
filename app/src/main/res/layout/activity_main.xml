@@ -50,6 +50,7 @@
         app:layout_constraintGuide_percent="0.7" />
 
     <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,5 +115,38 @@
 
         </LinearLayout>
     </HorizontalScrollView>
+
+    <SeekBar
+        android:id="@+id/sbBrightness"
+        android:layout_width="139dp"
+        android:layout_height="47dp"
+        android:max="255"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Brightness"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Saturation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sbBrightness" />
+
+    <SeekBar
+        android:id="@+id/sbSaturation"
+        android:layout_width="139dp"
+        android:layout_height="41dp"
+        android:max="255"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
