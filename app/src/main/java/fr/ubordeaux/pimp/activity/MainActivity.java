@@ -17,7 +17,9 @@ import android.widget.Toast;
 import com.github.chrisbanes.photoview.PhotoView;
 
 public class MainActivity extends AppCompatActivity {
-    private Image image; //Temporary champ waiting for others decision about Picture class
+    private Image image;
+
+    private PhotoView iv;
 
     public Image getImage() {
         return image;
@@ -27,7 +29,10 @@ public class MainActivity extends AppCompatActivity {
         this.image = image;
     }
 
-    private PhotoView iv;
+    public void updateIv(){
+        iv.setImageBitmap(image.getBmpCurrent());
+    }
+
 
     public PhotoView getIv() {
         return iv;
@@ -112,6 +117,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.loadFromCamera:
                 BitmapIO.dispatchTakePictureIntent();
                 //Display width and height from bitmap
+                return true;
+
+            case R.id.restoreChanges:
+                image.restoreBmp();
+                updateIv(); //Update imageview
                 return true;
 
 
