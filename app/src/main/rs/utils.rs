@@ -1,89 +1,66 @@
 #pragma version(1)
 #pragma rs java_package_name(fr.ubordeaux.pimp)
 
-static float3 rgb2hsv( float4 rgb)
-{
-    float3 hsv;
+static float4 HSVtoRGB ( float4 hsv ) {
+    float k, cmin, cmax, delta, h, s, v;
+    const float4 pixelf;
+    h = hsv.s0; s = hsv.s1; v = hsv.s2;
+    if (s == 0) //achromatic gray
+    {
+        pixelf.r = v  ; pixelf.g = v ; pixelf.b = v ; pixelf.a = hsv.a;
+    }else{
 
-    float r = rgb.r;
-    float g = rgb.g;
-    float b = rgb.b;
+        // Conversion values
 
-    float _max = max(max(r,g),b);
-    float _min = min(min(r,g),b);
+        float tempH = h;
+        tempH /= 60.0f;
+        int i = (int) floor(tempH);
+        float f = tempH - i;
+        float p = v * (1 - s);
+        float q = v * (1 - s * f);
+        float t = v * (1 - s * (1 - f));
 
-    float h = 0;
-    float s,v;
+        // There are 6 cases, one for every 60 degrees
+        switch (i)
+        {
+            case 0:
+                pixelf.r = v;
+                pixelf.g = t;
+                pixelf.b = p;
+                break;
 
-    if(_max == _min)
-        h=0;
-    else if(_max == r)
-        h =  ((int) (60 * (g-b)/(_max - _min) + 360)) % 360;
-    else if(_max == g)
-        h = 60 * (b-r)/(_max-_min) + 120;
-    else if(_max == b)
-        h = 60 * (r-g)/(_max-_min) + 240;
+            case 1:
+                pixelf.r = q;
+                pixelf.g = v;
+                pixelf.b = p;
+                break;
 
-    s = (_max==0) ? 0 : (1-(_min/_max));
-    v = _max;
+            case 2:
+                pixelf.r = p;
+                pixelf.g = v;
+                pixelf.b = t;
+                break;
 
-    hsv.s0 = h;
-    hsv.s1 = s;
-    hsv.s2 = v;
-    return hsv;
-}
+            case 3:
+                pixelf.r = p;
+                pixelf.g = q;
+                pixelf.b = v;
+                break;
 
-static float4 hsv2rgb(float3 hsv)
-{
-    float4 rgb;
+            case 4:
+                pixelf.r = t;
+                pixelf.g = p;
+                pixelf.b = v;
+                break;
 
-    float h = hsv.s0;
-    float s = hsv.s1;
-    float v = hsv.s2;
-
-    int ti;
-    float f,l,m,n;
-
-    int color = 0;
-
-    ti = (int) (h/60)%6;
-    f = h/60 - ti;
-    l = v * (1-s);
-    m = v * (1-f*s);
-    n = v*(1-(1-f)*s);
-
-    switch(ti){
-        case 0:
-            rgb.r = v;
-            rgb.g = n;
-            rgb.b = l;
-            break;
-        case 1 :
-            rgb.r = m;
-            rgb.g = v;
-            rgb.b = l;
-            break;
-        case 2 :
-            rgb.r = l;
-            rgb.g = v;
-            rgb.b = n;
-            break;
-        case 3 :
-            rgb.r = l;
-            rgb.g = m;
-            rgb.b = v;
-            break;
-        case 4 :
-            rgb.r = n;
-            rgb.g = l;
-            rgb.b = v;
-            break;
-        case 5 :
-            rgb.r = v;
-            rgb.g = l;
-            rgb.b = m;
-            break;
+            // Case 5
+            default:
+                pixelf.r = v;
+                pixelf.g = p;
+                pixelf.b = q;
+                break;
+        }
     }
-    rgb.a = 1;
-    return rgb;
+    pixelf.s3 = hsv.a;
+    return pixelf;
 }

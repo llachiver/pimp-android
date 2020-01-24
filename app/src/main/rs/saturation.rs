@@ -10,7 +10,7 @@ uchar4 RS_KERNEL setSaturation ( uchar4 in  ) {
     //We normalize the factor between -1 and 1.
     float fact = factor/127.;
 
-    float3 hsv = rgb2hsv(rsUnpackColor8888(in));
+    float4 hsv = RGBtoHSV(rsUnpackColor8888(in));
 
     //If we increase the saturation...
     if(fact >= 0){
@@ -23,6 +23,5 @@ uchar4 RS_KERNEL setSaturation ( uchar4 in  ) {
         hsv.s1 = hsv.s1 + fact * hsv.s1;
     }
 
-    uchar4 out = rsPackColorTo8888(hsv2rgb(hsv));
-    return out;
+    return rsPackColorTo8888(HSVtoRGB(hsv));
 }
