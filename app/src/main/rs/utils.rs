@@ -1,6 +1,45 @@
 #pragma version(1)
 #pragma rs java_package_name(fr.ubordeaux.pimp)
 
+static float4 RGBtoHSV ( float4 pixelf ) {
+    float k, cmin, cmax, delta, h, s, v;
+    const float4 hsv;
+
+    cmin = (pixelf.r < pixelf.g) ? pixelf.r : pixelf.g;
+    cmin = (cmin  < pixelf.b) ? cmin  : pixelf.b;
+
+    cmax = (pixelf.r > pixelf.g) ? pixelf.r : pixelf.g;
+    cmax = (cmax  > pixelf.b) ? cmax  : pixelf.b;
+
+    delta = cmax - cmin;
+
+    if (cmax == 0) {
+        h = 0; s = 0; v = 0;
+    }else{
+
+        if(cmax == pixelf.r) {
+            h = ((((pixelf.g - pixelf.b) / delta)));
+        }else if(cmax == pixelf.g) {
+            h = ((((pixelf.b - pixelf.r) / delta) + 2.0f));
+        }else if(cmax == pixelf.b) {
+            h  = ( (((pixelf.r - pixelf.g) / delta) + 4.0f));
+        }
+        h *= 60;
+       if (h < 0) { h += 360; }
+       if (h == 360) { h = 0; }
+       //h = rnd_hue; // Replacing for random hue
+
+        s = (delta) / cmax; //Convert only saturation and value because hue will be replaced by random hue
+
+        v = cmax;
+    }
+    hsv.s0 = h; hsv.s1 = s; hsv.s2 = v; hsv.s3 = pixelf.a;
+
+    return hsv;
+
+
+}
+
 static float4 HSVtoRGB ( float4 hsv ) {
     float k, cmin, cmax, delta, h, s, v;
     const float4 pixelf;
