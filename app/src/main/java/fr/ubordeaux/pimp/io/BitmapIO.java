@@ -172,60 +172,19 @@ public class BitmapIO {
 
     /**Async Task LoadImage**/
 
-    public static void LoadImageTask(Uri uri, MainActivity activity) {
-        LoadImageTask task = new LoadImageTask(activity);
-        task.execute(uri);
+    public static void LoadImageTask(final Uri uri, MainActivity activity) {
+        try {
+            BitmapAsync callback = new BitmapAsync() {
+                @Override
+                public Bitmap process() {
+                    return decodeAndScaleBitmapFromUri(uri);
+                }
+            };
+            new Task(callback, activity).execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
-    private static class LoadImageTask extends AsyncTask<Uri, Void, Bitmap> {
-        private WeakReference<MainActivity> activityWeakReference;
-
-        private LoadImageTask(MainActivity activity) {
-            this.activityWeakReference = new WeakReference<MainActivity>(activity);
-        }
-
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            MainActivity activity = activityWeakReference.get();
-            if (activity == null || activity.isFinishing()){
-                return;
-            }
-            activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Bitmap doInBackground(Uri... uris) {
-            MainActivity activity = activityWeakReference.get();
-            if (activity == null || activity.isFinishing()){
-                return null;
-            }
-
-            return decodeAndScaleBitmapFromUri(uris[0]);
-
-
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bmp) {
-            super.onPostExecute(bmp);
-            //Avoid memory leaks if activity has been finished
-            MainActivity activity = activityWeakReference.get();
-            if (activity == null || activity.isFinishing()){
-                return;
-            }
-
-            activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-            Image image = new Image(bmp);
-            activity.setImage(image);
-            activity.getIv().setImageBitmap(image.getBmpCurrent());
-
-
-        }
-
-    }
-    /**End of Async Task declaration **/
 
     /**** SAVE METHODS ******/
 
@@ -233,8 +192,7 @@ public class BitmapIO {
 
     public static Uri getUriFromCameraFile() {
         File f = new File(currentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        return contentUri;
+        return Uri.fromFile(f);
     }
 
 
