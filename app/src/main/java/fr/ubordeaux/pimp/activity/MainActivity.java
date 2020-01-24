@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         sbBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                Retouching.setBrightness(currentImage, progress, MainActivity.this);
+                Retouching.setBrightness(currentImage, progress-127, MainActivity.this);
             }
 
             @Override
