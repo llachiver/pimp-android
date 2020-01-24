@@ -140,6 +140,7 @@ public class BitmapIO {
 
 
             opt.inJustDecodeBounds = false;
+            opt.inMutable = true;
             InputStream imageStream2 = context.getContentResolver().openInputStream(imageUri);
             //Get image
             selectedImage = BitmapFactory.decodeStream(imageStream2, null, opt);
