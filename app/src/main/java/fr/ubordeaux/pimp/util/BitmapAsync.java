@@ -1,4 +1,4 @@
-package fr.ubordeaux.pimp.io;
+package fr.ubordeaux.pimp.util;
 
 import android.graphics.Bitmap;
 

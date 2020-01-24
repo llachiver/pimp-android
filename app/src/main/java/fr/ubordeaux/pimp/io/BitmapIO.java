@@ -5,26 +5,23 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Display;
-import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import androidx.core.content.FileProvider;
-import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
-import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.util.BitmapAsync;
 import fr.ubordeaux.pimp.util.MainSingleton;
+import fr.ubordeaux.pimp.util.Task;
 
 
 public class BitmapIO {

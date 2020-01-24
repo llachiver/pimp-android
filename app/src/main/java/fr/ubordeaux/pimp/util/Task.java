@@ -1,4 +1,4 @@
-package fr.ubordeaux.pimp.io;
+package fr.ubordeaux.pimp.util;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -9,6 +9,7 @@ import java.lang.ref.WeakReference;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.util.BitmapAsync;
 
 /**
  * General Async task any filter function from this project as an async Task
