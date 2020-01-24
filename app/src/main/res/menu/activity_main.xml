@@ -2,25 +2,50 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/loadFromGallery"
-        android:icon="@android:drawable/ic_menu_gallery"
-        android:title="@string/load_image_from_gallery"
+        android:id="@+id/restoreChanges"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:title="Restore changes"
         android:visible="true"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/loadFromCamera"
-        android:icon="@android:drawable/ic_menu_camera"
-        android:title="@string/load_image_from_gallery"
-        android:visible="true"
-        app:showAsAction="always" />
 
     <item
         android:id="@+id/imageInfo"
         android:icon="@android:drawable/ic_menu_info_details"
-        android:title="@string/load_image_from_gallery"
+        android:title="Image details"
         android:visible="true"
         app:showAsAction="always" />
+
+    <item
+        android:icon="@android:drawable/ic_menu_more"
+        android:title="Settings"
+        android:visible="true"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/loadFromGallery"
+                android:icon="@android:drawable/ic_menu_gallery"
+                android:title="@string/load_image_from_gallery"
+                android:visible="true"
+                app:showAsAction="always" />
+
+            <item
+                android:id="@+id/loadFromCamera"
+                android:icon="@android:drawable/ic_menu_camera"
+                android:title="Load image from camera"
+                android:visible="true"
+                app:showAsAction="always" />
+
+            <item
+                android:id="@+id/exportToGallery"
+                android:icon="@android:drawable/ic_menu_save"
+                android:title="Export image to gallery"
+                android:visible="true"
+                app:showAsAction="always" />
+
+        </menu>
+    </item>
+
 
 
 </menu>
