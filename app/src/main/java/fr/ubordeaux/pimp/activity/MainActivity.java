@@ -2,6 +2,7 @@ package fr.ubordeaux.pimp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import fr.ubordeaux.pimp.R;
+import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.io.BitmapIO;
 import fr.ubordeaux.pimp.util.MainSingleton;
 
@@ -16,14 +17,14 @@ import android.widget.Toast;
 import com.github.chrisbanes.photoview.PhotoView;
 
 public class MainActivity extends AppCompatActivity {
-    private Bitmap currentImage; //Temporary champ waiting for others decision about Picture class
+    private Image image; //Temporary champ waiting for others decision about Picture class
 
-    public Bitmap getCurrentImage() {
-        return currentImage;
+    public Image getImage() {
+        return image;
     }
 
-    public void setCurrentImage(Bitmap currentImage) {
-        this.currentImage = currentImage;
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     private PhotoView iv;
@@ -133,9 +134,13 @@ public class MainActivity extends AppCompatActivity {
         //Loading default image from resources
         Bitmap bmp = BitmapIO. decodeAndScaleBitmapFromResource(R.drawable.starwars);
 
+        //Create image object
+        image = new Image(bmp);
+        
         //Allow more zooming
         iv.setMaximumScale(10);
-        iv.setImageBitmap(bmp);
+        //Set imageview bitmap
+        iv.setImageBitmap(image.getBmpCurrent());
     }
 
     //BugFix loadImage

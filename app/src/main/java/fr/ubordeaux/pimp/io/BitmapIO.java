@@ -23,6 +23,7 @@ import java.util.Locale;
 import androidx.core.content.FileProvider;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.MainSingleton;
 
 
@@ -217,7 +218,7 @@ public class BitmapIO {
             activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 
             activity.getIv().setImageBitmap(bmp);
-            activity.setCurrentImage(bmp);
+            activity.setImage(new Image(bmp));
 
 
         }
