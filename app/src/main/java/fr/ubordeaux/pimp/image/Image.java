@@ -10,7 +10,7 @@ public class Image {
     private int height;
 
     //Base image when it is loaded
-    private Bitmap bmpBase;
+    private int[] imgBase;
 
     //Current visible image with applied effects
     private Bitmap bmpCurrent;
@@ -19,23 +19,16 @@ public class Image {
     private RenderScript rs;
 
     public Image(Bitmap bmp){
-        this.bmpBase = bmp;
-        this.bmpCurrent = bmp.copy(Bitmap.Config.ARGB_8888, true);
         width = bmp.getWidth();
         height = bmp.getHeight();
+        imgBase = new int [width * height];
+        bmpCurrent = bmp;
+        bmpCurrent.getPixels(imgBase, 0, width, 0, 0, width, height);
     }
 
     //Discard all effects
     public void restoreBmp() {
-        bmpCurrent = bmpBase.copy(Bitmap.Config.ARGB_8888, true);
-    }
-
-    public Bitmap getBmpBase() {
-        return bmpBase;
-    }
-
-    public void setBmpBase(Bitmap bmpBase) {
-        this.bmpBase = bmpBase;
+        bmpCurrent.setPixels(imgBase, 0, width, 0, 0, width, height);
     }
 
     public Bitmap getBmpCurrent() {
@@ -60,7 +53,7 @@ public class Image {
     }
 
     public void initRs(Context ctx){
-        this.rs.create(ctx);
+        rs = RenderScript.create(ctx);
     }
 
 

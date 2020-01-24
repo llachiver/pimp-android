@@ -140,6 +140,7 @@ public class BitmapIO {
 
 
             opt.inJustDecodeBounds = false;
+            opt.inMutable = true;
             InputStream imageStream2 = context.getContentResolver().openInputStream(imageUri);
             //Get image
             selectedImage = BitmapFactory.decodeStream(imageStream2, null, opt);
@@ -216,9 +217,9 @@ public class BitmapIO {
             }
 
             activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-
-            activity.getIv().setImageBitmap(bmp);
-            activity.setImage(new Image(bmp));
+            Image image = new Image(bmp);
+            activity.setImage(image);
+            activity.getIv().setImageBitmap(image.getBmpCurrent());
 
 
         }

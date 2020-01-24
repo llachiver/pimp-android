@@ -117,6 +117,10 @@ public class MainActivity extends AppCompatActivity {
                 //Display width and height from bitmap
                 return true;
 
+            case R.id.restoreChanges:
+                image.restoreBmp();
+                return true;
+
 
             default:
                 super.onOptionsItemSelected(item);
@@ -164,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         sbBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                image.restoreBmp();
                 Retouching.setBrightness(image.getBmpCurrent(), progress-127, MainActivity.this);
             }
 
@@ -182,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         sbSaturation.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                image.restoreBmp();
                 Retouching.setSaturation(image.getBmpCurrent(), progress-127, MainActivity.this);
             }
 
