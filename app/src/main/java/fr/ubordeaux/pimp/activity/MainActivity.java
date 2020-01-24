@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.restoreChanges:
                 image.restoreBmp();
+                iv.setImageBitmap(image.getBmpCurrent());
                 return true;
 
 
