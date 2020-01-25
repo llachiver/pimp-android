@@ -1,11 +1,5 @@
 package fr.ubordeaux.pimp.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import fr.ubordeaux.pimp.R;
-import fr.ubordeaux.pimp.image.Image;
-import fr.ubordeaux.pimp.io.BitmapIO;
-import fr.ubordeaux.pimp.util.MainSingleton;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -14,7 +8,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.github.chrisbanes.photoview.PhotoView;
+
+import fr.ubordeaux.pimp.R;
+import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.io.BitmapIO;
+import fr.ubordeaux.pimp.util.MainSingleton;
 
 public class MainActivity extends AppCompatActivity {
     private Image image;
@@ -132,21 +133,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (findViewById(R.id.contentFragment) != null) {//Recommended verifications.
+            if (savedInstanceState != null)
+                return;
+            MainFragment mainFragment = new MainFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.contentFragment, mainFragment).commit(); // Insert main fragment into activity.
+        }
+
+    }
+
+    //TODO move the followging code in onActivityCreated() methods in Fragment class
+    @Override
+    protected void onStart() {
+        super.onStart();
         iv = findViewById(R.id.imageView);
         //Initialize MainSingleton
         MainSingleton.INSTANCE.setContext(this);
 
         //Loading default image from resources
-        Bitmap bmp = BitmapIO. decodeAndScaleBitmapFromResource(R.drawable.starwars);
+        Bitmap bmp = BitmapIO.decodeAndScaleBitmapFromResource(R.drawable.starwars);
 
         //Create image object
         image = new Image(bmp);
-        
+
         //Allow more zooming
         iv.setMaximumScale(10);
         //Set imageview bitmap
