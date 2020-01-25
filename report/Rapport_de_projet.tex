@@ -4,6 +4,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[francais]{babel}
 \usepackage{graphicx}
+\usepackage{fontawesome}
 
 \usepackage{helvet}
 \renewcommand{\familydefault}{\sfdefault}
@@ -78,7 +79,11 @@ TODO
 %Structure du projet:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Structure du projet :}
-TODO
+\subsection{Structure graphique Android et navigation :}
+Pour afficher certains éléments d'interface et notamment les informations de l'image (bouton \faInfoCircle) nous utilisons des \textbf{Fragment}. En effet une activité supplémentaire n'est pas nécessaire car cette petite partie de l'application ne correspond pas à un point d'entrée de l'application. Par ailleurs changer de fragment (plutôt que de changer directement de layout) pourrait faciliter l'implémentation d'une interface différente, pour tablette par exemple.
+\\
+On notera que la structure actuelle de l'application n'exploite pas encore comme il faut les fragments, l'essentiel du code de l'interface est toujours directement utilisé depuis l'activité principale.
+\\
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
