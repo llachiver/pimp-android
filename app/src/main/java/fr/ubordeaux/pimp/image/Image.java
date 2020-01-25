@@ -16,7 +16,6 @@ public class Image {
     private Bitmap bmpCurrent;
 
     //Passed in arguments of effects methods
-    private RenderScript rs;
 
     public Image(Bitmap bmp){
         width = bmp.getWidth();
@@ -48,13 +47,6 @@ public class Image {
     }
 
 
-    public RenderScript getRs() {
-        return rs;
-    }
-
-    public void initRs(Context ctx){
-        rs = RenderScript.create(ctx);
-    }
 
 
 

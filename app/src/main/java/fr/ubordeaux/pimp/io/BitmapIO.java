@@ -80,11 +80,14 @@ public class BitmapIO {
     private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
+        if (reqWidth <= 0 || reqHeight <= 0)
+            return 1;
+
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
 
-        if (height > reqHeight || width > reqWidth) {
+        /*if (height > reqHeight || width > reqWidth) {
 
             final int halfHeight = height / 2;
             final int halfWidth = width / 2;
@@ -95,6 +98,9 @@ public class BitmapIO {
                     && (halfWidth / inSampleSize) >= reqWidth) {
                 inSampleSize *= 2;
             }
+        }*/
+        while ((height / inSampleSize) > reqHeight || (width / inSampleSize) > reqWidth){
+            inSampleSize *= 2;
         }
         return inSampleSize;
     }
