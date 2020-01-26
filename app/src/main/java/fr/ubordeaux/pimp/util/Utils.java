@@ -1,5 +1,11 @@
 package fr.ubordeaux.pimp.util;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Point;
+import android.view.Display;
+import android.view.View;
+
 /**
  * Class with static methods, usefull calculations for several things.
  */
@@ -13,7 +19,7 @@ public class Utils {
      * @param originalWidth  Width of the orignal picture.
      * @param originalHeight Height of the orignal picture.
      * @param reqWidth       The desired width for the sample.
-     * @param reqHeight      The desired width for the sample.
+     * @param reqHeight      The desired height for the sample.
      * @return An integer X corresponding to the smallest power of 2 keeping size inferior or equal to the required size, where it takes X*X pixels to make 1 pixel in the sample.
      */
     public static int calculateInSampleSize(int originalWidth, int originalHeight,
@@ -28,6 +34,21 @@ public class Utils {
         }
 
         return inSampleSize;
+    }
+
+
+    /**
+     * Get size of the screen where your activity is running.
+     * @param context An Activity launched in the device whose screen size you want to know.
+     * @return Point object , where size.x = screen width and size.y = screen height
+     */
+    public static Point getScreenSize(Activity context) {
+        //Get screen dimensions
+        Display display = context.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size;
+
     }
 
 

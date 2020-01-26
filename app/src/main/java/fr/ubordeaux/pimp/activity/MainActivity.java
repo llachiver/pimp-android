@@ -17,6 +17,13 @@ import android.widget.Toast;
 import com.github.chrisbanes.photoview.PhotoView;
 
 public class MainActivity extends AppCompatActivity {
+    /////////////////////////////////////////////////////////////////////////////////////
+    // Settings :
+    /////////////////////////////////////////////////////////////////////////////////////
+    private static int DEFAULT_IMAGE = R.drawable.starwars;
+
+
+    //Image currently modified.
     private Image image;
 
     private PhotoView iv;
@@ -142,10 +149,7 @@ public class MainActivity extends AppCompatActivity {
         MainSingleton.INSTANCE.setContext(this);
 
         //Loading default image from resources
-        Bitmap bmp = BitmapIO. decodeAndScaleBitmapFromResource(R.drawable.starwars);
-
-        //Create image object
-        image = new Image(bmp);
+        image = new Image(DEFAULT_IMAGE, this);
         
         //Allow more zooming
         iv.setMaximumScale(10);
