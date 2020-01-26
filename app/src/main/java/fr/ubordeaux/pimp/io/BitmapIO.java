@@ -22,6 +22,7 @@ import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.util.BitmapAsync;
 import fr.ubordeaux.pimp.util.MainSingleton;
 import fr.ubordeaux.pimp.util.Task;
+import fr.ubordeaux.pimp.util.Utils;
 
 
 public class BitmapIO {
@@ -64,46 +65,12 @@ public class BitmapIO {
         opt.inMutable = true;
         opt.inJustDecodeBounds = false;
         //Rescaling
-        opt.inSampleSize = BitmapIO.calculateInSampleSize(opt, size.x, size.y);
+        opt.inSampleSize = Utils.calculateInSampleSize(opt.outWidth, opt.outHeight, size.x, size.y);
         return BitmapFactory.decodeResource(context.getResources(), id, opt);
 
     }
 
-    /**
-     * Calculates sample size of BitmapFactory.Options options with reqWidth and reqHeight
-     * @param options options from bitmap to downscale.
-     * @param reqWidth required bitmap width.
-     * @param reqHeight required bitmap height.
-     * @return scaled sample size to assign in options.inSampleSize.
-     */
 
-    private static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        if (reqWidth <= 0 || reqHeight <= 0)
-            return 1;
-
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        /*if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }*/
-        while ((height / inSampleSize) > reqHeight || (width / inSampleSize) > reqWidth){
-            inSampleSize *= 2;
-        }
-        return inSampleSize;
-    }
 
     /**
      *
@@ -139,7 +106,7 @@ public class BitmapIO {
             Point size = getScreenSize();
 
             //Downscale
-            opt.inSampleSize = BitmapIO.calculateInSampleSize(opt, size.x, size.y);
+            opt.inSampleSize = Utils.calculateInSampleSize(opt.outWidth, opt.outHeight, size.x, size.y);
 
 
             opt.inJustDecodeBounds = false;
