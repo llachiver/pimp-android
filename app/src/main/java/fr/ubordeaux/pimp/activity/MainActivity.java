@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -21,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     private Image image;
 
     private PhotoView iv;
+
+    private static InfosFragment infosFragment;
+    private static MainFragment mainFragment;
 
     public Image getImage() {
         return image;
@@ -125,6 +129,12 @@ public class MainActivity extends AppCompatActivity {
                 updateIv(); //Update imageview
                 return true;
 
+            case R.id.imageInfo:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.contentFragment, infosFragment).commit(); // Show infos fragment
+                //TODO getSupportFragmentManager().popBackStackImmediate();
+                return true;
+
 
             default:
                 super.onOptionsItemSelected(item);
@@ -137,17 +147,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainFragment = new MainFragment();
+        infosFragment = new InfosFragment();
         if (findViewById(R.id.contentFragment) != null) {//Recommended verifications.
             if (savedInstanceState != null)
                 return;
-            MainFragment mainFragment = new MainFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.contentFragment, mainFragment).commit(); // Insert main fragment into activity.
         }
 
     }
 
-    //TODO move the followging code in onActivityCreated() methods in Fragment class
+    //TODO move the followging code in onActivityCreated() methods in Fragments class
     @Override
     protected void onStart() {
         super.onStart();
