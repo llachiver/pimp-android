@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateIv(){
-        iv.setImageBitmap(image.getBmpCurrent());
+        iv.setImageBitmap(image.getBitmap());
     }
 
 
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.restoreChanges:
-                image.restoreBmp();
+                image.reset();
                 updateIv(); //Update imageview
                 return true;
 
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         //Allow more zooming
         iv.setMaximumScale(10);
         //Set imageview bitmap
-        iv.setImageBitmap(image.getBmpCurrent());
+        updateIv();
     }
 
     //BugFix loadImage
