@@ -1,20 +1,13 @@
 package fr.ubordeaux.pimp.image;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.view.View;
 
-import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.io.BitmapIO;
-import fr.ubordeaux.pimp.util.MainSingleton;
 import fr.ubordeaux.pimp.util.Utils;
 
 public class Image {
-
-    //TODO To remove !!!!!
-    private static MainActivity context = MainSingleton.INSTANCE.getContext();
 
     private int width;
     private int height;
@@ -28,7 +21,7 @@ public class Image {
     /**
      * Load an image from resources, size is automatically limited depending the screen size.
      *
-     * @param id int value of the resource
+     * @param id      int value of the resource
      * @param context An Activity launched in the device where you want to adapt your Image.
      */
     public Image(int id, Activity context) {
