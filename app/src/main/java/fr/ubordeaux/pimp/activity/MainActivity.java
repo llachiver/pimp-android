@@ -1,21 +1,24 @@
 package fr.ubordeaux.pimp.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import fr.ubordeaux.pimp.R;
-import fr.ubordeaux.pimp.image.Image;
-import fr.ubordeaux.pimp.io.BitmapIO;
-import fr.ubordeaux.pimp.util.MainSingleton;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
 import com.github.chrisbanes.photoview.PhotoView;
+
+import java.io.File;
+import java.io.IOException;
+
+import fr.ubordeaux.pimp.R;
+import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.io.BitmapIO;
 
 public class MainActivity extends AppCompatActivity {
     /////////////////////////////////////////////////////////////////////////////////////
@@ -120,11 +123,11 @@ public class MainActivity extends AppCompatActivity {
             //Load photo from gallery
             case R.id.loadFromGallery:
 
-                BitmapIO.startGalleryActivity();
+                startGalleryActivity();
 
                 return true;
             case R.id.loadFromCamera:
-                BitmapIO.dispatchTakePictureIntent();
+                startCameraActivity();
                 //Display width and height from bitmap
                 return true;
 
@@ -147,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         iv = findViewById(R.id.imageView);
         //Initialize MainSingleton
-        MainSingleton.INSTANCE.setContext(this);
 
         //Loading default image from resources
         setImage(new Image(DEFAULT_IMAGE, this));
@@ -164,5 +166,42 @@ public class MainActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
+
+    /**
+     * Starts intent to pick an image from gallery
+     */
+    public void startGalleryActivity() {
+        //Photo intent
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+
+        photoPickerIntent.setType("image/*");
+        //Start activity and wait for result
+        this.startActivityForResult(photoPickerIntent, MainActivity.REQUEST_GET_SINGLE_FILE);
+    }
+
+    public void startCameraActivity() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = BitmapIO.createImageFile(this);
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                ex.printStackTrace();
+                Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                //context.grantUriPermission("fr.ubordeaux.pimp", photoURI, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                this.startActivityForResult(takePictureIntent, MainActivity.REQUEST_TAKE_PHOTO);
+            }
+        }
+    }
 
 }
