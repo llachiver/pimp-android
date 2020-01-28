@@ -4,14 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -101,30 +97,6 @@ public class BitmapIO {
 
 
     /**** SAVE METHODS ******/
-
-    private static String currentPhotoPath;
-
-    public static Uri getUriFromCameraFile() {
-        File f = new File(currentPhotoPath);
-        return Uri.fromFile(f);
-    }
-
-
-    public static File createImageFile(Context context) throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.FRANCE).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
 
 
 }

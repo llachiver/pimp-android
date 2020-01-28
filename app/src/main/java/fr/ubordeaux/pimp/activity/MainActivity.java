@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -18,8 +19,8 @@ import java.io.IOException;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.image.Image;
-import fr.ubordeaux.pimp.io.BitmapIO;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
+import fr.ubordeaux.pimp.util.Utils;
 
 public class MainActivity extends AppCompatActivity {
     /////////////////////////////////////////////////////////////////////////////////////
@@ -97,8 +98,9 @@ public class MainActivity extends AppCompatActivity {
         if (reqCode == REQUEST_TAKE_PHOTO) {
             if (resultCode == RESULT_OK) {
                 try {
-                    Uri imageUri = BitmapIO.getUriFromCameraFile(); //TODO
-                    // BitmapIO.loadImageTask(imageUri, this); TODO
+                    Log.v("LOG", "" + data); //TODO bug data is null ! ! !  ! ! ! !
+                    //File f = new File(.getPath());
+                    new LoadImageUriTask(this, data.getData()).execute();
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
@@ -122,15 +124,11 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             //Load photo from gallery
             case R.id.loadFromGallery:
-
                 startGalleryActivity();
-
                 return true;
             case R.id.loadFromCamera:
                 startCameraActivity();
-                //Display width and height from bitmap
                 return true;
-
             case R.id.restoreChanges:
                 image.reset();
                 updateIv(); //Update imageview
@@ -186,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             // Create the File where the photo should go
             File photoFile = null;
             try {
-                photoFile = BitmapIO.createImageFile(this);
+                photoFile = Utils.createJPGFile(this);
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 ex.printStackTrace();
@@ -197,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.fileprovider",
                         photoFile);
-                //context.grantUriPermission("fr.ubordeaux.pimp", photoURI, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                //this.grantUriPermission("fr.ubordeaux.pimp", photoURI, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 this.startActivityForResult(takePictureIntent, MainActivity.REQUEST_TAKE_PHOTO);
             }

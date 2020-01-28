@@ -3,8 +3,15 @@ package fr.ubordeaux.pimp.util;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
+import android.os.Environment;
 import android.view.Display;
 import android.view.View;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Class with static methods, usefull calculations for several things.
@@ -39,6 +46,7 @@ public class Utils {
 
     /**
      * Get size of the screen where your activity is running.
+     *
      * @param context An Activity launched in the device whose screen size you want to know.
      * @return Point object , where size.x = screen width and size.y = screen height
      */
@@ -49,6 +57,26 @@ public class Utils {
         display.getSize(size);
         return size;
 
+    }
+
+    /**
+     * This method create and return a .jpg file, its name will be the date and hour of the capture.
+     *
+     * @param context Activity which requested the creation of the file.
+     * @return File object
+     * @throws IOException
+     */
+    public static File createJPGFile(Context context) throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.FRANCE).format(new Date()); //TODO manage default locale ?
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        // Save a file: path for use with ACTION_VIEW intents
+        return File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
     }
 
 
