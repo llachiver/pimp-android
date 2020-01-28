@@ -13,9 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import fr.ubordeaux.pimp.activity.MainActivity;
-import fr.ubordeaux.pimp.util.BitmapAsync;
-import fr.ubordeaux.pimp.util.Task;
 import fr.ubordeaux.pimp.util.Utils;
 
 /**
@@ -103,28 +100,6 @@ public class BitmapIO {
     }
 
 
-
-    /**
-     * Use the method {@link #decodeAndScaleBitmapFromUri(Uri, int, int, Context)} but launch the operation in a Task in background.
-     *
-     * @param uri       path to bitmap to load
-     * @param reqWidth  The desired width for the image.
-     * @param reqHeight The desired height for the image.
-     */
-    public static void loadImageTask(final Uri uri, final int reqWidth, final int reqHeight, final Context context) {
-        try {
-            BitmapAsync callback = new BitmapAsync() {
-                @Override
-                public Bitmap process() {
-                    return decodeAndScaleBitmapFromUri(uri, reqWidth, reqHeight, context);
-                }
-            };
-            new Task(callback, (MainActivity) context).execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /**** SAVE METHODS ******/
 
     private static String currentPhotoPath;
@@ -133,7 +108,6 @@ public class BitmapIO {
         File f = new File(currentPhotoPath);
         return Uri.fromFile(f);
     }
-
 
 
     public static File createImageFile(Context context) throws IOException {
@@ -151,8 +125,6 @@ public class BitmapIO {
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
-
-
 
 
 }

@@ -19,6 +19,7 @@ import java.io.IOException;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.io.BitmapIO;
+import fr.ubordeaux.pimp.util.LoadImageUriTask;
 
 public class MainActivity extends AppCompatActivity {
     /////////////////////////////////////////////////////////////////////////////////////
@@ -80,11 +81,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
-        if (reqCode == REQUEST_GET_SINGLE_FILE) {
+        if (reqCode == REQUEST_GET_SINGLE_FILE) { // Intent from gallery, containing Uri of a the picture selected.
             if (resultCode == RESULT_OK) {
                 try {
-                    setImage(new Image(data.getData(), this));
-                    //BitmapIO.loadImageTask(data.getData(), this); TODO
+                    new LoadImageUriTask(this, data.getData()).execute(); // Load and instantiate Image from Uri, see fr.ubordeaux.pimp.util.LoadImageUriTask
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
@@ -203,5 +203,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 }
