@@ -56,14 +56,14 @@ public class BitmapIO {
     }
 
 
-
     /**
-     *
-     * @param imageUri path to bitmap to load
-     * @return bitmap loaded and reescaled from uri
+     * @param imageUri  path to bitmap to load
+     * @param reqWidth  The desired width for the image.
+     * @param reqHeight The desired height for the image.
+     * @return bitmap loaded and scaled from uri, see {@link fr.ubordeaux.pimp.util.Utils#calculateInSampleSize(int, int, int, int)}
      */
 
-    private static Bitmap decodeAndScaleBitmapFromUri(Uri imageUri) {
+    public static Bitmap decodeAndScaleBitmapFromUri(Uri imageUri, int reqWidth, int reqHeight) {
         //Initialize Bitmap to null
         Bitmap selectedImage = null;
         try {
@@ -87,11 +87,8 @@ public class BitmapIO {
             assert imageStream != null;
             imageStream.close();
 
-            //Getting screen size to downscale size.x == screenWidth, size.y == screenHeight
-            Point size = Utils.getScreenSize(context);
-
             //Downscale
-            opt.inSampleSize = Utils.calculateInSampleSize(opt.outWidth, opt.outHeight, size.x, size.y);
+            opt.inSampleSize = Utils.calculateInSampleSize(opt.outWidth, opt.outHeight, reqWidth, reqHeight);
 
 
             opt.inJustDecodeBounds = false;
@@ -116,7 +113,7 @@ public class BitmapIO {
     /**
      * Starts intent to pick an image from gallery
      */
-    public static void startGalleryActivity(){
+    public static void startGalleryActivity() {
         //Photo intent
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
 
@@ -125,17 +122,22 @@ public class BitmapIO {
         context.startActivityForResult(photoPickerIntent, MainActivity.REQUEST_GET_SINGLE_FILE);
     }
 
-    /**Async Task LoadImage**/
-
-    public static void LoadImageTask(final Uri uri, MainActivity activity) {
+    /**
+     * Use the method {@link #decodeAndScaleBitmapFromUri(Uri, int, int)} but launch the operation in a Task in background.
+     *
+     * @param uri       path to bitmap to load
+     * @param reqWidth  The desired width for the image.
+     * @param reqHeight The desired height for the image.
+     */
+    public static void loadImageTask(final Uri uri, final int reqWidth, final int reqHeight) {
         try {
             BitmapAsync callback = new BitmapAsync() {
                 @Override
                 public Bitmap process() {
-                    return decodeAndScaleBitmapFromUri(uri);
+                    return decodeAndScaleBitmapFromUri(uri, reqWidth, reqHeight);
                 }
             };
-            new Task(callback, activity).execute();
+            new Task(callback, context).execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,7 +151,6 @@ public class BitmapIO {
         File f = new File(currentPhotoPath);
         return Uri.fromFile(f);
     }
-
 
 
     private static File createImageFile() throws IOException {
@@ -192,10 +193,6 @@ public class BitmapIO {
             }
         }
     }
-
-
-
-
 
 
 }

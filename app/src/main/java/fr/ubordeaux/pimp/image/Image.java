@@ -3,6 +3,7 @@ package fr.ubordeaux.pimp.image;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.net.Uri;
 
 import fr.ubordeaux.pimp.io.BitmapIO;
 import fr.ubordeaux.pimp.util.Utils;
@@ -48,6 +49,38 @@ public class Image {
      */
     public Image(int id, int requiredWidth, int requiredHeight) {
         this(BitmapIO.decodeAndScaleBitmapFromResource(id, requiredWidth, requiredHeight));
+    }
+
+    /**
+     * Load an image from folders, size is automatically limited depending the screen size.
+     *
+     * @param uri     Path of the picture to laod.
+     * @param context An Activity launched in the device where you want to adapt your Image.
+     */
+    public Image(Uri uri, Activity context) {
+        this(uri, Utils.getScreenSize(context));
+    }
+
+    /**
+     * See {@link #Image(Uri, int, int)}
+     *
+     * @param uri  Path of the picture to laod.
+     * @param size Point where x is width and y is height.
+     */
+    public Image(Uri uri, Point size) {
+        this(uri, size.x, size.y);
+    }
+
+    /**
+     * Load an image from folders with size limitation.
+     * See {@link fr.ubordeaux.pimp.util.Utils#calculateInSampleSize(int, int, int, int)}
+     *
+     * @param uri            Path of the picture to laod.
+     * @param requiredWidth  The desired width for the image.
+     * @param requiredHeight The desired height for the image.
+     */
+    public Image(Uri uri, int requiredWidth, int requiredHeight) {
+        this(BitmapIO.decodeAndScaleBitmapFromUri(uri, requiredWidth, requiredHeight));
     }
 
 

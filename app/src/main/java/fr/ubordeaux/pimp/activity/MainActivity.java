@@ -1,6 +1,7 @@
 package fr.ubordeaux.pimp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.io.BitmapIO;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         this.image = image;
     }
 
-    public void updateIv(){
+    public void updateIv() {
         iv.setImageBitmap(image.getBitmap());
     }
 
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Inflate upper menu
+     *
      * @param menu to inflate
      * @return true if menu inflated with success
      */
@@ -65,12 +67,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     /**
      * Load image from internal storage
-     * @param reqCode request code to identify user's choice
+     *
+     * @param reqCode    request code to identify user's choice
      * @param resultCode result to load image
-     * @param data Event given by user to display something
+     * @param data       Event given by user to display something
      */
     @Override
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
@@ -78,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
         if (reqCode == REQUEST_GET_SINGLE_FILE) {
             if (resultCode == RESULT_OK) {
                 try {
-                    BitmapIO.LoadImageTask(data.getData(), this);
+                    setImage(new Image(data.getData(), this));
+                    //BitmapIO.loadImageTask(data.getData(), this); TODO
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
@@ -91,9 +94,9 @@ public class MainActivity extends AppCompatActivity {
         if (reqCode == REQUEST_TAKE_PHOTO) {
             if (resultCode == RESULT_OK) {
                 try {
-                    Uri imageUri = BitmapIO.getUriFromCameraFile();
-                    BitmapIO.LoadImageTask(imageUri, this);
-                }catch (Exception e) {
+                    Uri imageUri = BitmapIO.getUriFromCameraFile(); //TODO
+                    // BitmapIO.loadImageTask(imageUri, this); TODO
+                } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
                 }
@@ -106,14 +109,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param item Item chosen by user.
      * @return true user click on an item.
      */
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             //Load photo from gallery
             case R.id.loadFromGallery:
@@ -139,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,8 +150,8 @@ public class MainActivity extends AppCompatActivity {
         MainSingleton.INSTANCE.setContext(this);
 
         //Loading default image from resources
-        image = new Image(DEFAULT_IMAGE, this);
-        
+        setImage(new Image(DEFAULT_IMAGE, this));
+
         //Allow more zooming
         iv.setMaximumScale(10);
         //Set imageview bitmap
