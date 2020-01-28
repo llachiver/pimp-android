@@ -1,6 +1,7 @@
 package fr.ubordeaux.pimp.image;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 
@@ -25,7 +26,7 @@ public class Image {
      * @param context An Activity launched in the device where you want to adapt your Image.
      */
     public Image(int id, Activity context) {
-        this(id, Utils.getScreenSize(context));
+        this(id, Utils.getScreenSize(context), context);
     }
 
     /**
@@ -34,8 +35,8 @@ public class Image {
      * @param id   int value of the resource
      * @param size Point where x is width and y is height.
      */
-    public Image(int id, Point size) {
-        this(id, size.x, size.y);
+    public Image(int id, Point size, Context context) {
+        this(id, size.x, size.y, context);
     }
 
     /**
@@ -46,8 +47,8 @@ public class Image {
      * @param requiredWidth  The desired width for the image.
      * @param requiredHeight The desired height for the image.
      */
-    public Image(int id, int requiredWidth, int requiredHeight) {
-        this(BitmapIO.decodeAndScaleBitmapFromResource(id, requiredWidth, requiredHeight));
+    public Image(int id, int requiredWidth, int requiredHeight, Context context) {
+        this(BitmapIO.decodeAndScaleBitmapFromResource(id, requiredWidth, requiredHeight, context));
     }
 
 

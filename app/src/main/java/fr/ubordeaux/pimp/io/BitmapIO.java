@@ -1,5 +1,7 @@
 package fr.ubordeaux.pimp.io;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,7 +23,6 @@ import androidx.core.content.FileProvider;
 
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.util.BitmapAsync;
-import fr.ubordeaux.pimp.util.MainSingleton;
 import fr.ubordeaux.pimp.util.Task;
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -30,7 +31,6 @@ import fr.ubordeaux.pimp.util.Utils;
  */
 public class BitmapIO {
 
-    private static MainActivity context = MainSingleton.INSTANCE.getContext();
 
     /**
      * @param id        int id from resource to load
@@ -38,7 +38,7 @@ public class BitmapIO {
      * @param reqHeight The desired height for the image.
      * @return returns scaled bitmap, see {@link fr.ubordeaux.pimp.util.Utils#calculateInSampleSize(int, int, int, int)}
      */
-    public static Bitmap decodeAndScaleBitmapFromResource(int id, int reqWidth, int reqHeight) {
+    public static Bitmap decodeAndScaleBitmapFromResource(int id, int reqWidth, int reqHeight, Context context) {
         //Loads the image
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inJustDecodeBounds = true;
@@ -63,7 +63,7 @@ public class BitmapIO {
      * @return bitmap loaded and reescaled from uri
      */
 
-    private static Bitmap decodeAndScaleBitmapFromUri(Uri imageUri) {
+    private static Bitmap decodeAndScaleBitmapFromUri(Uri imageUri, Context context) {
         //Initialize Bitmap to null
         Bitmap selectedImage = null;
         try {
@@ -88,7 +88,7 @@ public class BitmapIO {
             imageStream.close();
 
             //Getting screen size to downscale size.x == screenWidth, size.y == screenHeight
-            Point size = Utils.getScreenSize(context);
+            Point size = Utils.getScreenSize((Activity)context);
 
             //Downscale
             opt.inSampleSize = Utils.calculateInSampleSize(opt.outWidth, opt.outHeight, size.x, size.y);
@@ -113,26 +113,16 @@ public class BitmapIO {
         }
     }
 
-    /**
-     * Starts intent to pick an image from gallery
-     */
-    public static void startGalleryActivity(){
-        //Photo intent
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
 
-        photoPickerIntent.setType("image/*");
-        //Start activity and wait for result
-        context.startActivityForResult(photoPickerIntent, MainActivity.REQUEST_GET_SINGLE_FILE);
-    }
 
     /**Async Task LoadImage**/
 
-    public static void LoadImageTask(final Uri uri, MainActivity activity) {
+    public static void LoadImageTask(final Uri uri, final MainActivity activity) {
         try {
             BitmapAsync callback = new BitmapAsync() {
                 @Override
                 public Bitmap process() {
-                    return decodeAndScaleBitmapFromUri(uri);
+                    return decodeAndScaleBitmapFromUri(uri, activity);
                 }
             };
             new Task(callback, activity).execute();
@@ -152,7 +142,7 @@ public class BitmapIO {
 
 
 
-    private static File createImageFile() throws IOException {
+    public static File createImageFile(Context context) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.FRANCE).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -168,30 +158,7 @@ public class BitmapIO {
         return image;
     }
 
-    public static void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                ex.printStackTrace();
-                Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show();
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(context,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                //context.grantUriPermission("fr.ubordeaux.pimp", photoURI, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                context.startActivityForResult(takePictureIntent, MainActivity.REQUEST_TAKE_PHOTO);
-            }
-        }
-    }
+
 
 
 
