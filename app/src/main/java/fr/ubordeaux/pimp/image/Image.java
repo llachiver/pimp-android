@@ -1,6 +1,8 @@
 package fr.ubordeaux.pimp.image;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
@@ -12,6 +14,8 @@ public class Image {
 
     private int width;
     private int height;
+
+    private Uri uri;
 
     //Original version of the image at its creation
     private int[] imgBase;
@@ -51,6 +55,13 @@ public class Image {
      */
     public Image(int id, int requiredWidth, int requiredHeight, Activity context) {
         this(BitmapIO.decodeAndScaleBitmapFromResource(id, requiredWidth, requiredHeight, context));
+        Resources resources = context.getResources();
+        this.uri = new Uri.Builder()
+                .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+                .authority(resources.getResourcePackageName(id))
+                .appendPath(resources.getResourceTypeName(id))
+                .appendPath(resources.getResourceEntryName(id))
+                .build(); //TO TEST !!!!!!
     }
 
     /**
@@ -85,6 +96,7 @@ public class Image {
      */
     public Image(Uri uri, int requiredWidth, int requiredHeight, Activity context) {
         this(BitmapIO.decodeAndScaleBitmapFromUri(uri, requiredWidth, requiredHeight, context));
+        this.uri = uri;
     }
 
 
@@ -130,7 +142,7 @@ public class Image {
      * @param source Image to copy.
      */
     public Image(Image source) {
-        this(source.getBitmap(), source.getWidth(), source.getHeight());
+        this(source, source.getWidth(), source.getHeight());
     }
 
     /**
@@ -144,6 +156,7 @@ public class Image {
      */
     public Image(Image source, int newRequiredWidth, int newRequiredHeight) {
         this(source.getBitmap(), newRequiredWidth, newRequiredHeight);
+        this.uri = source.uri;
     }
 
     /**
@@ -174,6 +187,17 @@ public class Image {
      */
     public int getHeight() {
         return height;
+    }
+
+    /**
+     * Get the Uri of the original file from where come the Image.
+     * Can share this path with another Image if this Image is a copy rescaled or not.
+     * May be also be null, if this Image was created from a Bitmap.
+     *
+     * @return Uri
+     */
+    public Uri getUri() {
+        return uri;
     }
 
 
