@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -95,12 +96,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if (reqCode == REQUEST_TAKE_PHOTO) {
+        if (reqCode == REQUEST_TAKE_PHOTO) {//Intent from camera.
             if (resultCode == RESULT_OK) {
                 try {
-                    Log.v("LOG", "" + data); //TODO bug data is null ! ! !  ! ! ! !
-                    //File f = new File(.getPath());
-                    new LoadImageUriTask(this, data.getData()).execute();
+                    new LoadImageUriTask(this, Uri.fromFile(new File(Utils.CAMERA_LAST_BITMAP_PATH))).execute(); // see fr.ubordeaux.pimp.util.Utils.CAMERA_LAST_BITMAP_PATH
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();

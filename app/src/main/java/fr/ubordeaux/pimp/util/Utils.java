@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Environment;
+import android.util.Pair;
 import android.view.Display;
 import android.view.View;
 
@@ -60,10 +61,16 @@ public class Utils {
     }
 
     /**
+     * Needed for use {@link #createJPGFile(Context)} }
+     */
+    public static String CAMERA_LAST_BITMAP_PATH;
+
+    /**
      * This method create and return a .jpg file, its name will be the date and hour of the capture.
+     * Also set the String {@link #CAMERA_LAST_BITMAP_PATH} }
      *
      * @param context Activity which requested the creation of the file.
-     * @return File object
+     * @return File object.
      * @throws IOException
      */
     public static File createJPGFile(Context context) throws IOException {
@@ -71,12 +78,15 @@ public class Utils {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.FRANCE).format(new Date()); //TODO manage default locale ?
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        // Save a file: path for use with ACTION_VIEW intents
-        return File.createTempFile(
+        File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        CAMERA_LAST_BITMAP_PATH = image.getAbsolutePath();
+        return image;
     }
 
 
