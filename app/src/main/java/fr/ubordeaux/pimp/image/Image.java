@@ -104,6 +104,49 @@ public class Image {
     }
 
     /**
+     * See {@link Image(Image, int, int)}
+     * Differs from {@link Image(Bitmap)} because this does not pack the bitmap in the Image, but create another Bitmap.
+     *
+     * @param bmp               Source Bitmap
+     * @param newRequiredWidth  The desired width for the image. (must be less than or equal to the original)
+     * @param newRequiredHeight The desired height for the image. (must be less than or equal to the original)
+     */
+    public Image(Bitmap bmp, int newRequiredWidth, int newRequiredHeight) {
+        newRequiredWidth = newRequiredWidth == 0 || newRequiredWidth > bmp.getWidth() ? bmp.getWidth() : newRequiredWidth;
+        newRequiredHeight = newRequiredHeight == 0 || newRequiredHeight > bmp.getHeight() ? bmp.getHeight() : newRequiredHeight;
+        int ratio = Utils.calculateInSampleSize(bmp.getWidth(), bmp.getHeight(), newRequiredWidth, newRequiredHeight);
+        Bitmap newBitmap = Bitmap.createScaledBitmap(bmp, bmp.getWidth() / ratio,
+                bmp.getHeight() / ratio, true); //true for bilinear filtering
+        bitmap = newBitmap;
+        width = newBitmap.getWidth();
+        height = newBitmap.getHeight();
+        imgBase = new int[width * height];
+        bitmap.getPixels(imgBase, 0, width, 0, 0, width, height);
+    }
+
+    /**
+     * Use this constructor to duplicate an Image.
+     *
+     * @param source Image to copy.
+     */
+    public Image(Image source) {
+        this(source.getBitmap(), source.getWidth(), source.getHeight());
+    }
+
+    /**
+     * Constructor to create an Image from a rescaled other Image.
+     * See {@link fr.ubordeaux.pimp.util.Utils#calculateInSampleSize(int, int, int, int)}
+     * Note that the rescaling is using bilinear filtering, see {@link android.graphics.Bitmap#createScaledBitmap(Bitmap, int, int, boolean)}.
+     *
+     * @param source            Source Image
+     * @param newRequiredWidth  The desired width for the image. (must be less than or equal to the original)
+     * @param newRequiredHeight The desired height for the image. (must be less than or equal to the original)
+     */
+    public Image(Image source, int newRequiredWidth, int newRequiredHeight) {
+        this(source.getBitmap(), newRequiredWidth, newRequiredHeight);
+    }
+
+    /**
      * Reset all pixels of the Image to the original version (when the Image was created or loaded).
      */
     public void reset() {
