@@ -1,0 +1,13 @@
+\section{Remarques et améliorations  :}
+
+\subsection{Remarques sur le code}
+TODO Remarques poids mémoire de la copie orginale des Images.
+\\
+
+Lors du chargement d'une nouvelle image, nous ré-instancions un objet de la classe Image. Ce qui veut techniquement dire que jusqu'au prochain passage du ramasse miette Android, deux images sont en mémoires, donc deux Bitmap et deux tableaux de pixels (la copie originale des Images, voir \ref{classeImage}). C'est un élément discutable cependant notre application limite la taille des Images chargées. Ce qui évite largement les dépassements mémoire.
+
+\subsection{Remarques sur les librairies Android}
+TODO Remarques sur l'utilisation obligatoire d'une activité contexte pour charger une Bitmap.
+
+\subsection{Améliorations à court terme :}
+TODO

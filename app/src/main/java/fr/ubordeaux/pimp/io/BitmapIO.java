@@ -1,114 +1,53 @@
 package fr.ubordeaux.pimp.io;
 
-import android.content.Intent;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.view.Display;
-import android.view.View;
-import android.widget.Toast;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
-import androidx.core.content.FileProvider;
-import fr.ubordeaux.pimp.R;
-import fr.ubordeaux.pimp.activity.MainActivity;
-import fr.ubordeaux.pimp.image.Image;
-import fr.ubordeaux.pimp.util.MainSingleton;
+import fr.ubordeaux.pimp.util.Utils;
 
-
+/**
+ * Class containing several static methods to write and read Bitmap obejcts.
+ */
 public class BitmapIO {
 
-    private static MainActivity context = MainSingleton.INSTANCE.getContext();
 
     /**
-     *
-     * @return Point object size, where size.x == screenWidth and size.y == screenHeight
+     * @param id        int id from resource to load
+     * @param reqWidth  The desired width for the image.
+     * @param reqHeight The desired height for the image.
+     * @return returns scaled bitmap, see {@link fr.ubordeaux.pimp.util.Utils#calculateInSampleSize(int, int, int, int)}
      */
-    private static Point getScreenSize(){
-        //Get screen dimensions
-        Display display = context.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return size;
-
-    }
-
-    /**
-     *
-     * @param id int id from resource to load
-     * @return returns scaled bitmap from phone screen
-     */
-    public static Bitmap decodeAndScaleBitmapFromResource(int id){
-
-        //size.x == screenWidth, size.y == screenHeight
-        Point size = getScreenSize();
-
+    public static Bitmap decodeAndScaleBitmapFromResource(int id, int reqWidth, int reqHeight, Context context) {
         //Loads the image
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inJustDecodeBounds = true;
         //InScaled set to false because it matches in target density
         opt.inScaled = false;
-
         //Firstly, we don't load the image, we just get the dimensions to be able to re-scale it.
         BitmapFactory.decodeResource(context.getResources(), id, opt);
-
 
         opt.inMutable = true;
         opt.inJustDecodeBounds = false;
         //Rescaling
-        opt.inSampleSize = BitmapIO.calculateInSampleSize(opt, size.x, size.y);
+        opt.inSampleSize = Utils.calculateInSampleSize(opt.outWidth, opt.outHeight, reqWidth, reqHeight);
         return BitmapFactory.decodeResource(context.getResources(), id, opt);
 
     }
 
-    /**
-     * Calculates sample size of BitmapFactory.Options options with reqWidth and reqHeight
-     * @param options options from bitmap to downscale.
-     * @param reqWidth required bitmap width.
-     * @param reqHeight required bitmap height.
-     * @return scaled sample size to assign in options.inSampleSize.
-     */
-
-    private static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-        return inSampleSize;
-    }
 
     /**
-     *
-     * @param imageUri path to bitmap to load
-     * @return bitmap loaded and reescaled from uri
+     * @param imageUri  path to bitmap to load
+     * @param reqWidth  The desired width for the image.
+     * @param reqHeight The desired height for the image.
+     * @return bitmap loaded and scaled from uri, see {@link fr.ubordeaux.pimp.util.Utils#calculateInSampleSize(int, int, int, int)}
      */
 
-    private static Bitmap decodeAndScaleBitmapFromUri(Uri imageUri) {
+    public static Bitmap decodeAndScaleBitmapFromUri(Uri imageUri, int reqWidth, int reqHeight, Context context) {
         //Initialize Bitmap to null
         Bitmap selectedImage = null;
         try {
@@ -132,11 +71,8 @@ public class BitmapIO {
             assert imageStream != null;
             imageStream.close();
 
-            //Getting screen size to downscale size.x == screenWidth, size.y == screenHeight
-            Point size = getScreenSize();
-
             //Downscale
-            opt.inSampleSize = BitmapIO.calculateInSampleSize(opt, size.x, size.y);
+            opt.inSampleSize = Utils.calculateInSampleSize(opt.outWidth, opt.outHeight, reqWidth, reqHeight);
 
 
             opt.inJustDecodeBounds = false;
@@ -158,89 +94,8 @@ public class BitmapIO {
         }
     }
 
-    /**
-     * Starts intent to pick an image from gallery
-     */
-    public static void startGalleryActivity(){
-        //Photo intent
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-
-        photoPickerIntent.setType("image/*");
-        //Start activity and wait for result
-        context.startActivityForResult(photoPickerIntent, MainActivity.REQUEST_GET_SINGLE_FILE);
-    }
-
-    /**Async Task LoadImage**/
-
-    public static void LoadImageTask(final Uri uri, MainActivity activity) {
-        try {
-            BitmapAsync callback = new BitmapAsync() {
-                @Override
-                public Bitmap process() {
-                    return decodeAndScaleBitmapFromUri(uri);
-                }
-            };
-            new Task(callback, activity).execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**** SAVE METHODS ******/
-
-    private static String currentPhotoPath;
-
-    public static Uri getUriFromCameraFile() {
-        File f = new File(currentPhotoPath);
-        return Uri.fromFile(f);
-    }
-
-
-
-    private static File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.FRANCE).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    public static void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                ex.printStackTrace();
-                Toast.makeText(context, "Something went wrong", Toast.LENGTH_LONG).show();
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(context,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                //context.grantUriPermission("fr.ubordeaux.pimp", photoURI, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                context.startActivityForResult(takePictureIntent, MainActivity.REQUEST_TAKE_PHOTO);
-            }
-        }
-    }
-
-
-
-
 
 
 }

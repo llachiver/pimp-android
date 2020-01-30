@@ -1,0 +1,15 @@
+\section{Structure du projet :}
+
+\subsection{Classe \textbf{Image} :} \label{classeImage}
+Cette classe a été conçu comme une alternative à l'utilisation directe de la classe \textbf{Bitmap} fournie par Android.
+\\
+Le coeur de la classe est évidement une instance de Bitmap, qu'il est possible de récupérer à tout moment. Par ailleurs la classe offre des fonctionnalités supplémentaires, parmi celle ci notamment la possibilité de restaurer l'image à son état au moment de sa création ou de son chargement, via la méthode \textbf{reset()}.
+\\
+On notera la nécessité pour Image d'avoir la référence d'une Activité de l'application, en effet elle est requise à plusieurs moments par les librairies Android pour charger la Bitmap en mémoire.
+
+\subsection{Package \textbf{util} :}
+Ce package contient de nombreuses classes contenant des méthodes statiques permettant une meilleur factorisation du code.
+\\
+La classe \textbf{Utils} offre par exemple des méthodes pour récupérer la taille de l'écran ou pour calculer un ratio de redimensionnement.
+\\
+La classe \textbf{BitmapIO} permet d'effectuer le chargement d'une Bitmap de plusieurs manières, depuis les resources ou un autre emplacement du téléphone, et avec la taille voulue.
