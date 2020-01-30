@@ -3,10 +3,19 @@ package fr.ubordeaux.pimp.io;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -97,5 +106,49 @@ public class BitmapIO {
 
     /**** SAVE METHODS ******/
 
+    public static boolean saveBitmap(Bitmap imgBitmap, String fileNameOpening, Context context){
+
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
+        Date now = new Date();
+        String fileName = fileNameOpening + "_" + formatter.format(now) + ".jpeg";
+
+        FileOutputStream outStream;
+        try{
+            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
+            File saveDir =  new File(path + "/PimpImages/");
+
+            if(!saveDir.exists()) {
+                if (saveDir.mkdirs())
+                    Log.e("err", "mkdir worked");
+                else{
+                    Log.e("err", "mkdir didn't work");
+                }
+            }
+            File fileDir =  new File(saveDir, fileName);
+
+            outStream = new FileOutputStream(fileDir);
+            if (imgBitmap == null)
+                Toast.makeText(context, "Null pointer exception", Toast.LENGTH_LONG).show();
+            imgBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+
+            MediaScannerConnection.scanFile(context.getApplicationContext(),
+                    new String[] { fileDir.toString() }, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        public void onScanCompleted(String path, Uri uri) {
+                        }
+                    });
+
+            outStream.flush();
+            outStream.close();
+
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
 
 }
