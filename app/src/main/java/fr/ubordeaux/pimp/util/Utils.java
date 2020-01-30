@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Environment;
-import android.util.Pair;
 import android.view.Display;
-import android.view.View;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,7 +69,7 @@ public class Utils {
      *
      * @param context Activity which requested the creation of the file.
      * @return File object.
-     * @throws IOException
+     * @throws IOException IOException can appear because of File creation.
      */
     public static File createJPGFile(Context context) throws IOException {
         // Create an image file name
