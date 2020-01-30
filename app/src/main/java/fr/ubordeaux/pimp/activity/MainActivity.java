@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 
 import fr.ubordeaux.pimp.R;
+import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
@@ -156,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         updateIv();
 
         listeners();
+        Retouching.findMinMax(image.getBitmap(), this);
     }
 
 
@@ -173,8 +175,8 @@ public class MainActivity extends AppCompatActivity {
         sbBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                image.restoreBmp();
-                Retouching.setBrightness(image.getBmpCurrent(), progress-127, MainActivity.this);
+                image.reset();
+                Retouching.setBrightness(image.getBitmap(), progress-127, MainActivity.this);
             }
 
             @Override
@@ -192,8 +194,8 @@ public class MainActivity extends AppCompatActivity {
         sbSaturation.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                image.restoreBmp();
-                Retouching.setSaturation(image.getBmpCurrent(), progress-127, MainActivity.this);
+                image.reset();
+                Retouching.setSaturation(image.getBitmap(), progress-127, MainActivity.this);
             }
 
             @Override

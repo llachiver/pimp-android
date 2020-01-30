@@ -3,9 +3,12 @@ package fr.ubordeaux.pimp.filters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.renderscript.Allocation;
+import android.renderscript.Byte2;
 import android.renderscript.RenderScript;
+import android.renderscript.Short2;
 
 import fr.ubordeaux.pimp.ScriptC_brightness;
+import fr.ubordeaux.pimp.ScriptC_findMinMax;
 import fr.ubordeaux.pimp.ScriptC_saturation;
 
 public class Retouching {
@@ -17,9 +20,9 @@ public class Retouching {
     }
 
     /**
-     * Changes the image brightness following a factor.
+     * Increase or decrease the image brightness following a factor.
      * @param bmp the image to modify
-     * @param factor the brightness factor
+     * @param factor the brightness factor, whose range is based on the seekbar [-127 ; +127]
      */
     public static void setBrightness(Bitmap bmp, int factor, Context context){
         RenderScript rs = RenderScript.create(context);
@@ -40,9 +43,9 @@ public class Retouching {
     }
 
     /**
-     * Changes the image saturation following a factor.
+     * Increase or decrease the image saturation following a factor.
      * @param bmp the image to modify
-     * @param factor the brightness factor
+     * @param factor the saturation factor, whose range is based on the seekbar [-127 ; +127]
      */
     public static void setSaturation(Bitmap bmp, int factor, Context context){
         RenderScript rs = RenderScript.create(context);
@@ -60,6 +63,18 @@ public class Retouching {
         output.destroy();
         sBrightness.destroy();
         rs.destroy();
+    }
+
+    public static void findMinMax(Bitmap bmp, Context context){
+        RenderScript rs = RenderScript.create(context);
+        Allocation input = Allocation.createFromBitmap(rs, bmp);
+        ScriptC_findMinMax script = new ScriptC_findMinMax(rs);
+        Byte2 minmax;
+        minmax = script.reduce_findMinMax(input).get();
+        System.out.println("Min : " + minmax.x);
+        System.out.println("Max : " + minmax.y);
+
+
     }
 
 }
