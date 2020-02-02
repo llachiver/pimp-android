@@ -210,21 +210,13 @@ public class Image {
     }
 
     /**
-     * Export the current image to the devices gallery
-     *
-     * @param context n Activity launched in the device where you want to save your Image.
-     */
-    public void exportToGallery(Activity context ){
-        askSaveBitmap(context);
-    }
-
-    /**
+     *  Export the current image to the devices gallery
      * Ask for the user's permission if not yet given to store the current
      * image in the gallery before calling the function that saves it to the gallery.
      *
      * @param context n Activity launched in the device where you want to save your Image.
      */
-    public void askSaveBitmap(Activity context) {
+    public void exportToGallery(Activity context) {
         if (ContextCompat.checkSelfPermission(context,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {

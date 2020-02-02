@@ -22,7 +22,6 @@ import java.io.IOException;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.image.Image;
-import fr.ubordeaux.pimp.io.BitmapIO;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -217,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    BitmapIO.saveBitmap(image.getBitmap(), "pimp", this);
+                    image.exportToGallery(this);
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                     Toast.makeText(this, "Save success", Toast.LENGTH_SHORT).show();
