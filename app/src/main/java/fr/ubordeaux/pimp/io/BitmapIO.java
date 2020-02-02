@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -108,29 +109,30 @@ public class BitmapIO {
 
     public static boolean saveBitmap(Bitmap imgBitmap, String fileNameOpening, Context context){
 
-
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
         Date now = new Date();
         String fileName = fileNameOpening + "_" + formatter.format(now) + ".jpeg";
 
         FileOutputStream outStream;
-        try{
+
             File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
             File saveDir =  new File(path + "/PimpImages/");
 
             if(!saveDir.exists()) {
-                if (saveDir.mkdirs())
-                    Log.e("err", "mkdir worked");
-                else{
-                    Log.e("err", "mkdir didn't work");
-                }
+                saveDir.mkdirs();
             }
             File fileDir =  new File(saveDir, fileName);
 
+        try {
             outStream = new FileOutputStream(fileDir);
-            if (imgBitmap == null)
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+        if (imgBitmap == null)
                 Toast.makeText(context, "Null pointer exception", Toast.LENGTH_LONG).show();
+            assert imgBitmap != null;
             imgBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
 
             MediaScannerConnection.scanFile(context.getApplicationContext(),
@@ -139,15 +141,13 @@ public class BitmapIO {
                         public void onScanCompleted(String path, Uri uri) {
                         }
                     });
-
+        try {
             outStream.flush();
             outStream.close();
-
-        }catch(Exception e){
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
-
         return true;
     }
 

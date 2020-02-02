@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 updateIv(); //Update imageview
                 return true;
             case R.id.exportToGallery:
-                askSaveBitmap();
+                image.exportToGallery(this);
                 return true;
 
 
@@ -237,36 +237,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void askSaveBitmap() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-            BitmapIO.saveBitmap(image.getBitmap(), "pimp", this);
-            Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show();
 
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(this, "Permission is needed to save image", Toast.LENGTH_SHORT).show();
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            }
-
-
-            // No explanation needed, we can request the permission.
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_WRITE_EXTERNAL_STORAGE);
-
-            // MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE is an
-            // app-defined int constant. The callback method gets the
-            // result of the request.
-
-        }
-
-
-    }
 
 }
