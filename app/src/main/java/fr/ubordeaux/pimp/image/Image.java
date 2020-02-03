@@ -1,14 +1,23 @@
 package fr.ubordeaux.pimp.image;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
+import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import fr.ubordeaux.pimp.io.BitmapIO;
 import fr.ubordeaux.pimp.util.Utils;
+
+import static fr.ubordeaux.pimp.activity.MainActivity.REQUEST_WRITE_EXTERNAL_STORAGE;
 
 public class Image {
 
@@ -77,7 +86,7 @@ public class Image {
     /**
      * See {@link #Image(Uri, int, int, Activity)}
      *
-     * @param uri     Path of the picture to laod.
+     * @param uri     Path of the picture to load.
      * @param size    Point where x is width and y is height.
      * @param context An Activity launched in the device where you want to adapt your Image.
      */
@@ -200,5 +209,42 @@ public class Image {
         return uri;
     }
 
+    /**
+     *  Export the current image to the devices gallery
+     * Ask for the user's permission if not yet given to store the current
+     * image in the gallery before calling the function that saves it to the gallery.
+     *
+     * @param context n Activity launched in the device where you want to save your Image.
+     */
+    public void exportToGallery(Activity context) {
+        if (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            BitmapIO.saveBitmap(this.getBitmap(), "pimp", context);
+            Toast.makeText(context, "Saved successfully", Toast.LENGTH_SHORT).show();
 
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(context,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Toast.makeText(context, "Permission is needed to save image", Toast.LENGTH_SHORT).show();
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            }
+
+
+            // No explanation needed, we can request the permission.
+
+            ActivityCompat.requestPermissions(context,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_WRITE_EXTERNAL_STORAGE);
+
+            // MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+
+        }
+
+
+    }
 }
