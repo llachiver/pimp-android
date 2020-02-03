@@ -3,8 +3,10 @@ package fr.ubordeaux.pimp.io;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import androidx.annotation.RequiresApi;
 import fr.ubordeaux.pimp.util.Utils;
 
 /**
@@ -57,6 +60,7 @@ public class BitmapIO {
      * @return bitmap loaded and scaled from uri, see {@link fr.ubordeaux.pimp.util.Utils#calculateInSampleSize(int, int, int, int)}
      */
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public static Bitmap decodeAndScaleBitmapFromUri(Uri imageUri, int reqWidth, int reqHeight, Context context) {
         //Initialize Bitmap to null
         Bitmap selectedImage = null;
@@ -76,6 +80,7 @@ public class BitmapIO {
             //Getting width and height
             BitmapFactory.decodeStream(imageStream, null, opt);
 
+
             //Close stream
 
             assert imageStream != null;
@@ -92,10 +97,13 @@ public class BitmapIO {
             selectedImage = BitmapFactory.decodeStream(imageStream2, null, opt);
 
             assert imageStream2 != null;
+
+            //Get image orientation
+
             imageStream2.close();
 
+            return Utils.rotateImageIfRequired(selectedImage, context, imageUri);
 
-            return selectedImage;
 
 
         } catch (IOException e) {

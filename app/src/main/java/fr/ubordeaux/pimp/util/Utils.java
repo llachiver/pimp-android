@@ -2,8 +2,15 @@ package fr.ubordeaux.pimp.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Point;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.Display;
 
 import java.io.File;
@@ -11,6 +18,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
+
+import androidx.annotation.RequiresApi;
 
 /**
  * Class with static methods, usefull calculations for several things.
@@ -87,5 +97,79 @@ public class Utils {
         return image;
     }
 
+    /**
+     * Rotates a bitmap with degrees passed as parameter and return a new one
+     * @param bitmap bitmap to rotate
+     * @param degrees degrees to rotates
+     * @return new rotated bitmap
+     */
+    public static Bitmap rotateBitmap(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    /**
+     * Rotates a bitmap with boolean orientation
+     * @param bitmap bitmap to rotate
+     * @param horizontal rotate horizontal sens
+     * @param vertical rotate in vertical sens
+     * @return rotated bitmap
+     */
+    public static Bitmap flipBitmap(Bitmap bitmap, boolean horizontal, boolean vertical) {
+        Matrix matrix = new Matrix();
+        matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+
+    /**
+     * Checks if a bitmap with uri must be rotated checking context orientation, if it must to be rotated, return a new rotated bitmap.
+     *
+     * @see <a href="https://teamtreehouse.com/community/how-to-rotate-images-to-the-correct-orientation-portrait-by-editing-the-exif-data-once-photo-has-been-taken</a>
+     * @param selectedImage image to check and rotate
+     * @param context current mainActivity context
+     * @param imageUri uri from image
+     * @return a new bitmap rotated
+     * @throws IOException
+     */
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public static Bitmap rotateImageIfRequired(Bitmap selectedImage, Context context, Uri imageUri) throws IOException {
+
+        if (Objects.equals(imageUri.getScheme(), "content")) {
+            String[] projection = { MediaStore.Images.ImageColumns.ORIENTATION };
+            Cursor c = context.getContentResolver().query(imageUri, projection, null, null, null);
+            assert c != null;
+            if (c.moveToFirst()) {
+                final int rotation = c.getInt(0);
+                c.close();
+                return rotateBitmap(selectedImage, rotation);
+            }
+            return selectedImage;
+        } else {
+            ExifInterface ei = new ExifInterface(Objects.requireNonNull(imageUri.getPath()));
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    return Utils.rotateBitmap(selectedImage, 90);
+
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    return Utils.rotateBitmap(selectedImage, 180);
+
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    return Utils.rotateBitmap(selectedImage, 270);
+
+                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                    return Utils.flipBitmap(selectedImage, true, false);
+
+                case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                    return Utils.flipBitmap(selectedImage, false, true);
+
+                default:
+                    return selectedImage;
+            }
+        }
+    }
 
 }
