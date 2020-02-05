@@ -2,12 +2,15 @@ package fr.ubordeaux.pimp.filters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.icu.lang.UCharacter;
 import android.renderscript.Allocation;
 import android.renderscript.Byte2;
 import android.renderscript.RenderScript;
 import android.renderscript.Short2;
+import android.util.Log;
 
 import fr.ubordeaux.pimp.ScriptC_brightness;
+import fr.ubordeaux.pimp.ScriptC_dynamicExtension;
 import fr.ubordeaux.pimp.ScriptC_findMinMax;
 import fr.ubordeaux.pimp.ScriptC_saturation;
 
@@ -65,15 +68,34 @@ public class Retouching {
         rs.destroy();
     }
 
-    public static void findMinMax(Bitmap bmp, Context context){
+    public static void dynamicExtensionRGB(Bitmap bmp, int factor, Context context){
         RenderScript rs = RenderScript.create(context);
         Allocation input = Allocation.createFromBitmap(rs, bmp);
-        ScriptC_findMinMax script = new ScriptC_findMinMax(rs);
-        Byte2 minmax;
-        minmax = script.reduce_findMinMax(input).get();
-        System.out.println("Min : " + minmax.x);
-        System.out.println("Max : " + minmax.y);
 
+        ScriptC_findMinMax sMinMax = new ScriptC_findMinMax(rs);
+        Short2[] minMax;
+        sMinMax.set_luminanceMode(false);
+        minMax = sMinMax.reduce_findMinMax(input).get();
+        sMinMax.destroy();
+        if (minMax[0].x == minMax[0].y && minMax[1].x == minMax[1].y && minMax[2].x == minMax[2].y) //Exit if only one color
+            return;
+
+        for(int i = 0 ; i < 3 ; i++) {
+            Log.i("debugging", "min" + i + " : " + minMax[i].x);
+            Log.i("debugging", "max" + i + " : " + minMax[i].y);
+        }
+
+        Allocation output = Allocation.createTyped(rs, input.getType());
+
+        ScriptC_dynamicExtension sDynExtension = new ScriptC_dynamicExtension(rs);
+        sDynExtension.set_minMaxRGB(minMax);
+        sDynExtension.set_factor(factor);
+        sDynExtension.invoke_dynamicExtensionRGB(input, output);
+        output.copyTo(bmp);
+
+
+
+        rs.destroy();
 
     }
 

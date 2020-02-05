@@ -1,6 +1,11 @@
 #pragma version(1)
 #pragma rs java_package_name(fr.ubordeaux.pimp)
 
+//Truncates a color value for converting it into an unsigned char (from 0 to 255)
+static char truncate(int value){
+    return (uchar) (value < 0 ? 0 : (value > 255 ? 255 : value));
+}
+
 static float4 RGBtoHSV ( float4 pixelf ) {
     float k, cmin, cmax, delta, h, s, v;
     const float4 hsv;
