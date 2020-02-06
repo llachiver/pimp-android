@@ -15,7 +15,7 @@ bool luminanceMode;
 
 #pragma rs reduce(findMinMax) \
     initializer(fMMInit) accumulator(fMMAccumulator) \
-     combiner(fMMCombiner)
+     combiner(fMMCombiner) outconverter(fMMOutConverter)
 
 static void fMMInit(minMaxArr* accum) {
     for(uchar i = 0; i < NB_COLOR_CHANS; ++i){
@@ -29,9 +29,9 @@ static void fMMInit(minMaxArr* accum) {
 
 static void fMMAccumulator(minMaxArr* accum, uchar4 in){
     if(luminanceMode){
-        char value = max(max(in.r,in.g),in.b);
-        (*accum)[0].x = value < (*accum)[0].x ? value : (*accum)[0].x;
-        (*accum)[0].y = value > (*accum)[0].y ? value : (*accum)[0].y;
+        uchar value = max(max(in.r,in.g),in.b);
+        (*accum)[0].x = value <= (*accum)[0].x ? value : (*accum)[0].x;
+        (*accum)[0].y = value >= (*accum)[0].y ? value : (*accum)[0].y;
         return;
     }
 
@@ -43,9 +43,7 @@ static void fMMAccumulator(minMaxArr* accum, uchar4 in){
     (*accum)[2].y = in.b >= (*accum)[2].y ? in.b : (*accum)[2].y;
 }
 
-static void fMMCombiner(minMaxArr* accum, const minMaxArr* addend){}
-
-static void _fMMCombiner(minMaxArr* accum, const minMaxArr* addend){
+static void fMMCombiner(minMaxArr* accum, const minMaxArr* addend){
     for(uchar i = 0; i < NB_COLOR_CHANS; ++i){
         if ((((*accum)[i]).x < 0) || (((*addend)[i]).x < ((*accum)[i]).x))
             (*accum)[i].x = (*addend)[i].x;
@@ -55,5 +53,15 @@ static void _fMMCombiner(minMaxArr* accum, const minMaxArr* addend){
             break;
         }
     }
+}
+
+static void fMMOutConverter(minMaxArr * result, const minMaxArr * accum){
+      for(uchar i = 0; i < NB_COLOR_CHANS; ++i){
+        (*result)[i].x = (*accum)[i].x;
+        (*result)[i].y = (*accum)[i].y;
+        if (luminanceMode){
+            break;
+        }
+      }
 }
 
