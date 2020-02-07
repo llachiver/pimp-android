@@ -1,16 +1,19 @@
 package fr.ubordeaux.pimp.activity;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
@@ -64,19 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Inflate upper menu
-     *
-     * @param menu to inflate
-     * @return true if menu inflated with success
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }
-
-
-    /**
      * Load image from internal storage
      *
      * @param reqCode    request code to identify user's choice
@@ -119,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
      * @param item Item chosen by user.
      * @return true user click on an item.
      */
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -140,12 +128,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.imageInfo:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.contentFragment, infosFragment).commit(); // Show infos fragment
-                //TODO getSupportFragmentManager().popBackStackImmediate();
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.contentFragment, infosFragment);
+                ft.addToBackStack("info_fragment");
+                ft.commit();
                 return true;
-
-
             default:
                 super.onOptionsItemSelected(item);
         }
@@ -168,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //TODO move the followging code in onActivityCreated() methods in Fragments class
+    //TODO move the followging code in onActivityCreated() methods in Fragments class ?
     @Override
     protected void onStart() {
         super.onStart();
@@ -187,7 +174,11 @@ public class MainActivity extends AppCompatActivity {
     //BugFix loadImage
     @Override
     public void onBackPressed() {
-        moveTaskToBack(true);
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0)
+            fm.popBackStack();
+        else
+            super.onBackPressed();
     }
 
 
@@ -256,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
                 // permissions this app might request.
         }
     }
-
 
 
 }
