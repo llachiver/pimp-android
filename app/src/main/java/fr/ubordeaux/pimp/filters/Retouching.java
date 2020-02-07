@@ -9,6 +9,9 @@ package fr.ubordeaux.pimp.filters;
         import android.renderscript.Short2;
         import android.util.Log;
 
+        import fr.ubordeaux.pimp.ScriptC_cumulatedHistogram;
+
+        import fr.ubordeaux.pimp.ScriptC_assignLut;
         import fr.ubordeaux.pimp.ScriptC_brightness;
         import fr.ubordeaux.pimp.ScriptC_dynamicExtension;
         import fr.ubordeaux.pimp.ScriptC_findMinMax;
@@ -23,7 +26,7 @@ public class Retouching {
     }
 
     /**
-     * Sets the brightness of an image by adding a factor to the existing luminance.
+     * Sets the brightness of an image by adding a factor to the existing brightness.
      * @param bmp the image to modify
      * @param factor the brightness factor, whose range is based on the seekbar [-127 ; +127]
      */
@@ -80,7 +83,7 @@ public class Retouching {
 
         ScriptC_findMinMax sMinMax = new ScriptC_findMinMax(rs);
         Short2[] minMax;
-        sMinMax.set_luminanceMode(false);
+        sMinMax.set_valueMode(false);
         minMax = sMinMax.reduce_findMinMax(input).get();
         sMinMax.destroy();
         if (minMax[0].x == minMax[0].y && minMax[1].x == minMax[1].y && minMax[2].x == minMax[2].y) //Exit if only one color
@@ -110,11 +113,13 @@ public class Retouching {
 
         ScriptC_findMinMax sMinMax = new ScriptC_findMinMax(rs);
         Short2[] minMax;
-        sMinMax.set_luminanceMode(true);
+        sMinMax.set_valueMode(true);
         minMax = sMinMax.reduce_findMinMax(input).get();
         sMinMax.destroy();
         if (minMax[0].x == minMax[0].y) //Exit if only one color
             return;
+
+        System.out.println(minMax[0].x);
 
         Allocation output = Allocation.createTyped(rs, input.getType());
 
@@ -124,6 +129,40 @@ public class Retouching {
         sDynExtension.invoke_dynamicExtensionGray(input, output);
         output.copyTo(bmp);
 
+        rs.destroy();
+    }
+
+    public static void histogramEqualization(Bitmap bmp, Context context){
+        RenderScript rs = RenderScript.create(context); //Create base renderscript
+
+        Allocation input = Allocation.createFromBitmap(rs, bmp); //Bitmap input
+
+        ScriptC_cumulatedHistogram histoScript = new ScriptC_cumulatedHistogram(rs);
+
+        histoScript.set_size(bmp.getWidth() * bmp.getHeight());
+
+        short[] LUTValue;
+
+        LUTValue = histoScript.reduce_LUTCumulatedHistogram(input).get(); //Get result
+
+        System.out.println(LUTValue[127]);
+
+        histoScript.destroy();
+
+        Allocation output = Allocation.createTyped(rs, input.getType());
+
+        ScriptC_assignLut lut = new ScriptC_assignLut(rs);
+
+        lut.set_lutSingle(LUTValue);
+
+        lut.forEach_assignLutHSV(input,output);
+
+
+        //Keep only one chann
+        output.copyTo(bmp);
+        input.destroy();
+        output.destroy();
+        lut.destroy();
         rs.destroy();
     }
 }

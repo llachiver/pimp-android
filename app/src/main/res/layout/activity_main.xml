@@ -165,6 +165,10 @@
                 android:id="@+id/sbContrast"
                 android:max="255" />
         </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </TableLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

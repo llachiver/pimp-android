@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
         SeekBar sbBrightness = this.findViewById(R.id.sbBrightness);
         SeekBar sbSaturation = this.findViewById(R.id.sbSaturation);
         SeekBar sbContrast = this.findViewById(R.id.sbContrast);
+        Button bEqualization = this.findViewById(R.id.bEqualization);
 
         sbBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -237,6 +238,14 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+        });
+
+        bEqualization.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
+            }
         });
 
     }

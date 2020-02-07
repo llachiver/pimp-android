@@ -1,11 +1,12 @@
 #pragma version (1)
-#pragma rs java_package_name ( com.example.ColorStudio)
+#pragma rs java_package_name (fr.ubordeaux.pimp)
 #pragma rs_fp_relaxed
 
 #define NBR_COLOR_CHANS 3
 #define LUT_SIZE 256
 
 #include "utils.rs"
+
 
 //the contrast factor, controlled by the user with the seekbar
 int factor;
@@ -21,6 +22,7 @@ uchar2 minMaxGray;
 
 //the new min & max of the value of the bitmap (after the dynamic extension)
 uchar2 newMinMaxGray;
+
 
 //LUT for the 3 RGB channels
 static uchar3 lutRGB [LUT_SIZE];
