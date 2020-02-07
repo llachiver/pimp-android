@@ -164,10 +164,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //BugFix loadImage
+    /*
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
-    }
+    }*/
 
 
     /**
