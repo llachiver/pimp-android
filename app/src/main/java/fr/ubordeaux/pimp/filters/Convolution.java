@@ -10,7 +10,7 @@ import fr.ubordeaux.pimp.ScriptC_convolution;
 
 public class Convolution {
 
-    public static void convolve2d(Bitmap bmp, float [] kernel, int kWidth, int kHeight, boolean normalize, Context context){
+    public static void convolve2d(Bitmap bmp, float [] kernel, int kWidth, int kHeight, boolean normalize, boolean mirrorPadding , Context context){
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
         ScriptC_convolution sConvolution = new ScriptC_convolution(rs); //Create script
@@ -33,6 +33,7 @@ public class Convolution {
         sConvolution.set_width(bmp.getWidth());
         sConvolution.set_kWidth(kWidth);
         sConvolution.set_kHeight(kHeight);
+        sConvolution.set_mirrorPadding(mirrorPadding);
         sConvolution.invoke_setup(); //Initialize kCenters
 
         //Allocate output

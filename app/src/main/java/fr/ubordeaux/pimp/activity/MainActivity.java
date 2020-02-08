@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
-                Convolution.convolve2d(image.getBitmap(), kernel, 3, 3,  true, MainActivity.this);
+                Convolution.convolve2d(image.getBitmap(), kernel, 3, 3,  true, false, MainActivity.this);
                 updateIv();
             }
         });

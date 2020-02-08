@@ -9,16 +9,19 @@ static uint32_t kCenterX, kCenterY;
 float kdiv; //For normalize pixel with total value of kernel
 float* kernel;
 bool normal;
+bool mirrorPadding;
 
 
 void conv2d(const uchar4* in, uchar4* out, uint32_t x, uint32_t y){
-    if(x < kCenterX || y < kCenterY){ *out = *in; return;}
-    if ((x > width - kCenterX) || (y > height - kCenterY)){ *out = *in; return;}//Respect bounds
-
+    if( ( (x < kCenterX || y < kCenterY) ) || ( (x > width - kCenterX) || (y > height - kCenterY) ) ) {
+        if (mirrorPadding)
+            *out = *in;
+        return;
+    }
     uint8_t kx, ky;
     float4 temp = 0;
-    const uchar4* kin = in - (kCenterX) - (kCenterY) * width;
-    //rsDebug("Totona", &in);
+    const uchar4* kin = in - (kCenterX) - (kCenterY) * width; //Bugging shit
+    //rsDebug("kIn", *kin);
     //You can do better than your code and java if you seek only in the good values range...
     for(kx = 0; kx < kWidth; kx++)
     {
