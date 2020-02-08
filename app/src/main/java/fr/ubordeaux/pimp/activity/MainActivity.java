@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 
 import fr.ubordeaux.pimp.R;
+import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
@@ -29,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     /////////////////////////////////////////////////////////////////////////////////////
     // Settings :
     /////////////////////////////////////////////////////////////////////////////////////
-    private static int DEFAULT_IMAGE = R.drawable.starwars;
+    private static int DEFAULT_IMAGE = R.drawable.zzz;
 
 
     //Image currently modified.
@@ -159,14 +163,91 @@ public class MainActivity extends AppCompatActivity {
 
         //Allow more zooming
         iv.setMaximumScale(10);
-        //Set imageview bitmap
+
         updateIv();
+
+        listeners();
     }
+
+
 
     //BugFix loadImage
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
+    }
+
+    public void listeners(){
+        SeekBar sbBrightness = this.findViewById(R.id.sbBrightness);
+        SeekBar sbSaturation = this.findViewById(R.id.sbSaturation);
+        SeekBar sbContrast = this.findViewById(R.id.sbContrast);
+        Button bEqualization = this.findViewById(R.id.bEqualization);
+
+        sbBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                image.reset();
+                Retouching.setBrightness(image.getBitmap(), progress-127, MainActivity.this);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+        });
+
+        sbSaturation.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                image.reset();
+                Retouching.setSaturation(image.getBitmap(), progress-127, MainActivity.this);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+        });
+
+        sbContrast.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                image.reset();
+                Retouching.dynamicExtensionGray(image.getBitmap(), progress, MainActivity.this);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+        });
+
+        bEqualization.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
+            }
+        });
+
     }
 
 
