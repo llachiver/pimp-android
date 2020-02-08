@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     /////////////////////////////////////////////////////////////////////////////////////
     // Settings :
     /////////////////////////////////////////////////////////////////////////////////////
-    private static int DEFAULT_IMAGE = R.drawable.zzz;
+    private static int DEFAULT_IMAGE = R.drawable.starwars;
 
 
     //Image currently modified.
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 image.reset();
-                Retouching.dynamicExtensionGray(image.getBitmap(), progress, MainActivity.this);
+                Retouching.dynamicExtensionRGB(image.getBitmap(), progress, MainActivity.this);
             }
 
             @Override

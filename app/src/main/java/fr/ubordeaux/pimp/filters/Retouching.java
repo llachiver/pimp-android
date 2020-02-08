@@ -9,7 +9,7 @@ package fr.ubordeaux.pimp.filters;
         import android.renderscript.Short2;
         import android.util.Log;
 
-        import fr.ubordeaux.pimp.ScriptC_cumulatedHistogram;
+        import fr.ubordeaux.pimp.ScriptC_cummulativeHistogram;
 
         import fr.ubordeaux.pimp.ScriptC_assignLut;
         import fr.ubordeaux.pimp.ScriptC_brightness;
@@ -32,8 +32,8 @@ public class Retouching {
      */
     public static void setBrightness(Bitmap bmp, int factor, Context context){
         RenderScript rs = RenderScript.create(context);
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
+        Allocation input = Allocation.createFromBitmap(rs, bmp); //Bitmap input
+        Allocation output = Allocation.createTyped(rs, input.getType()); //Bitmap output
 
         ScriptC_brightness sBrightness = new ScriptC_brightness(rs);
 
@@ -54,20 +54,22 @@ public class Retouching {
      * @param factor the saturation factor, whose range is based on the seekbar [-127 ; +127]
      */
     public static void setSaturation(Bitmap bmp, int factor, Context context){
+        //We normalize the factor between -1 and 1.
+        float factorRS = factor/127f;
         RenderScript rs = RenderScript.create(context);
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
-        Allocation output = Allocation.createTyped(rs, input.getType());
+        Allocation input = Allocation.createFromBitmap(rs, bmp); //Bitmap input
+        Allocation output = Allocation.createTyped(rs, input.getType()); //Bitmap output
 
         ScriptC_saturation sBrightness = new ScriptC_saturation(rs);
 
-        sBrightness.set_factor(factor);
+        sBrightness.set_factor(factorRS);
         sBrightness.forEach_setSaturation(input, output);
 
         output.copyTo(bmp);
 
+        sBrightness.destroy();
         input.destroy();
         output.destroy();
-        sBrightness.destroy();
         rs.destroy();
     }
 
@@ -79,8 +81,10 @@ public class Retouching {
      */
     public static void dynamicExtensionRGB(Bitmap bmp, int factor, Context context){
         RenderScript rs = RenderScript.create(context);
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
+        Allocation input = Allocation.createFromBitmap(rs, bmp); //Bitmap input
+        Allocation output = Allocation.createTyped(rs, input.getType()); //Bitmap output
 
+        //We compute the min and max value of the image.
         ScriptC_findMinMax sMinMax = new ScriptC_findMinMax(rs);
         Short2[] minMax;
         sMinMax.set_valueMode(false);
@@ -89,14 +93,15 @@ public class Retouching {
         if (minMax[0].x == minMax[0].y && minMax[1].x == minMax[1].y && minMax[2].x == minMax[2].y) //Exit if only one color
             return;
 
-        Allocation output = Allocation.createTyped(rs, input.getType());
-
+        //We extend the dynamic
         ScriptC_dynamicExtension sDynExtension = new ScriptC_dynamicExtension(rs);
         sDynExtension.set_minMaxRGB(minMax);
         sDynExtension.set_factor(factor);
         sDynExtension.invoke_dynamicExtensionRGB(input, output);
         output.copyTo(bmp);
 
+        input.destroy();
+        output.destroy();
         rs.destroy();
     }
 
@@ -109,7 +114,8 @@ public class Retouching {
      */
     public static void dynamicExtensionGray(Bitmap bmp, int factor, Context context){
         RenderScript rs = RenderScript.create(context);
-        Allocation input = Allocation.createFromBitmap(rs, bmp);
+        Allocation input = Allocation.createFromBitmap(rs, bmp); //Bitmap input
+        Allocation output = Allocation.createTyped(rs, input.getType()); //Bitmap output
 
         ScriptC_findMinMax sMinMax = new ScriptC_findMinMax(rs);
         Short2[] minMax;
@@ -119,47 +125,42 @@ public class Retouching {
         if (minMax[0].x == minMax[0].y) //Exit if only one color
             return;
 
-        System.out.println(minMax[0].x);
-
-        Allocation output = Allocation.createTyped(rs, input.getType());
-
         ScriptC_dynamicExtension sDynExtension = new ScriptC_dynamicExtension(rs);
         sDynExtension.set_minMaxGray(minMax[0]);
         sDynExtension.set_factor(factor);
         sDynExtension.invoke_dynamicExtensionGray(input, output);
         output.copyTo(bmp);
 
+        input.destroy();
+        output.destroy();
         rs.destroy();
     }
 
+    /**
+     * Equalizes the histogram of the image.
+     * @param bmp
+     * @param context
+     */
     public static void histogramEqualization(Bitmap bmp, Context context){
         RenderScript rs = RenderScript.create(context); //Create base renderscript
 
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Bitmap input
+        Allocation output = Allocation.createTyped(rs, input.getType()); //Bitmap output
 
-        ScriptC_cumulatedHistogram histoScript = new ScriptC_cumulatedHistogram(rs);
-
+        //We compute the LUT extracted from the cummulative histogram.
+        ScriptC_cummulativeHistogram histoScript = new ScriptC_cummulativeHistogram(rs);
         histoScript.set_size(bmp.getWidth() * bmp.getHeight());
-
         short[] LUTValue;
-
-        LUTValue = histoScript.reduce_LUTCumulatedHistogram(input).get(); //Get result
-
-        System.out.println(LUTValue[127]);
-
+        LUTValue = histoScript.reduce_LUTCummulativeHistogram(input).get();
         histoScript.destroy();
 
-        Allocation output = Allocation.createTyped(rs, input.getType());
-
+        //Then we assign the LUT values to the image with the assignLut script.
         ScriptC_assignLut lut = new ScriptC_assignLut(rs);
-
         lut.set_lutSingle(LUTValue);
-
         lut.forEach_assignLutHSV(input,output);
 
-
-        //Keep only one chann
         output.copyTo(bmp);
+
         input.destroy();
         output.destroy();
         lut.destroy();
