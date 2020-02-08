@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 
 import fr.ubordeaux.pimp.R;
+import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
@@ -40,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
     private Image image;
 
     private PhotoView iv;
+    private float[] kernel = {
+            1.f, 1.f, 1.f,
+            1.f, 1.f, 1.f,
+            1.f, 1.f, 1.f,
+    };
 
     public Image getImage() {
         return image;
@@ -182,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
         SeekBar sbSaturation = this.findViewById(R.id.sbSaturation);
         SeekBar sbContrast = this.findViewById(R.id.sbContrast);
         Button bEqualization = this.findViewById(R.id.bEqualization);
+        Button bConvolution = this.findViewById(R.id.bConvolution);
 
         sbBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -245,6 +252,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
+                //Convolution.convolve2d(image.getBitmap(), kernel, true, MainActivity.this);
+                updateIv();
+            }
+        });
+
+        bConvolution.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
+                Convolution.convolve2d(image.getBitmap(), kernel, 3, 3,  true, MainActivity.this);
+                updateIv();
             }
         });
 
