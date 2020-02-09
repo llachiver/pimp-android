@@ -155,15 +155,18 @@
 
             <SeekBar
                 android:id="@+id/sbBrightness"
-                android:max="255" />
+                android:max="255"
+                android:progress="127" />
 
             <SeekBar
                 android:id="@+id/sbSaturation"
-                android:max="255" />
+                android:max="255"
+                android:progress="127" />
 
             <SeekBar
                 android:id="@+id/sbContrast"
-                android:max="255" />
+                android:max="255"
+                android:progress="127" />
         </TableRow>
 
         <TableRow
