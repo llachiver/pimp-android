@@ -88,6 +88,14 @@ float4 RS_KERNEL convX(uchar4 in, uint32_t x, uint32_t y){
 }
 */
 
+/*
+* Must be called with this options!
+    rs_script_call_t options = {0};
+    options.xStart = kCenterX;
+    options.yStart = kCenterY;
+    options.xEnd = width - kCenterX;
+    options.yEnd = height - kCenterY;
+    **/
 
 uchar4 RS_KERNEL conv2dSobel(uchar4 in, uint32_t x, uint32_t y) //Image must be gray!!
 {
@@ -101,13 +109,13 @@ uchar4 RS_KERNEL conv2dSobel(uchar4 in, uint32_t x, uint32_t y) //Image must be 
     {
         for(kx = x - kCenterX; kx <= x + kCenterX ;kx++)
         {
-           if (kx >= (kCenterX) && kx <= (width - kCenterX) && ky >= (kCenterY) && ky <= (height - kCenterY))
-           {
+           //if (kx >= (kCenterX) && kx <= (width - kCenterX) && ky >= (kCenterY) && ky <= (height - kCenterY))
+           //{
                 pixelf = rsUnpackColor8888( rsGetElementAt_uchar4(pOut, kx, ky)); //Get only one channel cause greyscale image
                 tempX += pixelf.r * sobelX[kIndex];
                 tempY += pixelf.r * sobelY[kIndex];
                 kIndex++;
-           }
+           //}
 
 
         }
@@ -119,15 +127,24 @@ uchar4 RS_KERNEL conv2dSobel(uchar4 in, uint32_t x, uint32_t y) //Image must be 
 }
 
 
+
+
 void setup(){
     kCenterX = kWidth/2;
     kCenterY = kHeight/2;
 }
 
+
 void sobelOperator(rs_allocation inputImage, rs_allocation outputImage){
     rsForEach(grey, inputImage, outputImage); // Turn to gray
     setup(); //Init kCenters
-    rsForEach(conv2dSobel, outputImage, inputImage); //recycle allocation
+    rs_script_call_t options = {0};
+    options.xStart = kCenterX;
+    options.yStart = kCenterY;
+    options.xEnd = width - kCenterX;
+    options.yEnd = height - kCenterY;
+    rsForEachWithOptions(conv2dSobel, &options , outputImage, inputImage); //recycle allocation
+
 
 
 }
