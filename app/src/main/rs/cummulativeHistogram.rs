@@ -1,5 +1,6 @@
 #pragma version (1)
 #pragma rs java_package_name ( fr.ubordeaux.pimp)
+#pragma rs_fp_relaxed
 
 //Accumulator declaration
 #pragma rs reduce(histogram) \

@@ -41,9 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private Image image;
 
     private PhotoView iv;
-    private float[] kernel = {
-            -1.0f, -1.0f, -1.0f, -1.0f, 8.0f, -1.0f, -1.0f, -1.0f, -1.0f,
-    };
 
     public Image getImage() {
         return image;
@@ -188,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         SeekBar sbContrast = this.findViewById(R.id.sbContrast);
         Button bEqualization = this.findViewById(R.id.bEqualization);
         Button bConvolution = this.findViewById(R.id.bConvolution);
+        Button bContrast = this.findViewById(R.id.bContrast);
 
         sbBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -262,7 +260,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
 
-                Convolution.convolve2d(image.getBitmap(), kernel, 3, 3,  true, false, MainActivity.this);
+                Convolution.averageBlur3x3(image.getBitmap(), MainActivity.this);
+                updateIv();
+            }
+        });
+
+        bContrast.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
+                //Convolution.convolve2d(image.getBitmap(), kernelBlur, 3, 3,true, MainActivity.this);
+                Convolution.sobelOperator(image.getBitmap(), MainActivity.this);
                 updateIv();
             }
         });

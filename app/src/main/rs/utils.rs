@@ -1,5 +1,7 @@
 #pragma version(1)
 #pragma rs java_package_name(fr.ubordeaux.pimp)
+#pragma rs_fp_relaxed
+
 
 //Truncates a color value for converting it into an unsigned char (from 0 to 255)
 static char truncate(int value){
@@ -107,4 +109,21 @@ static float4 HSVtoRGB ( float4 hsv ) {
     }
     pixelf.s3 = hsv.a;
     return pixelf;
+}
+
+//Gray constants
+static const float4 weight = {0.299f, 0.587f, 0.114f, 0.0f};
+
+uchar4 RS_KERNEL grey ( uchar4 in  ) {
+
+    const float4 pixelf = rsUnpackColor8888 ( in ) ;
+
+    const float gray = dot(pixelf , weight);
+
+
+    uchar4 out = rsPackColorTo8888 ( gray , gray , gray , pixelf.a ) ;
+
+
+
+    return out;
 }
