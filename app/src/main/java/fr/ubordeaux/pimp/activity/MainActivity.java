@@ -42,9 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private PhotoView iv;
     private float[] kernel = {
-            1.f, 1.f, 1.f,
-            1.f, 1.f, 1.f,
-            1.f, 1.f, 1.f,
+            -1.0f, -1.0f, -1.0f, -1.0f, 8.0f, -1.0f, -1.0f, -1.0f, -1.0f,
     };
 
     public Image getImage() {
@@ -148,7 +146,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.exportToGallery:
                 image.exportToGallery(this);
                 return true;
-
+            case R.id.imageInfo:
+                Toast.makeText(this, "Width = "+ image.getWidth() + " Heigth = " + image.getHeight(), Toast.LENGTH_SHORT).show();
 
             default:
                 super.onOptionsItemSelected(item);
@@ -262,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
+
                 Convolution.convolve2d(image.getBitmap(), kernel, 3, 3,  true, false, MainActivity.this);
                 updateIv();
             }

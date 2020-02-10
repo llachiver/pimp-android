@@ -24,7 +24,7 @@ public class Convolution {
 
         sConvolution.bind_kernel(kAlloc);
         float totalNormalize = 0.f;
-        for (float f : kernel) totalNormalize += f; //Compute normalizing coefficient
+        for (float f : kernel) totalNormalize += Math.abs(f); //Compute normalizing coefficient
 
         //Initialize global variables
         sConvolution.set_kdiv(totalNormalize);
@@ -34,6 +34,7 @@ public class Convolution {
         sConvolution.set_kWidth(kWidth);
         sConvolution.set_kHeight(kHeight);
         sConvolution.set_mirrorPadding(mirrorPadding);
+        sConvolution.set_pIn(input);
         sConvolution.invoke_setup(); //Initialize kCenters
 
         //Allocate output
