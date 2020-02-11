@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
 
-                Convolution.averageBlur3x3(image.getBitmap(), MainActivity.this);
+                Convolution.averageBlur5x5(image.getBitmap(), MainActivity.this);
                 updateIv();
             }
         });

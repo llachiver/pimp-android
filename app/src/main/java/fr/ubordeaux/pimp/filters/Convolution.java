@@ -115,8 +115,8 @@ public class Convolution {
         sobelXAlloc.destroy();
         sobelYAlloc.destroy();
 
-
-
-
     }
+
+
+
 }

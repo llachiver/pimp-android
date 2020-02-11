@@ -17,7 +17,8 @@ bool normal;
 
 uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
 {
-
+    if (!(x >= (kCenterX) && x < (width - kCenterX) && y >= (kCenterY) && y < (height - kCenterY)))
+        return rsPackColorTo8888(0.0f,0.0f,0.0f,1.0f);
     uint32_t kx, ky;
     float4 temp = 0;
 
@@ -26,11 +27,10 @@ uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
     {
         for(kx = x - kCenterX; kx <= x + kCenterX ;kx++)
         {
-           if (kx >= (kCenterX) && kx <= (width - kCenterX) && ky >= (kCenterY) && ky <= (height - kCenterY))
-           {
-                temp += rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, ky)) * kernel[kIndex];
-                kIndex++;
-           }
+
+            temp += rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, ky)) * kernel[kIndex];
+            kIndex++;
+
         }
     }
 
@@ -40,65 +40,13 @@ uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
     temp.a = 1.00f;
     return rsPackColorTo8888(temp);
 }
-/*
-float4 RS_KERNEL convY(uchar4 in, uint32_t x, uint32_t y){
-    uint32_t ky;
-    float4 temp = 0;
 
-    uint32_t kIndex = 0;
-    for(ky = y - kCenterY; ky <= y + kCenterY ;ky++)
-    {
-       if (ky >= (kCenterY) && ky <= (height - kCenterY))
-           {
-           temp += rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, ky)) * kernel[kIndex];
-           kIndex++;
-           }
-        }
-    }
 
-    if (normal) temp /= kdiv; //Normalize
-    temp = fabs(temp);
-
-    temp.a = 1.00f;
-    return temp;
-
-}
-
-float4 RS_KERNEL convX(uchar4 in, uint32_t x, uint32_t y){
-    uint32_t kx;
-    float4 temp = 0;
-
-    uint32_t kIndex = 0;
-    for(kx = x - kCenterX; kx <= x + kCenterX ;kx++)
-    {
-        if (kx >= (kCenterX) && kx <= (width - kCenterX))
-           {
-           temp += rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, y)) * kernel[kIndex];
-           kIndex++;
-           }
-        }
-    }
-
-    if (normal) temp /= kdiv; //Normalize
-    temp = fabs(temp);
-
-    temp.a = 1.00f;
-    return temp;
-
-}
-*/
-
-/*
-* Must be called with this options!
-    rs_script_call_t options = {0};
-    options.xStart = kCenterX;
-    options.yStart = kCenterY;
-    options.xEnd = width - kCenterX;
-    options.yEnd = height - kCenterY;
-    **/
 
 uchar4 RS_KERNEL conv2dSobel(uchar4 in, uint32_t x, uint32_t y) //Image must be gray!!
 {
+    if (!(x >= (kCenterX) && x < (width - kCenterX) && y >= (kCenterY) && y < (height - kCenterY)))
+        return rsPackColorTo8888(0.0f,0.0f,0.0f,1.0f);
     uint32_t kx, ky;
     float sum = 0;
     float tempX = 0;
@@ -109,13 +57,12 @@ uchar4 RS_KERNEL conv2dSobel(uchar4 in, uint32_t x, uint32_t y) //Image must be 
     {
         for(kx = x - kCenterX; kx <= x + kCenterX ;kx++)
         {
-           //if (kx >= (kCenterX) && kx <= (width - kCenterX) && ky >= (kCenterY) && ky <= (height - kCenterY))
-           //{
-                pixelf = rsUnpackColor8888( rsGetElementAt_uchar4(pOut, kx, ky)); //Get only one channel cause greyscale image
-                tempX += pixelf.r * sobelX[kIndex];
-                tempY += pixelf.r * sobelY[kIndex];
-                kIndex++;
-           //}
+
+            pixelf = rsUnpackColor8888( rsGetElementAt_uchar4(pOut, kx, ky)); //Get only one channel cause greyscale image
+            tempX += pixelf.r * sobelX[kIndex];
+            tempY += pixelf.r * sobelY[kIndex];
+            kIndex++;
+
 
 
         }
@@ -138,15 +85,8 @@ void setup(){
 void sobelOperator(rs_allocation inputImage, rs_allocation outputImage){
     rsForEach(grey, inputImage, outputImage); // Turn to gray
     setup(); //Init kCenters
-    rs_script_call_t options = {0};
-    options.xStart = kCenterX;
-    options.yStart = kCenterY;
-    options.xEnd = width - kCenterX;
-    options.yEnd = height - kCenterY;
-    rsForEachWithOptions(conv2dSobel, &options , outputImage, inputImage); //recycle allocation
-
-
-
+    rsForEach(conv2dSobel,outputImage,inputImage);
 }
+
 
 
