@@ -27,6 +27,7 @@ import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.util.Kernels;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -259,8 +260,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
-
-                Convolution.averageBlur5x5(image.getBitmap(), MainActivity.this);
+                float[] kernel = Kernels.gauss(3);
+                Convolution.convolve2dSeparable(image.getBitmap(),kernel,kernel,true, MainActivity.this);
                 updateIv();
             }
         });
