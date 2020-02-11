@@ -1,5 +1,7 @@
 package fr.ubordeaux.pimp.util;
 
+import android.util.Log;
+
 public class Kernels {
 
     //Sobel Filter
@@ -44,17 +46,23 @@ public class Kernels {
             1.0f, -2.0f, 1.0f,
     };
 
+    public static final float[] CLEARNESS = {
+            0.0f, -1.0f, 0.0f,
+    };
+
+
+
     //-------------------------------------
 
 
     //Separated kernel (to use for both x and y kernels)
-    public static final float[] gauss(int size) {
+    public static float[] gauss(int size, float sigma) {
         //Test if size is even
         float[] kernel = new float[size];
-        float sigma = 0.8f;
-        for(int x = 0 ; x < size ; ++x)
-            kernel[x] = (float) ((1/(Math.sqrt(2*(Math.PI)*sigma*sigma))) * Math.exp(-((x - size/2)*(x - size/2)/(2*sigma*sigma))));
-
+        for(int x = 0 ; x < size ; ++x) {
+            kernel[x] = (float) ((1 / (Math.sqrt(2 * (Math.PI) * sigma * sigma))) * Math.exp(-((x - size / 2) * (x - size / 2) / (2 * sigma * sigma))));
+            Log.e("VALUES " + String.valueOf(x), String.valueOf(kernel[x]));
+        }
         return kernel;
     }
 

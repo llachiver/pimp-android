@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
-                float[] kernel = Kernels.gauss(3);
+                float[] kernel = Kernels.gauss(5,1f);
                 Convolution.convolve2dSeparable(image.getBitmap(),kernel,kernel,true, MainActivity.this);
                 updateIv();
             }

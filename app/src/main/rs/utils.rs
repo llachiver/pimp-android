@@ -127,3 +127,12 @@ uchar4 RS_KERNEL grey ( uchar4 in  ) {
 
     return out;
 }
+
+uchar4 RS_KERNEL invert (uchar4 in ) {
+    uchar4 out;
+    out.r = 255 - in.r;
+    out.g = 255 - in.g;
+    out.b = 255 - in.b;
+    return out;
+
+}
