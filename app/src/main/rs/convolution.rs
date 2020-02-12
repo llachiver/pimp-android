@@ -28,14 +28,17 @@ const int* edgesY;
 
 const float* kernelX;
 const float* kernelY;
-//Normalize parameter must be set as true the most of cases
+//Normalize parameter must be set as true in the most of cases
 bool normal;
 
 
 uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
 {
-    if (!(x >= (kCenterX) && x < (width - kCenterX) && y >= (kCenterY) && y < (height - kCenterY)))
-        return rsPackColorTo8888(0.0f,0.0f,0.0f,1.0f);
+    uchar4 ret = 0;
+    if (!(x >= (kCenterX) && x < (width - kCenterX) && y >= (kCenterY) && y < (height - kCenterY))){
+        ret.a = in.a;
+        return ret;
+    }
     uint32_t kx, ky;
     float4 temp = 0;
 
@@ -54,16 +57,20 @@ uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
     if (normal) temp /= kdiv; //Normalize
     temp = fabs(temp);
 
-    temp.a = 1.00f;
-    return rsPackColorTo8888(temp);
+    ret =  rsPackColorTo8888(temp);
+    ret.a = in.a;
+    return ret;
 }
 
 
 
 uchar4 RS_KERNEL conv2dEdges(uchar4 in, uint32_t x, uint32_t y) //Image must be gray!!
 {
-    if (!(x >= (kCenterX) && x < (width - kCenterX) && y >= (kCenterY) && y < (height - kCenterY)))
-        return rsPackColorTo8888(0.0f,0.0f,0.0f,1.0f);
+    uchar4 ret = 0;
+    if (!(x >= (kCenterX) && x < (width - kCenterX) && y >= (kCenterY) && y < (height - kCenterY))){
+        ret.a = in.a;
+        return ret;
+    }
     uint32_t kx, ky;
     float4 sum = 0;
     float4 tempX = 0;
@@ -88,17 +95,18 @@ uchar4 RS_KERNEL conv2dEdges(uchar4 in, uint32_t x, uint32_t y) //Image must be 
     sum = fabs(tempX) + fabs(tempY);
     sum.a = 1.0f;
 
-    return rsPackColorTo8888(sum);
+    ret = rsPackColorTo8888(sum);
+    ret.a = in.a;
+    return ret;
 }
 
 
 
 uchar4 RS_KERNEL conv2dX(uchar4 in, uint32_t x, uint32_t y){
-
-    float4 ret = 0;
-    ret.a = 1.0f;
+    uchar4 ret = 0;
     if (!(x >= (kCenterX) && x < (width - kCenterX))){
-        return rsPackColorTo8888(ret);
+        ret.a = in.a;
+        return ret;
     }
     uint32_t kx;
     float4 tmp = 0;
@@ -106,21 +114,24 @@ uchar4 RS_KERNEL conv2dX(uchar4 in, uint32_t x, uint32_t y){
 
     for(kx = x - kCenterX; kx <= x + kCenterX ;kx++)
     {
-        tmp = rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, y)); //Get only one channel cause greyscale image
-        ret += tmp * kernelX[kIndex];
+        tmp += rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, y))* kernelX[kIndex];
         kIndex++;
     }
-    if (normal) ret /= kdivX; //Normalize
+    if (normal) tmp /= kdivX; //Normalize
 
-    return rsPackColorTo8888(ret);
+    tmp = fabs(tmp);
+
+    ret = rsPackColorTo8888(tmp);
+    ret.a = in.a;
+    return ret;
 }
 
 
 uchar4 RS_KERNEL conv2dY(uchar4 in, uint32_t x, uint32_t y){
-    float4 ret = 0;
-    ret.a = 1.0f;
+    uchar4 ret = 0;
     if (!(y >= (kCenterY) && y < (height - kCenterY))){
-        return rsPackColorTo8888(ret);
+        ret.a = in.a;
+        return ret;
     }
     uint32_t ky;
     float4 tmp = 0;
@@ -128,16 +139,17 @@ uchar4 RS_KERNEL conv2dY(uchar4 in, uint32_t x, uint32_t y){
 
     for(ky = y - kCenterY; ky <= y + kCenterY ;ky++)
     {
-        tmp = rsUnpackColor8888(rsGetElementAt_uchar4(pTmp, x, ky)); //Get only one channel cause greyscale image
-        ret += tmp * kernelY[kIndex];
+        tmp += rsUnpackColor8888(rsGetElementAt_uchar4(pTmp, x, ky)) * kernelY[kIndex];; //Get only one channel cause greyscale image
         kIndex++;
     }
     //??
-    if (normal) ret /= kdivY; //Normalize
+    if (normal) tmp /= kdivY; //Normalize
+    tmp = fabs(tmp);
 
-    ret = fabs(ret);
 
-    return rsPackColorTo8888(ret);
+    ret = rsPackColorTo8888(tmp);
+    ret.a = in.a;
+    return ret;
 }
 
 
