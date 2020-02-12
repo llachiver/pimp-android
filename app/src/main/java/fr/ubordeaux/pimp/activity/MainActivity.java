@@ -260,8 +260,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
-                float[] kernel = Kernels.gauss(5,1f);
-                Convolution.convolve2dSeparable(image.getBitmap(),kernel,kernel,true, MainActivity.this);
+                int [] kernelX = {1,4,6,4,1};
+                Convolution.convolve2dSeparable(image.getBitmap(), kernelX, kernelX ,true, MainActivity.this);
                 updateIv();
             }
         });
@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
                 //Convolution.convolve2d(image.getBitmap(), kernelBlur, 3, 3,true, MainActivity.this);
-                Convolution.sobelOperator(image.getBitmap(), MainActivity.this);
+                Convolution.edgeDetection(image.getBitmap(), Kernels.SOBEL_X, Kernels.SOBEL_Y, MainActivity.this);
                 updateIv();
             }
         });

@@ -11,7 +11,7 @@ import fr.ubordeaux.pimp.util.Kernels;
 
 public class Convolution {
 
-    public static void convolve2d(Bitmap bmp, float [] kernel, int kWidth, int kHeight, boolean normalize, Context context){
+    public static void convolve2d(Bitmap bmp, int [] kernel, int kWidth, int kHeight, boolean normalize, Context context){
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
         ScriptC_convolution sConvolution = new ScriptC_convolution(rs); //Create script
@@ -20,12 +20,12 @@ public class Convolution {
 
         //sConvolution.set_square_ksize(squareSize);
 
-        Allocation kAlloc = Allocation.createSized(rs, Element.F32(rs),kernel.length); //Allocate memory for kernel
+        Allocation kAlloc = Allocation.createSized(rs, Element.I32(rs),kernel.length); //Allocate memory for kernel
         kAlloc.copyFrom(kernel); //Copy data from kernel
 
         sConvolution.bind_kernel(kAlloc);
-        float totalNormalize = 0.f;
-        for (float f : kernel) totalNormalize += Math.abs(f); //Compute normalizing coefficient
+        int totalNormalize = 0;
+        for (int f : kernel) totalNormalize += Math.abs(f); //Compute normalizing coefficient
 
         //Initialize global variables
         sConvolution.set_kdiv(totalNormalize);
@@ -54,7 +54,8 @@ public class Convolution {
 
     }
 
-    public static void convolve2dSeparable(Bitmap bmp, float[] kernelX, float[] kernelY, boolean normalize, Context context){
+    public static void convolve2dSeparable(Bitmap bmp, int[] kernelX, int[] kernelY, boolean normalize, Context context){
+        int kXsize = kernelX.length; int kYsize = kernelY.length;
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
         ScriptC_convolution sConvolution = new ScriptC_convolution(rs); //Create script
@@ -63,23 +64,28 @@ public class Convolution {
 
         //sConvolution.set_square_ksize(squareSize);
 
-        Allocation kAllocX = Allocation.createSized(rs, Element.F32(rs),kernelX.length); //Allocate memory for kernel
+        Allocation kAllocX = Allocation.createSized(rs, Element.I32(rs),kXsize); //Allocate memory for kernel
         kAllocX.copyFrom(kernelX); //Copy data from kernel
-        Allocation kAllocY = Allocation.createSized(rs, Element.F32(rs),kernelY.length); //Allocate memory for kernel
+        Allocation kAllocY = Allocation.createSized(rs, Element.I32(rs),kYsize); //Allocate memory for kernel
         kAllocY.copyFrom(kernelY); //Copy data from kernel
 
         sConvolution.bind_kernelX(kAllocX);
         sConvolution.bind_kernelY(kAllocY);
 
-        float totalNormalize = 0.f;
-        for (float x : kernelX){
-            for (float y : kernelY){
-                totalNormalize += Math.abs(x * y); //Compute normalizing coefficient
-            }
+        int normalizeX = 0;
+        int normalizeY = 0;
+        for (int x : kernelX){
+            normalizeX += Math.abs(x);
+        }
+        for (int y : kernelX) {
+            normalizeY += Math.abs(y);
         }
 
-        //Initialize global variables
-        sConvolution.set_kdiv(totalNormalize);
+
+
+            //Initialize global variables
+        sConvolution.set_kdivX(normalizeX);
+        sConvolution.set_kdivY(normalizeY);
         sConvolution.set_normal(normalize);
         sConvolution.set_height(bmp.getHeight());
         sConvolution.set_width(bmp.getWidth());
@@ -94,6 +100,7 @@ public class Convolution {
         //Launch script
         sConvolution.invoke_convolutionSeparable(input,output);
         //Copy to bmp
+
         output.copyTo(bmp);
         //Free memory
         rs.destroy();
@@ -104,40 +111,25 @@ public class Convolution {
         kAllocY.destroy();
     }
 
-    public static void averageBlur3x3(Bitmap bmp, Context context){
-        float [] kernel = new float[9];
-        for(int i = 0; i < kernel.length ; i++) kernel[i] = 1.0f;
-        convolve2d(bmp, kernel, 3, 3, true, context);
-    }
-    public static void averageBlur5x5(Bitmap bmp, Context context){
-        float [] kernel = new float[25];
-        for(int i = 0; i < kernel.length ; i++) kernel[i] = 1.0f;
-        convolve2d(bmp, kernel, 5, 5, true, context);
-    }
-
 
     //To replace by an edge detector method ?
-    public static void sobelOperator(Bitmap bmp, Context context){
+    public static void edgeDetection(Bitmap bmp, int[] kernelX, int[] kernelY, Context context){
         //Create context
+        int kXsize = kernelX.length; int kYsize = kernelY.length;
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
         Allocation output = Allocation.createTyped(rs, input.getType());
         ScriptC_convolution sConvolution = new ScriptC_convolution(rs); //Create script
 
-        //Declare sobel X and Y operators
-        float[] sobelX = Kernels.SOBEL_X;
-
-        float[] sobelY = Kernels.SOBEL_Y;
-
         //Allocating sobel operators for RS
-        Allocation sobelXAlloc = Allocation.createSized(rs, Element.F32(rs),sobelX.length); //Allocate memory for kernel
-        sobelXAlloc.copyFrom(sobelX); //Copy data from kernel
-        Allocation sobelYAlloc = Allocation.createSized(rs, Element.F32(rs),sobelY.length); //Allocate memory for kernel
-        sobelYAlloc.copyFrom(sobelY); //Copy data from kernel
+        Allocation kernelXAlloc = Allocation.createSized(rs, Element.I32(rs),kXsize); //Allocate memory for kernel
+        kernelXAlloc.copyFrom(kernelX); //Copy data from kernel
+        Allocation kernelYAlloc = Allocation.createSized(rs, Element.I32(rs),kYsize); //Allocate memory for kernel
+        kernelYAlloc.copyFrom(kernelY); //Copy data from kernel
 
         //Bind global variables
-        sConvolution.bind_kernelX(sobelXAlloc);
-        sConvolution.bind_kernelY(sobelYAlloc);
+        sConvolution.bind_kernelX(kernelXAlloc);
+        sConvolution.bind_kernelY(kernelYAlloc);
         sConvolution.set_height(bmp.getHeight());
         sConvolution.set_width(bmp.getWidth());
         sConvolution.set_kWidth(3);
@@ -150,14 +142,15 @@ public class Convolution {
 
 
         sConvolution.invoke_sobelOperator(input, output);
-        input.copyTo(bmp); //Input because it is recycled
+
+        output.copyTo(bmp); //Input because it is recycled
         //Free memory
         rs.destroy();
         sConvolution.destroy();
         input.destroy();
         output.destroy();
-        sobelXAlloc.destroy();
-        sobelYAlloc.destroy();
+        kernelXAlloc.destroy();
+        kernelYAlloc.destroy();
 
     }
 
