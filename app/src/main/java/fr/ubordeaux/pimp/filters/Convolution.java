@@ -11,7 +11,7 @@ import fr.ubordeaux.pimp.util.Kernels;
 
 public class Convolution {
 
-    public static void convolve2d(Bitmap bmp, int [] kernel, int kWidth, int kHeight, boolean normalize, Context context){
+    public static void convolve2d(Bitmap bmp, float [] kernel, int kWidth, int kHeight, boolean normalize, Context context){
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
         ScriptC_convolution sConvolution = new ScriptC_convolution(rs); //Create script
@@ -20,12 +20,12 @@ public class Convolution {
 
         //sConvolution.set_square_ksize(squareSize);
 
-        Allocation kAlloc = Allocation.createSized(rs, Element.I32(rs),kernel.length); //Allocate memory for kernel
+        Allocation kAlloc = Allocation.createSized(rs, Element.F32(rs),kWidth * kHeight); //Allocate memory for kernel
         kAlloc.copyFrom(kernel); //Copy data from kernel
 
         sConvolution.bind_kernel(kAlloc);
-        int totalNormalize = 0;
-        for (int f : kernel) totalNormalize += Math.abs(f); //Compute normalizing coefficient
+        float totalNormalize = 0;
+        for (float f : kernel) totalNormalize += Math.abs(f); //Compute normalizing coefficient
 
         //Initialize global variables
         sConvolution.set_kdiv(totalNormalize);
@@ -54,7 +54,7 @@ public class Convolution {
 
     }
 
-    public static void convolve2dSeparable(Bitmap bmp, int[] kernelX, int[] kernelY, boolean normalize, Context context){
+    public static void convolve2dSeparable(Bitmap bmp, float[] kernelX, float[] kernelY, boolean normalize, Context context){
         int kXsize = kernelX.length; int kYsize = kernelY.length;
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
@@ -64,20 +64,20 @@ public class Convolution {
 
         //sConvolution.set_square_ksize(squareSize);
 
-        Allocation kAllocX = Allocation.createSized(rs, Element.I32(rs),kXsize); //Allocate memory for kernel
+        Allocation kAllocX = Allocation.createSized(rs, Element.F32(rs),kXsize); //Allocate memory for kernel
         kAllocX.copyFrom(kernelX); //Copy data from kernel
-        Allocation kAllocY = Allocation.createSized(rs, Element.I32(rs),kYsize); //Allocate memory for kernel
+        Allocation kAllocY = Allocation.createSized(rs, Element.F32(rs),kYsize); //Allocate memory for kernel
         kAllocY.copyFrom(kernelY); //Copy data from kernel
 
         sConvolution.bind_kernelX(kAllocX);
         sConvolution.bind_kernelY(kAllocY);
 
-        int normalizeX = 0;
-        int normalizeY = 0;
-        for (int x : kernelX){
+        float normalizeX = 0;
+        float normalizeY = 0;
+        for (float x : kernelX){
             normalizeX += Math.abs(x);
         }
-        for (int y : kernelX) {
+        for (float y : kernelX) {
             normalizeY += Math.abs(y);
         }
 
@@ -89,8 +89,8 @@ public class Convolution {
         sConvolution.set_normal(normalize);
         sConvolution.set_height(bmp.getHeight());
         sConvolution.set_width(bmp.getWidth());
-        sConvolution.set_kWidth(kernelX.length);
-        sConvolution.set_kHeight(kernelY.length);
+        sConvolution.set_kWidth(kXsize);
+        sConvolution.set_kHeight(kYsize);
         sConvolution.set_pIn(input);
         sConvolution.invoke_setup(); //Initialize kCenters
 
@@ -128,8 +128,8 @@ public class Convolution {
         kernelYAlloc.copyFrom(kernelY); //Copy data from kernel
 
         //Bind global variables
-        sConvolution.bind_kernelX(kernelXAlloc);
-        sConvolution.bind_kernelY(kernelYAlloc);
+        sConvolution.bind_edgesX(kernelXAlloc);
+        sConvolution.bind_edgesY(kernelYAlloc);
         sConvolution.set_height(bmp.getHeight());
         sConvolution.set_width(bmp.getWidth());
         sConvolution.set_kWidth(3);
@@ -141,7 +141,7 @@ public class Convolution {
 
 
 
-        sConvolution.invoke_sobelOperator(input, output);
+        sConvolution.invoke_edgeDetection(input, output);
 
         output.copyTo(bmp); //Input because it is recycled
         //Free memory

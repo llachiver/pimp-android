@@ -45,17 +45,6 @@ public class Kernels {
     //-------------------------------------
 
 
-    //Separated kernel (to use for both x and y kernels)
-    public static final int[] LAPLACIAN = {
-            1, -2, 1,
-    };
-
-    public static final int[] CLEARNESS = {
-            0, -1, 0,
-    };
-
-
-
 
 
 
@@ -63,19 +52,19 @@ public class Kernels {
 
 
     //Separated kernel (to use for both x and y kernels)
-    public static int[] gauss(int size, float sigma) {
+    public static float[] gauss(int size, float sigma) {
         //Test if size is even
-        int[] kernel = new int[size];
+        float[] kernel = new float[size];
         for(int x = 0 ; x < size ; ++x) {
-            kernel[x] = (int) ((1 / (Math.sqrt(2 * (Math.PI) * sigma * sigma))) * Math.exp(-((x - size / 2) * (x - size / 2) / (2 * sigma * sigma))));
+            kernel[x] = (float) ((1 / (Math.sqrt(2 * (Math.PI) * sigma * sigma))) * Math.exp(-((x - size / 2) * (x - size / 2) / (2 * sigma * sigma))));
         }
         return kernel;
     }
 
     //Separated kernel (to use for both x and y kernels)
-    public static int[] mean(int size) {
+    public static float[] mean(int size) {
         //Test if size is even
-        int[] kernel = new int[size];
+        float[] kernel = new float[size];
         for(int x = 0 ; x < size ; ++x)
             kernel[x] = 1;
 

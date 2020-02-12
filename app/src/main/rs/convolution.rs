@@ -9,15 +9,26 @@ rs_allocation pOut;
 //intermediate image after horizontal convolution
 rs_allocation pTmp;
 
+//**Filter parameters **/
 uint32_t width, height;
 uint32_t kWidth, kHeight;
 static uint32_t kCenterX, kCenterY;
-uint32_t kdivX; //For normalize pixel with total value of kernel
-uint32_t kdivY; //For normalize pixel with total value of kernel
-uint32_t kdiv; //For normalize pixel with total value of kernel
-const int* kernel;
-const int* kernelX;
-const int* kernelY;
+
+///////////////////////////////////////////////
+float kdivX; //For normalize pixel with total value of kernel
+float kdivY; //For normalize pixel with total value of kernel
+float kdiv; //For normalize pixel with total value of kernel
+//For classic convoltion-------
+const float* kernel;
+//--------------
+//For edge detection int multiplication is more faster than float----
+const int* edgesX;
+const int* edgesY;
+//---
+
+const float* kernelX;
+const float* kernelY;
+//Normalize parameter must be set as true the most of cases
 bool normal;
 
 
@@ -49,7 +60,7 @@ uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
 
 
 
-uchar4 RS_KERNEL conv2dSobel(uchar4 in, uint32_t x, uint32_t y) //Image must be gray!!
+uchar4 RS_KERNEL conv2dEdges(uchar4 in, uint32_t x, uint32_t y) //Image must be gray!!
 {
     if (!(x >= (kCenterX) && x < (width - kCenterX) && y >= (kCenterY) && y < (height - kCenterY)))
         return rsPackColorTo8888(0.0f,0.0f,0.0f,1.0f);
@@ -65,8 +76,8 @@ uchar4 RS_KERNEL conv2dSobel(uchar4 in, uint32_t x, uint32_t y) //Image must be 
         {
 
             pixelf = rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, ky)); //Get only one channel cause greyscale image
-            tempX += pixelf * kernelX[kIndex];
-            tempY += pixelf * kernelY[kIndex];
+            tempX += pixelf * edgesX[kIndex];
+            tempY += pixelf * edgesY[kIndex];
             kIndex++;
 
 
@@ -143,15 +154,14 @@ void convolutionSeparable(rs_allocation inputImage, rs_allocation outputImage){
 
     rsForEach(conv2dX,inputImage, pTmp);
     rsForEach(conv2dY,pTmp, outputImage);
-}
+    rsClearObject(&pTmp);
+    }
 
 
-void sobelOperator(rs_allocation inputImage, rs_allocation outputImage){
-    //rsForEach(grey, inputImage, outputImage); // Turn to gray
+void edgeDetection(rs_allocation inputImage, rs_allocation outputImage){
     setup(); //Init kCenters
 
-    //We send back the image into input for gaining memory
-    rsForEach(conv2dSobel,inputImage,outputImage);
+    rsForEach(conv2dEdges,inputImage,outputImage);
 }
 
 
