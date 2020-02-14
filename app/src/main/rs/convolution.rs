@@ -17,9 +17,9 @@ static uint32_t kCenterX, kCenterY;
 ///////////////////////////////////////////////
 float kdivX; //For normalize pixel with total value of kernel
 float kdivY; //For normalize pixel with total value of kernel
-float kdiv; //For normalize pixel with total value of kernel
+int kdiv; //For normalize pixel with total value of kernel
 //For classic convoltion-------
-const float* kernel;
+const int* kernel;
 //--------------
 //For edge detection int multiplication is more faster than float----
 const int* edgesX;

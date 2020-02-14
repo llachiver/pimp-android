@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         Button bEqualization = this.findViewById(R.id.bEqualization);
         Button bConvolution = this.findViewById(R.id.bConvolution);
         Button bContrast = this.findViewById(R.id.bContrast);
+        Button bSelectHue = this.findViewById(R.id.bSelectHue);
 
         sbBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -260,8 +261,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
-                float [] kernel = Kernels.gauss(5, 4);
-                Convolution.convolve2dSeparable(image.getBitmap(), kernel, kernel ,true, MainActivity.this);
+                Convolution.convolve2d(image.getBitmap(), Kernels.LAPLACIAN, 3, 3, true, MainActivity.this );
                 updateIv();
             }
         });
@@ -273,6 +273,19 @@ public class MainActivity extends AppCompatActivity {
                 //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
                 //Convolution.convolve2d(image.getBitmap(), kernelBlur, 3, 3,true, MainActivity.this);
                 Convolution.edgeDetection(image.getBitmap(), Kernels.SOBEL_X, Kernels.SOBEL_Y, MainActivity.this);
+                updateIv();
+            }
+        });
+
+        bSelectHue.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
+                //Convolution.convolve2d(image.getBitmap(), kernelBlur, 3, 3,true, MainActivity.this);
+                float [] keke = Kernels.gauss(9, 1.4f);
+                Kernels.laplace(9,9, 1.4f);
+                Convolution.convolve2dSeparable(image.getBitmap(), Kernels.mean(9), Kernels.mean(9), true, MainActivity.this);
                 updateIv();
             }
         });

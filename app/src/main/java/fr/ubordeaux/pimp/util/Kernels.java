@@ -17,6 +17,14 @@ public class Kernels {
     };
     //-------------------------------------
 
+    public static final int[] LAPLACIAN = {
+            -1, -1, -1,
+            -1, 8, -1,
+            -1, -1, -1,
+    };
+
+
+
     //Sobel Filter
     public static final int[] KIRSCH_X = {
               5,  5,  5,
@@ -56,7 +64,7 @@ public class Kernels {
         //Test if size is even
         float[] kernel = new float[size];
         for(int x = 0 ; x < size ; ++x) {
-            kernel[x] = (float) ((1 / (Math.sqrt(2 * (Math.PI) * sigma * sigma))) * Math.exp(-((x - size / 2) * (x - size / 2) / (2 * sigma * sigma))));
+            kernel[x] = (float) ((1 / (Math.sqrt(2 * (Math.PI) * sigma * sigma))) * Math.exp(-((x - size >> 1) * (x - size >> 1) / (2 * sigma * sigma))));
         }
         return kernel;
     }
@@ -70,6 +78,23 @@ public class Kernels {
 
         return kernel;
     }
+
+    public static float[][] laplace(int width, int height, float sigma) { //Needs to debug
+
+        float [][] kernel = new float[width][height];
+
+        for(int y = 0; y < height; y++){
+            for (int x = 0; x < width; x++){
+                float res =  ((((x >> 1) * (x >> 1) ) + ((y >> 1) * (y >> 1) )) / (2*(sigma*sigma))) ;
+                kernel[x][y] = (float) ( - ( 1/ (Math.PI * Math.pow(sigma, 4))) * (1 - res) * Math.exp((-res)));
+                Log.e("VALUES", String.valueOf(x) + "   " + String.valueOf(y) + "   " +  String.valueOf(kernel[x][y]));
+            }
+        }
+        return kernel;
+
+    }
+
+
 
 
 
