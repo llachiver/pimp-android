@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
             fm.popBackStack();
         else
             super.onBackPressed();
-        moveTaskToBack(true);
     }
 
 
