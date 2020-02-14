@@ -11,7 +11,8 @@ import fr.ubordeaux.pimp.util.Kernels;
 
 public class Convolution {
 
-    public static void convolve2d(Bitmap bmp, int [] kernel, int kWidth, int kHeight, boolean normalize, Context context){
+    public static void convolve2d(Bitmap bmp, float [] kernel, int kWidth, int kHeight, boolean normalize, Context context){
+        if (kWidth % 2 == 0 || kHeight % 2 == 0) return; //Pair kernels not allowed
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
         ScriptC_convolution sConvolution = new ScriptC_convolution(rs); //Create script
@@ -20,12 +21,12 @@ public class Convolution {
 
         //sConvolution.set_square_ksize(squareSize);
 
-        Allocation kAlloc = Allocation.createSized(rs, Element.I32(rs),kWidth * kHeight); //Allocate memory for kernel
+        Allocation kAlloc = Allocation.createSized(rs, Element.F32(rs),kWidth * kHeight); //Allocate memory for kernel
         kAlloc.copyFrom(kernel); //Copy data from kernel
 
         sConvolution.bind_kernel(kAlloc);
-        int totalNormalize = 0;
-        for (int f : kernel) totalNormalize += Math.abs(f); //Compute normalizing coefficient
+        float totalNormalize = 0;
+        for (float f : kernel) totalNormalize += Math.abs(f); //Compute normalizing coefficient
 
         //Initialize global variables
         sConvolution.set_kdiv(totalNormalize);
@@ -117,6 +118,7 @@ public class Convolution {
     public static void edgeDetection(Bitmap bmp, int[] kernelX, int[] kernelY, Context context){
         //Create context
         int kXsize = kernelX.length; int kYsize = kernelY.length;
+        if (kXsize != kYsize) return;
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
         Allocation output = Allocation.createTyped(rs, input.getType());

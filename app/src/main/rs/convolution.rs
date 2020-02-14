@@ -17,9 +17,9 @@ static uint32_t kCenterX, kCenterY;
 ///////////////////////////////////////////////
 float kdivX; //For normalize pixel with total value of kernel
 float kdivY; //For normalize pixel with total value of kernel
-int kdiv; //For normalize pixel with total value of kernel
+float kdiv; //For normalize pixel with total value of kernel
 //For classic convoltion-------
-const int* kernel;
+const float* kernel;
 //--------------
 //For edge detection int multiplication is more faster than float----
 const int* edgesX;
@@ -49,12 +49,14 @@ uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
         {
 
             temp += rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, ky)) * kernel[kIndex];
+
             kIndex++;
 
         }
     }
 
     if (normal) temp /= kdiv; //Normalize
+    //temp *= 1.6f;
     temp = fabs(temp);
 
     ret =  rsPackColorTo8888(temp);

@@ -16,6 +16,8 @@ package fr.ubordeaux.pimp.filters;
         import fr.ubordeaux.pimp.ScriptC_dynamicExtension;
         import fr.ubordeaux.pimp.ScriptC_findMinMax;
         import fr.ubordeaux.pimp.ScriptC_saturation;
+        import fr.ubordeaux.pimp.ScriptC_utils;
+        import fr.ubordeaux.pimp.io.BitmapIO;
 
 public class Retouching {
 
@@ -166,4 +168,24 @@ public class Retouching {
         lut.destroy();
         rs.destroy();
     }
+
+    public static void toGray(Bitmap bmp, Context context){
+        RenderScript rs = RenderScript.create(context);
+
+        Allocation input = Allocation.createFromBitmap(rs, bmp);
+        Allocation output = Allocation.createTyped(rs, input.getType());
+
+        ScriptC_utils grayScript = new ScriptC_utils(rs);
+
+        grayScript.forEach_grey(input,output);
+
+        output.copyTo(bmp);
+
+        input.destroy();
+        output.destroy();
+        rs.destroy();
+        grayScript.destroy();
+
+    }
+
 }

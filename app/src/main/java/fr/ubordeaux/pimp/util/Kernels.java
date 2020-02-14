@@ -17,7 +17,7 @@ public class Kernels {
     };
     //-------------------------------------
 
-    public static final int[] LAPLACIAN = {
+    public static final float[] LAPLACIAN3x3 = {
             -1, -1, -1,
             -1, 8, -1,
             -1, -1, -1,
@@ -25,7 +25,7 @@ public class Kernels {
 
 
 
-    //Sobel Filter
+    //KIRSCH Filter
     public static final int[] KIRSCH_X = {
               5,  5,  5,
              -3,  0, -3,
@@ -64,7 +64,8 @@ public class Kernels {
         //Test if size is even
         float[] kernel = new float[size];
         for(int x = 0 ; x < size ; ++x) {
-            kernel[x] = (float) ((1 / (Math.sqrt(2 * (Math.PI) * sigma * sigma))) * Math.exp(-((x - size >> 1) * (x - size >> 1) / (2 * sigma * sigma))));
+            kernel[x] = (float) ((1 / (Math.sqrt(2 * (Math.PI) * sigma * sigma))) * Math.exp(-((x - (size >> 1)) * (x - (size >> 1)) / (2 * sigma * sigma))));
+
         }
         return kernel;
     }
@@ -79,15 +80,20 @@ public class Kernels {
         return kernel;
     }
 
-    public static float[][] laplace(int width, int height, float sigma) { //Needs to debug
+    public static float[] laplaceOfGauss(int width, int height, float sigma) {
 
-        float [][] kernel = new float[width][height];
+        float [] kernel = new float[width * height];
+
 
         for(int y = 0; y < height; y++){
             for (int x = 0; x < width; x++){
-                float res =  ((((x >> 1) * (x >> 1) ) + ((y >> 1) * (y >> 1) )) / (2*(sigma*sigma))) ;
-                kernel[x][y] = (float) ( - ( 1/ (Math.PI * Math.pow(sigma, 4))) * (1 - res) * Math.exp((-res)));
-                Log.e("VALUES", String.valueOf(x) + "   " + String.valueOf(y) + "   " +  String.valueOf(kernel[x][y]));
+                int index = x + (y * width);
+
+                float res =  ((((x - (width >> 1)) * (x - (width >> 1)) ) + ((y - (height >> 1)) * (y - (height >> 1)) )) / (2*(sigma*sigma))) ;
+                kernel[index] = (float) ( - ( 1/ (Math.PI * Math.pow(sigma, 4))) * (1 - res) * Math.exp((-res)));
+                //kernel[index] *= 1000;
+                Log.e("VALUES", String.valueOf(x) + " " + String.valueOf(y) + "   " + String.valueOf(kernel[index]));
+
             }
         }
         return kernel;

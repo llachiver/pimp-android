@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         SeekBar sbSaturation = this.findViewById(R.id.sbSaturation);
         SeekBar sbContrast = this.findViewById(R.id.sbContrast);
         Button bEqualization = this.findViewById(R.id.bEqualization);
+        Button bGray = this.findViewById(R.id.bGray);
         Button bConvolution = this.findViewById(R.id.bConvolution);
         Button bContrast = this.findViewById(R.id.bContrast);
         Button bSelectHue = this.findViewById(R.id.bSelectHue);
@@ -246,12 +247,21 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        bGray.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Retouching.toGray(image.getBitmap(), MainActivity.this);
+                updateIv();
+            }
+        });
+
+
         bEqualization.setOnClickListener(new Button.OnClickListener(){
 
             @Override
             public void onClick(View v) {
                 Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
-                //Convolution.convolve2d(image.getBitmap(), kernel, true, MainActivity.this);
                 updateIv();
             }
         });
@@ -260,8 +270,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
-                Convolution.convolve2d(image.getBitmap(), Kernels.LAPLACIAN, 3, 3, true, MainActivity.this );
+                Convolution.convolve2d(image.getBitmap(), Kernels.laplaceOfGauss(9,9,1.8f), 9, 9 , true, MainActivity.this );
                 updateIv();
             }
         });
@@ -270,8 +279,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
-                //Convolution.convolve2d(image.getBitmap(), kernelBlur, 3, 3,true, MainActivity.this);
+
                 Convolution.edgeDetection(image.getBitmap(), Kernels.SOBEL_X, Kernels.SOBEL_Y, MainActivity.this);
                 updateIv();
             }
@@ -281,11 +289,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                //Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
-                //Convolution.convolve2d(image.getBitmap(), kernelBlur, 3, 3,true, MainActivity.this);
-                float [] keke = Kernels.gauss(9, 1.4f);
-                Kernels.laplace(9,9, 1.4f);
-                Convolution.convolve2dSeparable(image.getBitmap(), Kernels.mean(9), Kernels.mean(9), true, MainActivity.this);
+                float [] gauss = Kernels.gauss(9,1.2f);
+                Convolution.convolve2dSeparable(image.getBitmap(), gauss, gauss, true, MainActivity.this);
                 updateIv();
             }
         });
