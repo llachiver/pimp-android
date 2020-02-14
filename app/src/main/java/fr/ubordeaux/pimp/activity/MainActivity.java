@@ -6,13 +6,12 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -36,9 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private Image image;
 
     private PhotoView iv;
-
-    private static InfosFragment infosFragment;
-    private static MainFragment mainFragment;
 
     public Image getImage() {
         return image;
@@ -129,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.imageInfo:
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.contentFragment, infosFragment);
+                ft.replace(R.id.contentFragment, new InfosFragment());
                 ft.addToBackStack("info_fragment");
                 ft.commit();
                 return true;
@@ -139,20 +135,27 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Inflate upper menu
+     *
+     * @param menu to inflate
+     * @return true if menu inflated with success
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.clear();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.app_name);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainFragment = new MainFragment();
-        infosFragment = new InfosFragment();
-        if (findViewById(R.id.contentFragment) != null) {//Recommended verifications.
-            if (savedInstanceState != null)
-                return;
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.contentFragment, mainFragment).commit(); // Insert main fragment into activity.
-        }
-
     }
 
     //TODO move the followging code in onActivityCreated() methods in Fragments class ?
