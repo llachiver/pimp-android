@@ -1,6 +1,5 @@
 package fr.ubordeaux.pimp.activity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -11,8 +10,6 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -20,12 +17,16 @@ import com.github.chrisbanes.photoview.PhotoView;
 import java.io.File;
 import java.io.IOException;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import fr.ubordeaux.pimp.R;
+import fr.ubordeaux.pimp.fragments.EffectFragment;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
     /////////////////////////////////////////////////////////////////////////////////////
     // Settings :
     /////////////////////////////////////////////////////////////////////////////////////
@@ -147,11 +148,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+    /*public static EffectFragment newInstance(int index) {
+        EffectFragment f = new EffectFragment();
+        // Supply index input as an argument.
+        Bundle args = new Bundle();
+        System.out.println(args);
+        args.putInt("index", index);
+        System.out.println(args);
+        f.setArguments(args);
+        return f;
+    }*/
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        iv = findViewById(R.id.imageView);
+        iv = findViewById(R.id.photoView);
         //Initialize MainSingleton
 
         //Loading default image from resources
@@ -161,6 +177,20 @@ public class MainActivity extends AppCompatActivity {
         iv.setMaximumScale(10);
         //Set imageview bitmap
         updateIv();
+
+        EffectFragment fragment = new EffectFragment();
+        Bundle args = new Bundle();
+        args.putInt("index", 25);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.fragment_effect_container, fragment);
+        fragmentTransaction.commit();
+
+
+        //FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
+
     }
 
     //BugFix loadImage
