@@ -1,6 +1,7 @@
 package fr.ubordeaux.pimp.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -270,7 +271,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Convolution.convolve2d(image.getBitmap(), Kernels.laplaceOfGauss(9,9,1.8f), 9, 9 , true, MainActivity.this );
+                //Convolution.convolve2d(image.getBitmap(), Kernels.laplaceOfGauss(9,9,1.8f), 9, 9 , true, MainActivity.this );
+                //float [] sharpKernel = Kernels.sharpenFilter(Kernels.laplaceOfGauss(9,9, 1.4f), 9,9);
+                //Convolution.convolve2d(image.getBitmap(), sharpKernel, 9, 9, true, MainActivity.this);
+                Convolution.convolve2d(image.getBitmap(), Kernels.SHARPEN3X3, 3, 3 ,true , MainActivity.this);
+
                 updateIv();
             }
         });

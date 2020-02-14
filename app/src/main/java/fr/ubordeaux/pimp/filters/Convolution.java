@@ -26,7 +26,7 @@ public class Convolution {
 
         sConvolution.bind_kernel(kAlloc);
         float totalNormalize = 0;
-        for (float f : kernel) totalNormalize += Math.abs(f); //Compute normalizing coefficient
+        for (float f : kernel) totalNormalize += f; //Compute normalizing coefficient
 
         //Initialize global variables
         sConvolution.set_kdiv(totalNormalize);
@@ -77,10 +77,10 @@ public class Convolution {
         float normalizeX = 0;
         float normalizeY = 0;
         for (float x : kernelX){
-            normalizeX += Math.abs(x);
+            normalizeX += x;
         }
         for (float y : kernelX) {
-            normalizeY += Math.abs(y);
+            normalizeY += y;
         }
 
 
@@ -115,7 +115,7 @@ public class Convolution {
 
 
     //To replace by an edge detector method ?
-    public static void edgeDetection(Bitmap bmp, int[] kernelX, int[] kernelY, Context context){
+    public static void edgeDetection(Bitmap bmp, float[] kernelX, float[] kernelY, Context context){
         //Create context
         int kXsize = kernelX.length; int kYsize = kernelY.length;
         if (kXsize != kYsize) return;
@@ -125,14 +125,14 @@ public class Convolution {
         ScriptC_convolution sConvolution = new ScriptC_convolution(rs); //Create script
 
         //Allocating sobel operators for RS
-        Allocation kernelXAlloc = Allocation.createSized(rs, Element.I32(rs),kXsize); //Allocate memory for kernel
+        Allocation kernelXAlloc = Allocation.createSized(rs, Element.F32(rs),kXsize); //Allocate memory for kernel
         kernelXAlloc.copyFrom(kernelX); //Copy data from kernel
-        Allocation kernelYAlloc = Allocation.createSized(rs, Element.I32(rs),kYsize); //Allocate memory for kernel
+        Allocation kernelYAlloc = Allocation.createSized(rs, Element.F32(rs),kYsize); //Allocate memory for kernel
         kernelYAlloc.copyFrom(kernelY); //Copy data from kernel
 
         //Bind global variables
-        sConvolution.bind_edgesX(kernelXAlloc);
-        sConvolution.bind_edgesY(kernelYAlloc);
+        sConvolution.bind_kernelX(kernelXAlloc);
+        sConvolution.bind_kernelY(kernelYAlloc);
         sConvolution.set_height(bmp.getHeight());
         sConvolution.set_width(bmp.getWidth());
         sConvolution.set_kWidth(3);

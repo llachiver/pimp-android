@@ -21,10 +21,7 @@ float kdiv; //For normalize pixel with total value of kernel
 //For classic convoltion-------
 const float* kernel;
 //--------------
-//For edge detection int multiplication is more faster than float----
-const int* edgesX;
-const int* edgesY;
-//---
+
 
 const float* kernelX;
 const float* kernelY;
@@ -85,8 +82,8 @@ uchar4 RS_KERNEL conv2dEdges(uchar4 in, uint32_t x, uint32_t y) //Image must be 
         {
 
             pixelf = rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, ky)); //Get only one channel cause greyscale image
-            tempX += pixelf * edgesX[kIndex];
-            tempY += pixelf * edgesY[kIndex];
+            tempX += pixelf * kernelX[kIndex];
+            tempY += pixelf * kernelY[kIndex];
             kIndex++;
 
 
@@ -95,10 +92,10 @@ uchar4 RS_KERNEL conv2dEdges(uchar4 in, uint32_t x, uint32_t y) //Image must be 
     }
 
     sum = fabs(tempX) + fabs(tempY);
-    sum.a = 1.0f;
+    sum.a = 1.0f; //To assure good conversion
 
     ret = rsPackColorTo8888(sum);
-    ret.a = in.a;
+    ret.a = in.a; //Get original alpha
     return ret;
 }
 

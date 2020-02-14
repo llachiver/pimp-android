@@ -5,12 +5,12 @@ import android.util.Log;
 public class Kernels {
 
     //Sobel Filter
-    public static final int[] SOBEL_X = {
+    public static final float[] SOBEL_X = {
             1, 0, -1,
             2, 0, -2,
             1, 0, -1,
     };
-    public static final int[] SOBEL_Y = {
+    public static final float[] SOBEL_Y = {
             1, 2, 1,
             0, 0, 0,
             -1, -2, -1,
@@ -23,15 +23,21 @@ public class Kernels {
             -1, -1, -1,
     };
 
+    public static final float[] SHARPEN3X3 = {
+            0, -1, 0,
+            -1, 5, -1,
+            0, -1, 0,
+    };
+
 
 
     //KIRSCH Filter
-    public static final int[] KIRSCH_X = {
+    public static final float[] KIRSCH_X = {
               5,  5,  5,
              -3,  0, -3,
              -3, -3, -3,
     };
-    public static final int[] KIRSCH_Y = {
+    public static final float[] KIRSCH_Y = {
             5, -3, -3,
             5,  0, -3,
             5, -3, -3,
@@ -40,12 +46,12 @@ public class Kernels {
 
 
     //Prewitt Filter
-    public static final int[] PREWITT_X = {
+    public static final float[] PREWITT_X = {
             1, 0, -1,
             1, 0, -1,
             1, 0, -1,
     };
-    public static final int[] PREWITT_Y = {
+    public static final float[] PREWITT_Y = {
             1, 1, 1,
             0, 0, 0,
             -1, -1, -1,
@@ -80,6 +86,31 @@ public class Kernels {
         return kernel;
     }
 
+
+    public static float[] identity (int width, int height){
+        float [] kernel = new float[width * height];
+        int xCenter = width / 2;
+        int yCenter = height / 2;
+        kernel [xCenter + (yCenter * width)] = 1;
+        return kernel;
+
+    }
+
+    /**
+     * Generate sharpenFilter in function of edgeDetection filter. Calculates the difference between identity matrix and edgeDetector filter.
+     * @param edgeDetectionKernel
+     * @return sharpenKernel of size of edgeDetectionKernel
+     */
+    public static float[] sharpenFilter(float [] edgeDetectionKernel, int width, int height){
+        float[] filter = identity(width, height);
+        for (int i = 0; i < width*height; ++i){
+            filter[i] -= edgeDetectionKernel[i];
+        }
+        return filter;
+    }
+
+
+
     public static float[] laplaceOfGauss(int width, int height, float sigma) {
 
         float [] kernel = new float[width * height];
@@ -92,7 +123,7 @@ public class Kernels {
                 float res =  ((((x - (width >> 1)) * (x - (width >> 1)) ) + ((y - (height >> 1)) * (y - (height >> 1)) )) / (2*(sigma*sigma))) ;
                 kernel[index] = (float) ( - ( 1/ (Math.PI * Math.pow(sigma, 4))) * (1 - res) * Math.exp((-res)));
                 //kernel[index] *= 1000;
-                Log.e("VALUES", String.valueOf(x) + " " + String.valueOf(y) + "   " + String.valueOf(kernel[index]));
+                //Log.e("VALUES", String.valueOf(x) + " " + String.valueOf(y) + "   " + String.valueOf(kernel[index]));
 
             }
         }
