@@ -174,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
         updateIv();
     }
 
-    //BugFix loadImage
     @Override
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
@@ -182,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
             fm.popBackStack();
         else
             super.onBackPressed();
+        moveTaskToBack(true);
     }
 
 

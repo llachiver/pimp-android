@@ -60,7 +60,6 @@ public class BitmapIO {
      * @return bitmap loaded and scaled from uri, see {@link fr.ubordeaux.pimp.util.Utils#calculateInSampleSize(int, int, int, int)}
      */
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     public static Bitmap decodeAndScaleBitmapFromUri(Uri imageUri, int reqWidth, int reqHeight, Context context) {
         //Initialize Bitmap to null
         Bitmap selectedImage = null;

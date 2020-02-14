@@ -133,7 +133,6 @@ public class Utils {
      * @return a new bitmap rotated
      * @throws IOException
      */
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     public static Bitmap rotateImageIfRequired(Bitmap selectedImage, Context context, Uri imageUri) throws IOException {
 
         if (Objects.equals(imageUri.getScheme(), "content")) {
