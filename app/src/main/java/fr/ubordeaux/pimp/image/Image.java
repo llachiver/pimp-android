@@ -3,7 +3,6 @@ package fr.ubordeaux.pimp.image;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -71,6 +70,7 @@ public class Image {
                 .appendPath(resources.getResourceTypeName(id))
                 .appendPath(resources.getResourceEntryName(id))
                 .build(); //TO TEST !!!!!!
+        new ImageInfos(this.uri);
     }
 
     /**
@@ -106,6 +106,7 @@ public class Image {
     public Image(Uri uri, int requiredWidth, int requiredHeight, Activity context) {
         this(BitmapIO.decodeAndScaleBitmapFromUri(uri, requiredWidth, requiredHeight, context));
         this.uri = uri;
+        new ImageInfos(this.uri);
     }
 
 
