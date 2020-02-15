@@ -18,9 +18,9 @@ public class Kernels {
     //-------------------------------------
 
     public static final float[] LAPLACIAN3x3 = {
-            -1, -1, -1,
-            -1, 8, -1,
-            -1, -1, -1,
+            1, 1, 1,
+            1, -8, 1,
+            1, 1,  1,
     };
 
     public static final float[] SHARPEN3X3 = {

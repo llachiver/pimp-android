@@ -274,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
                 //Convolution.convolve2d(image.getBitmap(), Kernels.laplaceOfGauss(9,9,1.8f), 9, 9 , true, MainActivity.this );
                 //float [] sharpKernel = Kernels.sharpenFilter(Kernels.laplaceOfGauss(9,9, 1.4f), 9,9);
                 //Convolution.convolve2d(image.getBitmap(), sharpKernel, 9, 9, true, MainActivity.this);
-                Convolution.convolve2d(image.getBitmap(), Kernels.SHARPEN3X3, 3, 3 ,true , MainActivity.this);
+                Convolution.convolve2d(image.getBitmap(), Kernels.laplaceOfGauss(9,9,1.8f), 9,9 ,true , MainActivity.this);
 
                 updateIv();
             }
@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                float [] gauss = Kernels.gauss(9,1.2f);
+                float [] gauss = Kernels.gauss(3,1.8f);
                 Convolution.convolve2dSeparable(image.getBitmap(), gauss, gauss, true, MainActivity.this);
                 updateIv();
             }

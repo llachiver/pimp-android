@@ -27,6 +27,7 @@ public class Convolution {
         sConvolution.bind_kernel(kAlloc);
         float totalNormalize = 0;
         for (float f : kernel) totalNormalize += f; //Compute normalizing coefficient
+        if (totalNormalize == 0) normalize = false; //Do not normalize if totalNormalize equals to zero
 
         //Initialize global variables
         sConvolution.set_kdiv(totalNormalize);
@@ -36,13 +37,13 @@ public class Convolution {
         sConvolution.set_kWidth(kWidth);
         sConvolution.set_kHeight(kHeight);
         sConvolution.set_pIn(input);
-        sConvolution.invoke_setup(); //Initialize kCenters
 
         //Allocate output
         Allocation output = Allocation.createTyped(rs, input.getType());
+        sConvolution.set_pOut(output);
 
         //Launch script
-        sConvolution.forEach_conv2d(input,output);
+        sConvolution.invoke_convolve2d(input,output);
         //Copy to bmp
         output.copyTo(bmp);
         //Free memory
@@ -83,9 +84,11 @@ public class Convolution {
             normalizeY += y;
         }
 
+        if (normalizeX == 0 || normalizeY == 0) normalize = false; //Do not normalize if totalNormalize equals to zero
 
 
-            //Initialize global variables
+
+        //Initialize global variables
         sConvolution.set_kdivX(normalizeX);
         sConvolution.set_kdivY(normalizeY);
         sConvolution.set_normal(normalize);
@@ -94,10 +97,12 @@ public class Convolution {
         sConvolution.set_kWidth(kXsize);
         sConvolution.set_kHeight(kYsize);
         sConvolution.set_pIn(input);
+
         sConvolution.invoke_setup(); //Initialize kCenters
 
         //Allocate output
         Allocation output = Allocation.createTyped(rs, input.getType());
+        sConvolution.set_pOut(output);
 
         //Launch script
         sConvolution.invoke_convolutionSeparable(input,output);
