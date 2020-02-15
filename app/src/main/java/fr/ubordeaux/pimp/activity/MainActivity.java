@@ -16,6 +16,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -156,14 +158,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
-    //TODO move the followging code in onActivityCreated() methods in Fragments class ?
-    @Override
-    protected void onStart() {
-        super.onStart();
         iv = findViewById(R.id.imageView);
-        //Initialize MainSingleton
 
         //Loading default image from resources
         setImage(new Image(DEFAULT_IMAGE, this));
@@ -223,30 +219,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_WRITE_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                                           @NotNull String[] permissions, @NotNull int[] grantResults) {
+        if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    image.exportToGallery(this);
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    Toast.makeText(this, "Save success", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-
+                image.exportToGallery(this);
+                // permission was granted, yay! Do the
+                // contacts-related task you need to do.
+                Toast.makeText(this, "Save success", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission.
             }
-
-
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);    // other 'case' lines to check for other
-                // permissions this app might request.
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);    // other 'case' lines to check for other
+            // permissions this app might request.
         }
     }
 
