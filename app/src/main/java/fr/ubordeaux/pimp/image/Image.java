@@ -70,7 +70,6 @@ public class Image {
                 .appendPath(resources.getResourceTypeName(id))
                 .appendPath(resources.getResourceEntryName(id))
                 .build(); //TO TEST !!!!!!
-        new ImageInfos(this.uri);
     }
 
     /**
@@ -106,7 +105,6 @@ public class Image {
     public Image(Uri uri, int requiredWidth, int requiredHeight, Activity context) {
         this(BitmapIO.decodeAndScaleBitmapFromUri(uri, requiredWidth, requiredHeight, context));
         this.uri = uri;
-        new ImageInfos(this.uri);
     }
 
 
@@ -211,7 +209,7 @@ public class Image {
     }
 
     /**
-     *  Export the current image to the devices gallery
+     * Export the current image to the devices gallery
      * Ask for the user's permission if not yet given to store the current
      * image in the gallery before calling the function that saves it to the gallery.
      *

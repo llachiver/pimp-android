@@ -30,15 +30,15 @@ public class ImageInfos {
 
     /**
      * Extract image information from picture File.
+     *
      * @param uri Uri of the file
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public ImageInfos(Uri uri){
+    public ImageInfos(Uri uri) {
         try {
-            assert(uri.getPath() != null);
-            ExifInterface exifInterface = new ExifInterface(uri.getPath());
-            Log.v("LOG", exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH)+" height");
-            Log.v("LOG", exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH)+"focal width");
+            assert (uri.getPath() != null);
+            ExifInterface exifInterface = new ExifInterface(uri.getPath()); // TODO
+            Log.v("LOG", exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH) + " height");
+            Log.v("LOG", exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH) + "focal width");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,7 +80,7 @@ public class ImageInfos {
     }
 
     /**
-      * @return Device model which took the picture
+     * @return Device model which took the picture
      */
     public String getDeviceModel() {
         return deviceModel;
