@@ -191,71 +191,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void listeners(){
-        SeekBar sbBrightness = this.findViewById(R.id.sbBrightness);
-        SeekBar sbSaturation = this.findViewById(R.id.sbSaturation);
-        SeekBar sbContrast = this.findViewById(R.id.sbContrast);
         Button bEqualization = this.findViewById(R.id.bEqualization);
         Button bGray = this.findViewById(R.id.bGray);
         Button bConvolution = this.findViewById(R.id.bConvolution);
         Button bContrast = this.findViewById(R.id.bContrast);
         Button bSelectHue = this.findViewById(R.id.bSelectHue);
 
-        sbBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                image.reset();
-                Retouching.setBrightness(image.getBitmap(), progress-127, MainActivity.this);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-
-        });
-
-        sbSaturation.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                image.reset();
-                Retouching.setSaturation(image.getBitmap(), progress-127, MainActivity.this);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-
-        });
-
-        sbContrast.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                image.reset();
-                Retouching.dynamicExtensionRGB(image.getBitmap(), progress, MainActivity.this);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-
-        });
 
         bGray.setOnClickListener(new Button.OnClickListener(){
 
