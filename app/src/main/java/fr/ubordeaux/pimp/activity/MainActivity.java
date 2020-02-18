@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -21,8 +21,10 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import fr.ubordeaux.pimp.R;
-import fr.ubordeaux.pimp.fragments.EffectFragment;
+import fr.ubordeaux.pimp.fragments.EffectSettingsFragment;
+import fr.ubordeaux.pimp.fragments.EffectsFragment;
 import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.util.Effects;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -31,6 +33,10 @@ public class MainActivity extends FragmentActivity {
     // Settings :
     /////////////////////////////////////////////////////////////////////////////////////
     private static int DEFAULT_IMAGE = R.drawable.starwars;
+
+    private EffectsFragment effectsListFragment;
+    private EffectSettingsFragment effectSettingsFragment;
+    private FragmentManager fragmentManager;
 
 
     //Image currently modified.
@@ -148,21 +154,6 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-
-    /*public static EffectFragment newInstance(int index) {
-        EffectFragment f = new EffectFragment();
-        // Supply index input as an argument.
-        Bundle args = new Bundle();
-        System.out.println(args);
-        args.putInt("index", index);
-        System.out.println(args);
-        f.setArguments(args);
-        return f;
-    }*/
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,19 +169,13 @@ public class MainActivity extends FragmentActivity {
         //Set imageview bitmap
         updateIv();
 
-        EffectFragment fragment = new EffectFragment();
-        Bundle args = new Bundle();
-        args.putInt("index", 25);
-        fragment.setArguments(args);
+        //Init the fragments
+        effectsListFragment = new EffectsFragment();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.fragment_effect_container, fragment);
-        fragmentTransaction.commit();
+        //Used for fragment transactions
+        fragmentManager = getSupportFragmentManager();
 
-
-        //FragmentTransaction transaction = this.getSupportFragmentManager().beginTransaction();
-
+        inflateEffectsList();
     }
 
     //BugFix loadImage
@@ -265,6 +250,32 @@ public class MainActivity extends FragmentActivity {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);    // other 'case' lines to check for other
                 // permissions this app might request.
         }
+    }
+
+    /**
+     * Inflates the list of effects at the bottom of the screen.
+     */
+    public void inflateEffectsList(){
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_effects_container, effectsListFragment);
+        fragmentTransaction.commit();
+    }
+
+    /**
+     * Inflates the settings (seekbars, buttons...) of a specific effect.
+     * @param effect the enum of the effect
+     */
+    public void inflateEffectSettings(Effects effect){
+        findViewById(R.id.fragment_effects_container).setVisibility(View.GONE);
+        effectSettingsFragment = new EffectSettingsFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable("effect", effect);
+        effectSettingsFragment.setArguments(args);
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_settings_container, effectSettingsFragment);
+        fragmentTransaction.commit();
     }
 
 

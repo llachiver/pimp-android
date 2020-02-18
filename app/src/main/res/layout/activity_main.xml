@@ -25,81 +25,32 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:contentDescription="@android:string/yes"
-        app:layout_constraintBottom_toTopOf="@+id/effects_list"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/btn_dialog" />
 
-    <HorizontalScrollView
-        android:id="@+id/effects_list"
-        android:layout_width="wrap_content"
+
+    <FrameLayout
+        android:id="@+id/fragment_settings_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_effects_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
-            android:id="@+id/effects"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/bBrightness"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_menu_black_24dp"
-                android:text="BRIGHTNESS" />
-
-
-            <Button
-                android:id="@+id/bContrast"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_tonality_black_24dp"
-                android:text="CONTRAST" />
-
-            <Button
-                android:id="@+id/bSaturation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_color_lens_black_24dp"
-                android:text="SATURATION" />
-
-            <Button
-                android:id="@+id/bHue"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_colorize_black_24dp"
-                android:text="HUE" />
-
-            <Button
-                android:id="@+id/bConvolution"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_blur_on_black_24dp"
-                android:text="CONVOLUTION" />
-
-        </LinearLayout>
-    </HorizontalScrollView>
+    </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/fragment_effect_container"
+        android:id="@+id/fragment_effects_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/effects_list"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
     </FrameLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
