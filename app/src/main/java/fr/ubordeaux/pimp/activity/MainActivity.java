@@ -5,14 +5,20 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.github.chrisbanes.photoview.PhotoView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,19 +77,6 @@ public class MainActivity extends FragmentActivity {
 
 
     /**
-     * Inflate upper menu
-     *
-     * @param menu to inflate
-     * @return true if menu inflated with success
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }
-
-
-    /**
      * Load image from internal storage
      *
      * @param reqCode    request code to identify user's choice
@@ -126,8 +119,6 @@ public class MainActivity extends FragmentActivity {
      * @param item Item chosen by user.
      * @return true user click on an item.
      */
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -146,13 +137,34 @@ public class MainActivity extends FragmentActivity {
                 image.exportToGallery(this);
                 return true;
 
-
+            case R.id.imageInfo:
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.contentFragment, new InfosFragment());
+                ft.addToBackStack("info_fragment");
+                ft.commit();
+                return true;
             default:
                 super.onOptionsItemSelected(item);
         }
         return false;
     }
 
+    /**
+     * Inflate upper menu
+     *
+     * @param menu to inflate
+     * @return true if menu inflated with success
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.clear();
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.app_name);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,12 +190,16 @@ public class MainActivity extends FragmentActivity {
         inflateEffectsList();
     }
 
-    //BugFix loadImage
-    /*
     @Override
     public void onBackPressed() {
-        moveTaskToBack(true);
-    }*/
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        }
+        else {
+            moveTaskToBack(true);
+        }
+    }
 
 
     /**
@@ -225,30 +241,23 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_WRITE_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                                           @NotNull String[] permissions, @NotNull int[] grantResults) {
+        if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    image.exportToGallery(this);
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    Toast.makeText(this, "Save success", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-
+                image.exportToGallery(this);
+                // permission was granted, yay! Do the
+                // contacts-related task you need to do.
+                Toast.makeText(this, "Save success", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission.
             }
-
-
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);    // other 'case' lines to check for other
-                // permissions this app might request.
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);    // other 'case' lines to check for other
+            // permissions this app might request.
         }
     }
 
@@ -277,7 +286,6 @@ public class MainActivity extends FragmentActivity {
         fragmentTransaction.replace(R.id.fragment_settings_container, effectSettingsFragment);
         fragmentTransaction.commit();
     }
-
 
 
 }
