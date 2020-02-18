@@ -1,5 +1,6 @@
 package fr.ubordeaux.pimp.activity;
 
+import android.Manifest;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +13,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -22,6 +25,7 @@ import java.io.IOException;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.io.BitmapIO;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_GET_SINGLE_FILE = 202;
     public static final int REQUEST_TAKE_PHOTO = 12;
     public static final int REQUEST_WRITE_EXTERNAL_STORAGE = 69;
+    public static final int REQUEST_READ_EXTERNAL_STORAGE = 68;
 
 
     /**
@@ -111,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             //Load photo from gallery
             case R.id.loadFromGallery:
-                startGalleryActivity();
+                startGalleryActivityWithPermissions();
                 return true;
             case R.id.loadFromCamera:
                 startCameraActivity();
@@ -184,13 +189,42 @@ public class MainActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
+    public void startGalleryActivityWithPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            startGalleryActivity();
 
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Toast.makeText(this, "Permission is needed to load image from gallery", Toast.LENGTH_SHORT).show();
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            }
+
+
+            // No explanation needed, we can request the permission.
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_READ_EXTERNAL_STORAGE);
+
+            // MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+
+        }
+    }
     /**
      * Starts intent to pick an image from gallery
      */
-    public void startGalleryActivity() {
+    private void startGalleryActivity() {
         //Photo intent
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+
+
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
         photoPickerIntent.setType("image/*");
         //Start activity and wait for result
@@ -235,6 +269,23 @@ public class MainActivity extends AppCompatActivity {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                     Toast.makeText(this, "Save success", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+
+            }
+
+            case REQUEST_READ_EXTERNAL_STORAGE : {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    startGalleryActivityWithPermissions();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
                 } else {
                     Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
                     // permission denied, boo! Disable the

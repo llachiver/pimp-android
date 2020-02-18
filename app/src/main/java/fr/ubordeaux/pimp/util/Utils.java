@@ -171,4 +171,23 @@ public class Utils {
         }
     }
 
+
+    // And to convert the image URI to the direct file system path of the image file
+    public static String getRealPathFromURI(Uri contentUri, Context context) {
+        // can post image
+        String [] proj={MediaStore.Images.Media.DATA};
+        Cursor cursor = context.getContentResolver().query(contentUri,
+                proj, // Which columns to return
+                null,       // WHERE clause; which rows to return (all rows)
+                null,       // WHERE clause selection arguments (none)
+                null); // Order-by clause (ascending by name)
+        if (cursor == null){
+            return contentUri.getPath(); //For camera path
+        }
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String path = cursor.getString(column_index);
+        cursor.close();
+        return path;
+    }
 }
