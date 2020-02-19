@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -25,7 +24,6 @@ import java.io.IOException;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.image.Image;
-import fr.ubordeaux.pimp.io.BitmapIO;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -169,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         iv = findViewById(R.id.imageView);
-        //Initialize MainSingleton
 
         //Loading default image from resources
         setImage(new Image(DEFAULT_IMAGE, this));
@@ -205,7 +202,6 @@ public class MainActivity extends AppCompatActivity {
                 // sees the explanation, try again to request the permission.
             }
 
-
             // No explanation needed, we can request the permission.
 
             ActivityCompat.requestPermissions(this,
@@ -234,7 +230,6 @@ public class MainActivity extends AppCompatActivity {
                 // sees the explanation, try again to request the permission.
             }
 
-
             // No explanation needed, we can request the permission.
 
             ActivityCompat.requestPermissions(this,
@@ -244,16 +239,14 @@ public class MainActivity extends AppCompatActivity {
             // MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE is an
             // app-defined int constant. The callback method gets the
             // result of the request.
-
         }
     }
+
     /**
      * Starts intent to pick an image from gallery
      */
     private void startGalleryActivity() {
         //Photo intent
-
-
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
         photoPickerIntent.setType("image/*");
@@ -308,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            case REQUEST_READ_EXTERNAL_STORAGE : {
+            case REQUEST_READ_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -325,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            case REQUEST_CAMERA : {
+            case REQUEST_CAMERA: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 

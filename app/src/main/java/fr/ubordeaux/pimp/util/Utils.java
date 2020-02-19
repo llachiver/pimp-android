@@ -8,7 +8,6 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Display;
@@ -20,7 +19,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-import androidx.annotation.RequiresApi;
 
 /**
  * Class with static methods, usefull calculations for several things.
@@ -99,7 +97,8 @@ public class Utils {
 
     /**
      * Rotates a bitmap with degrees passed as parameter and return a new one
-     * @param bitmap bitmap to rotate
+     *
+     * @param bitmap  bitmap to rotate
      * @param degrees degrees to rotates
      * @return new rotated bitmap
      */
@@ -111,9 +110,10 @@ public class Utils {
 
     /**
      * Rotates a bitmap with boolean orientation
-     * @param bitmap bitmap to rotate
+     *
+     * @param bitmap     bitmap to rotate
      * @param horizontal rotate horizontal sens
-     * @param vertical rotate in vertical sens
+     * @param vertical   rotate in vertical sens
      * @return rotated bitmap
      */
     public static Bitmap flipBitmap(Bitmap bitmap, boolean horizontal, boolean vertical) {
@@ -126,17 +126,17 @@ public class Utils {
     /**
      * Checks if a bitmap with uri must be rotated checking context orientation, if it must to be rotated, return a new rotated bitmap.
      *
-     * @see <a href="https://teamtreehouse.com/community/how-to-rotate-images-to-the-correct-orientation-portrait-by-editing-the-exif-data-once-photo-has-been-taken</a>
      * @param selectedImage image to check and rotate
-     * @param context current mainActivity context
-     * @param imageUri uri from image
+     * @param context       current mainActivity context
+     * @param imageUri      uri from image
      * @return a new bitmap rotated
      * @throws IOException
+     * @see <a href="https://teamtreehouse.com/community/how-to-rotate-images-to-the-correct-orientation-portrait-by-editing-the-exif-data-once-photo-has-been-taken</a>
      */
     public static Bitmap rotateImageIfRequired(Bitmap selectedImage, Context context, Uri imageUri) throws IOException {
 
         if (Objects.equals(imageUri.getScheme(), "content")) {
-            String[] projection = { MediaStore.Images.ImageColumns.ORIENTATION };
+            String[] projection = {MediaStore.Images.ImageColumns.ORIENTATION};
             Cursor c = context.getContentResolver().query(imageUri, projection, null, null, null);
             assert c != null;
             if (c.moveToFirst()) {
@@ -175,13 +175,13 @@ public class Utils {
     // And to convert the image URI to the direct file system path of the image file
     public static String getRealPathFromURI(Uri contentUri, Context context) {
         // can post image
-        String [] proj={MediaStore.Images.Media.DATA};
+        String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = context.getContentResolver().query(contentUri,
                 proj, // Which columns to return
                 null,       // WHERE clause; which rows to return (all rows)
                 null,       // WHERE clause selection arguments (none)
                 null); // Order-by clause (ascending by name)
-        if (cursor == null){
+        if (cursor == null) {
             return contentUri.getPath(); //For camera path
         }
         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);

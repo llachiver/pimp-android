@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import fr.ubordeaux.pimp.image.ImageInfos;
 import fr.ubordeaux.pimp.util.Utils;
 
 /**

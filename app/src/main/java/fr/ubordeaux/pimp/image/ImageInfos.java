@@ -3,10 +3,8 @@ package fr.ubordeaux.pimp.image;
 import android.content.Context;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
 import fr.ubordeaux.pimp.util.Utils;
 
 import java.io.IOException;
@@ -41,8 +39,9 @@ public class ImageInfos {
             //assert (uri.getPath() != null);
             ExifInterface exifInterface = new ExifInterface(path); // TODO
 
-            Log.e("LOG", exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH) + " height");
-            Log.e("LOG", exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH) + " focal width");
+            Log.v("LOG", exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH) + " height");
+            Log.v("LOG", exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH) + " width");
+            Log.v("LOG", exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH) + " focal width");
         } catch (IOException e) {
             e.printStackTrace();
         }
