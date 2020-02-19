@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_TAKE_PHOTO = 12;
     public static final int REQUEST_WRITE_EXTERNAL_STORAGE = 69;
     public static final int REQUEST_READ_EXTERNAL_STORAGE = 68;
+    public static final int REQUEST_CAMERA = 67;
 
 
     /**
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 startGalleryActivityWithPermissions();
                 return true;
             case R.id.loadFromCamera:
-                startCameraActivity();
+                startCameraActivityWithPermissions();
                 return true;
             case R.id.restoreChanges:
                 image.reset();
@@ -197,8 +198,8 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(this, "Permission is needed to load image from gallery", Toast.LENGTH_SHORT).show();
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                Toast.makeText(this, "Permission is needed to load image from gallery", Toast.LENGTH_LONG).show();
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
@@ -210,6 +211,35 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQUEST_READ_EXTERNAL_STORAGE);
+
+            // MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+
+        }
+    }
+
+    public void startCameraActivityWithPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            startCameraActivity();
+
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CAMERA)) {
+                Toast.makeText(this, "Permission is needed to load image from camera", Toast.LENGTH_LONG).show();
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            }
+
+
+            // No explanation needed, we can request the permission.
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA);
 
             // MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE is an
             // app-defined int constant. The callback method gets the
@@ -231,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
         this.startActivityForResult(photoPickerIntent, MainActivity.REQUEST_GET_SINGLE_FILE);
     }
 
-    public void startCameraActivity() {
+    private void startCameraActivity() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
@@ -270,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
                     // contacts-related task you need to do.
                     Toast.makeText(this, "Save success", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Write permission denied", Toast.LENGTH_SHORT).show();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
@@ -287,7 +317,23 @@ public class MainActivity extends AppCompatActivity {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                 } else {
-                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Read permission denied", Toast.LENGTH_SHORT).show();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+
+            }
+
+            case REQUEST_CAMERA : {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    startCameraActivityWithPermissions();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+                    Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }

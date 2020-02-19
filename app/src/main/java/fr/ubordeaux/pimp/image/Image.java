@@ -225,7 +225,7 @@ public class Image {
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(context,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(context, "Permission is needed to save image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Permission is needed to save image", Toast.LENGTH_LONG).show();
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
