@@ -29,6 +29,7 @@ import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.util.ApplyEffectTask;
 import fr.ubordeaux.pimp.util.Kernels;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
@@ -202,8 +203,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Retouching.toGray(image.getBitmap(), MainActivity.this);
-                updateIv();
+
+                new ApplyEffectTask(MainActivity.this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Retouching.toGray(image.getBitmap(), MainActivity.this);
+                    }
+                }).execute();
             }
         });
 
@@ -212,8 +218,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
-                updateIv();
+                new ApplyEffectTask(MainActivity.this, new Runnable() {
+                    @Override
+                    public void run() {
+                       Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
+                    }
+                }).execute();
             }
         });
 
@@ -224,9 +234,15 @@ public class MainActivity extends AppCompatActivity {
                 //Convolution.convolve2d(image.getBitmap(), Kernels.laplaceOfGauss(9,9,1.8f), 9, 9 , true, MainActivity.this );
                 //float [] sharpKernel = Kernels.sharpenFilter(Kernels.laplaceOfGauss(9,9, 1.4f), 9,9);
                 //Convolution.convolve2d(image.getBitmap(), sharpKernel, 9, 9, true, MainActivity.this);
-                Convolution.convolve2d(image.getBitmap(), Kernels.laplaceOfGauss(9,9,1.8f), 9,9 ,true , MainActivity.this);
+                new ApplyEffectTask(MainActivity.this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Convolution.convolve2d(image.getBitmap(), Kernels.laplaceOfGauss(9,9,1.8f), 9,9 ,true , MainActivity.this);
+                    }
+                }).execute();
 
-                updateIv();
+
+
             }
         });
 
@@ -234,9 +250,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                new ApplyEffectTask(MainActivity.this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Convolution.edgeDetection(image.getBitmap(), Kernels.SOBEL_X, Kernels.SOBEL_Y, MainActivity.this);
+                    }
+                }).execute();
 
-                Convolution.edgeDetection(image.getBitmap(), Kernels.SOBEL_X, Kernels.SOBEL_Y, MainActivity.this);
-                updateIv();
             }
         });
 
@@ -244,9 +264,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                float [] gauss = Kernels.gauss(3,1.8f);
-                Convolution.convolve2dSeparable(image.getBitmap(), gauss, gauss, true, MainActivity.this);
-                updateIv();
+                final float [] gauss = Kernels.gauss(3,1.8f);
+                new ApplyEffectTask(MainActivity.this, new Runnable() {
+                    @Override
+                    public void run() {
+                        Convolution.convolve2dSeparable(image.getBitmap(), gauss, gauss, true, MainActivity.this);
+                    }
+                }).execute();
             }
         });
 

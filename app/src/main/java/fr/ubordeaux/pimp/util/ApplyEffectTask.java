@@ -60,6 +60,6 @@ public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
 
         //***Linked to main activity ***/
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-        activity.updateIv();
+        //activity.updateIv();
     }
 }
