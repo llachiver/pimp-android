@@ -73,6 +73,8 @@ public class Image {
                 .appendPath(resources.getResourceEntryName(id))
                 .build(); //TO TEST !!!!!!
         infos = new ImageInfo(null, context); // todo ?
+        infos.setLoadedHeight(height);//set values n info pack
+        infos.setLoadedWidth(width);
     }
 
     /**
@@ -109,6 +111,8 @@ public class Image {
         this(BitmapIO.decodeAndScaleBitmapFromUri(uri, requiredWidth, requiredHeight, context));
         this.uri = uri;
         infos = new ImageInfo(this.uri, context);
+        infos.setLoadedHeight(height);//set values n info pack
+        infos.setLoadedWidth(width);
     }
 
 
@@ -147,6 +151,8 @@ public class Image {
         imgBase = new int[width * height];
         bitmap.getPixels(imgBase, 0, width, 0, 0, width, height);
         infos = new ImageInfo(null, null);
+        infos.setLoadedHeight(height);//set values n info pack
+        infos.setLoadedWidth(width);
     }
 
     /**
@@ -172,6 +178,8 @@ public class Image {
         this(source.getBitmap(), newRequiredWidth, newRequiredHeight);
         this.uri = source.uri;
         infos = new ImageInfo(source.getInfo());
+        infos.setLoadedHeight(height);//set values n info pack
+        infos.setLoadedWidth(width);
     }
 
     /**

@@ -8,6 +8,7 @@ import android.net.Uri;
 
 import fr.ubordeaux.pimp.util.Utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,9 +30,9 @@ public class ImageInfo {
     private String longitude;
     private String latitude;
     private String path;
-
-    private String weight;
+    private long weight;
     private String fileName;
+
     private int loadedHeight;
     private int loadedWidth;
 
@@ -44,6 +45,9 @@ public class ImageInfo {
     ImageInfo(Uri uri, Context context) { // friendly because Image only normally use this constructor
         if (uri != null) {
             this.path = Utils.getRealPathFromURI(uri, context);
+            File file = new File(this.path);
+            this.weight = file.length();
+            this.fileName = file.getName();
             try {
                 ExifInterface exifInterface = new ExifInterface(path);
                 this.height = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH);
@@ -53,8 +57,14 @@ public class ImageInfo {
                 this.expositionTime = exifInterface.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
                 this.focalLength = exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH);
                 this.ISO = exifInterface.getAttribute(ExifInterface.TAG_ISO_SPEED_RATINGS);
-                this.longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE) + "," + exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
-                this.latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE) + "," + exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+                if (exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE) == null || exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF) == null)
+                    this.longitude = null;
+                else
+                    this.longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE) + "," + exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+                if (exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE) == null || exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF) == null)
+                    this.latitude = null;
+                else
+                    this.latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE) + "," + exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -77,7 +87,6 @@ public class ImageInfo {
         this.ISO = original.ISO;
         this.longitude = original.longitude;
         this.latitude = original.latitude;
-
         this.weight = original.weight;
         this.fileName = original.fileName;
         this.loadedHeight = original.loadedHeight;
@@ -222,5 +231,61 @@ public class ImageInfo {
      */
     public String getPath() {
         return path;
+    }
+
+    /**
+     * @return File size with format "XX unit", with unit like B, kB, MB or GB. Mat return "0 B" if undefined.
+     */
+    public String getFileSize() {
+        double size = weight;
+        if (size < 100)
+            return (int) size + " B";
+        size /= 1024d;
+        if (size < 100)
+            return (Math.round(size * 100) / 100.0) + " kB";
+        size /= 1024d;
+        if (size < 100)
+            return (Math.round(size * 100) / 100.0) + " MB";
+        size /= 1024d;
+        return (Math.round(size * 100) / 100.0) + " GB";
+    }
+
+    /**
+     * @return File name, example "my_picture.jpg"
+     */
+    public String getFileName() {
+        return fileName;
+    }
+
+    /**
+     * Loaded height can be set with {@link #setLoadedHeight(int)}, see also {@link Image#getHeight()}.
+     *
+     * @return Height of the Image currently loaded in the app
+     */
+    public int getLoadedHeight() {
+        return loadedHeight;
+    }
+
+    /**
+     * @param height New height value
+     */
+    void setLoadedHeight(int height) {// friendly access, work with Image
+        loadedHeight = height;
+    }
+
+    /**
+     * Loaded width can be set with {@link #setLoadedWidth(int)} (int)}, see also {@link Image#getWidth()} ()}.
+     *
+     * @return Width of the Image currently loaded in the app
+     */
+    public int getLoadedWidth() {
+        return loadedWidth;
+    }
+
+    /**
+     * @param width New width value
+     */
+    void setLoadedWidth(int width) {// friendly access, work with Image
+        loadedWidth = width;
     }
 }
