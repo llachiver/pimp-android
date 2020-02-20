@@ -1,32 +1,38 @@
 package fr.ubordeaux.pimp.image;
 
 import android.content.Context;
-import android.media.ExifInterface;
+
+import androidx.exifinterface.media.ExifInterface;
+
 import android.net.Uri;
-import android.util.Log;
 
 import fr.ubordeaux.pimp.util.Utils;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
- * Class to pack some informations get from picture file.
+ * Class to pack some informations about Image object.
+ * See {@link Image}.
  */
 public class ImageInfos {
-    private int height;
-    private int width;
-    private double captorResolution;
-    private double weight;
-    private Date date;
+    private String height;
+    private String width;
+    private String date;
     private String deviceModel;
-    private double maxAperture;
-    private double aperture;
-    private double focalLength;
-    private int ISO;
+    private String expositionTime;
+    private String focalLength;
+    private String ISO;
     private String longitude;
     private String latitude;
     private String path;
+
+    private String weight;
+    private String fileName;
+
 
     /**
      * Extract image information from picture File.
@@ -36,99 +42,153 @@ public class ImageInfos {
     public ImageInfos(Uri uri, Context context) {
         path = Utils.getRealPathFromURI(uri, context);
         try {
-            //assert (uri.getPath() != null);
-            ExifInterface exifInterface = new ExifInterface(path); // TODO
+            ExifInterface exifInterface = new ExifInterface(path);
+            this.height = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH);
+            this.width = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH);
+            this.date = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);
+            this.deviceModel = exifInterface.getAttribute(ExifInterface.TAG_MODEL);
+            this.expositionTime = exifInterface.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
+            this.focalLength = exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH);
+            this.ISO = exifInterface.getAttribute(ExifInterface.TAG_ISO_SPEED_RATINGS);
+            this.longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE) + "," + exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+            this.latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE) + "," + exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
 
-            Log.v("LOG", exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH) + " height");
-            Log.v("LOG", exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH) + " width");
-            Log.v("LOG", exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH) + " focal width");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * @return Original height of the picture file in pixels.
+     * @return Original height of the picture file in pixels. This integer is formated as a String. Returns null if the image file doesn't contain the tag information.
      */
-    public int getHeight() {
+    public String getHeight() {
         return height;
     }
 
     /**
-     * @return Original height of the picture file in pixels.
+     * @return Original width of the picture file in pixels. This integer is formated as a String. Returns null if the image file doesn't contain the tag information.
      */
-    public int getWidth() {
+    public String getWidth() {
         return width;
     }
 
     /**
-     * @return Return resolution of the device which took this picture (Mpx)
+     * @return Size of the picture formated like this "Width x Height", or null if one or both dimension(s) is(are) null.
      */
-    public double getCaptorResolution() {
-        return captorResolution;
+    public String getSize() {
+        if (width == null || height == null)
+            return null;
+        return width + " x " + height;
     }
 
     /**
-     * @return File size (Mo)
+     * @return Return resolution of the device, example : "16.4 Mpx", or null if one or both dimension(s) is(are) null.
      */
-    public double getWeight() {
-        return weight;
+    public String getCaptorResolution() {
+        if (width == null || height == null)
+            return null;
+        double resolution = Integer.valueOf(this.height) * Integer.valueOf(this.width) / 1_000_000d;
+        return (Math.round(resolution * 10) / 10.0) + " Mpx";
     }
 
     /**
-     * @return Shooting date
+     * @return Shooting date with this format : "dd/mm/yyyy hh:mm" (french format), or null if date not defined.
      */
-    public Date getDate() {
-        return date;
+    public String getDate() {
+        if (date == null) return null;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.US); //EXIF tag for date is using 24h format US standard
+        Date d;
+        try {
+            d = simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (d == null) return null;
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRANCE).format(d); // french format only for the moment.
     }
 
     /**
-     * @return Device model which took the picture
+     * @return Device model which took the picture, or null it EXIF tag not defined.
      */
     public String getDeviceModel() {
         return deviceModel;
     }
 
+
     /**
-     * @return Maximale aperture, like "f/1,8"
+     * @return Captor aperture time with format "1/vv s", or null if EXIF tag undefined.
      */
-    public double getMaxAperture() {
-        return maxAperture;
+    public String getExpositionTime() {
+        if (expositionTime == null) return null;
+        int count = 1;
+        double time = Double.valueOf(expositionTime);
+        double value = time;
+        while (value < 1.0) {
+            value += time;
+            count++;
+        }
+        return "1/" + count + " s";
     }
 
     /**
-     * @return Captor aperture time (s)
+     * @return Focal length format "X.x mm", or null if EXIF tag undefined.
      */
-    public double getAperture() {
-        return aperture;
+    public String getFocalLength() {
+        if (focalLength == null) return null;
+        String[] split = focalLength.split("/");
+        double dist = Double.valueOf(split[0]) / Double.valueOf(split[1]);
+        return (Math.round(dist * 10) / 10.0) + " mm";
     }
 
     /**
-     * @return Focal length (mm)
+     * @return ISO sensibility with format "ISO xxx", or null if EXIF tag undefined.
      */
-    public double getFocalLength() {
-        return focalLength;
+    public String getISO() {
+        if (ISO == null) return null;
+        return "ISO " + ISO;
     }
 
     /**
-     * @return ISO sensibility
+     * @return GPS longitude numerical value, may be 0 if undefined.
      */
-    public int getISO() {
-        return ISO;
+    public double getLongitude() {
+        if (longitude == null) return 0;
+        String[] split = longitude.split("[,/]");
+        int sign = split[6].charAt(0) == 'E' ? 1 : -1;
+        return sign * ((Double.valueOf(split[0]) / Double.valueOf(split[1])) +
+                (Double.valueOf(split[2]) / (Double.valueOf(split[3]) * 60d)) +
+                (Double.valueOf(split[4]) / (Double.valueOf(split[5]) * 3600d))
+        );
     }
 
     /**
-     * @return GPS longitude
+     * @return GPS latitude numerical value, may be 0 if undefined.
      */
-    public String getLongitude() {
-        return longitude;
+    public double getLatitude() {
+        if (latitude == null) return 0;
+        String[] split = latitude.split("[,/]");
+        int sign = split[6].charAt(0) == 'N' ? 1 : -1;
+        return sign * ((Double.valueOf(split[0]) / Double.valueOf(split[1])) +
+                (Double.valueOf(split[2]) / (Double.valueOf(split[3]) * 60d)) +
+                (Double.valueOf(split[4]) / (Double.valueOf(split[5]) * 3600d))
+        );
     }
 
     /**
-     * @return GPS latitude
+     * @return GPS coordinates with format "XX°XX'XX"N XX°XX'XX"W" or null if latitude or longitude undefined.
      */
-    public String getLatitude() {
-        return latitude;
+    public String getCoordinates() {
+        if (latitude == null || longitude == null) return null;
+        String[] splitLa = latitude.split("[,/]");
+        String[] splitLo = longitude.split("[,/]");
+        int degLa = (int) Math.round(Double.valueOf(splitLa[0]) / Double.valueOf(splitLa[1]));
+        int minLa = (int) Math.round(Double.valueOf(splitLa[2]) / Double.valueOf(splitLa[3]));
+        int secLa = (int) Math.round(Double.valueOf(splitLa[4]) / Double.valueOf(splitLa[5]));
+        int degLo = (int) Math.round(Double.valueOf(splitLo[0]) / Double.valueOf(splitLo[1]));
+        int minLo = (int) Math.round(Double.valueOf(splitLo[2]) / Double.valueOf(splitLo[3]));
+        int secLo = (int) Math.round(Double.valueOf(splitLo[4]) / Double.valueOf(splitLo[5]));
+        return degLa + "°" + minLa + "\'" + secLa + "\"" + splitLa[6] + " " + degLo + "°" + minLo + "\'" + secLo + "\"" + splitLo[6];
     }
 
     /**

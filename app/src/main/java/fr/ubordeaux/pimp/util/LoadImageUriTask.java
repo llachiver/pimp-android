@@ -9,7 +9,6 @@ import java.lang.ref.WeakReference;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.image.Image;
-import fr.ubordeaux.pimp.image.ImageInfos;
 
 /**
  * General Async task any filter function from this project as an async LoadImageUriTask
