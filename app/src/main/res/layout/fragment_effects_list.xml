@@ -46,12 +46,20 @@
                 android:text="SATURATION" />
 
             <Button
-                android:id="@+id/bHue"
+                android:id="@+id/bChangeHue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:drawableTop="@drawable/ic_colorize_black_24dp"
                 android:text="HUE" />
+
+            <Button
+                android:id="@+id/bKeepHue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_colorize_black_24dp"
+                android:text="KEEP HUE" />
 
             <Button
                 android:id="@+id/bConvolution"

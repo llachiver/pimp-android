@@ -1,27 +1,22 @@
 package fr.ubordeaux.pimp.util;
 
+import java.lang.reflect.Method;
+
 public enum Effects {
-    BRIGHTNESS(new String[]{"Brightness"}, null),
-    SATURATION(new String[]{"Saturation"},null),
-    CONTRAST(new String[]{"Contrast"},new String[]{"Equalization"}),
-    SELECTHUE(new String[]{"Hue","Tolerance"},new String[]{"Keep color", "Change hue"});
+    BRIGHTNESS("Brightness"),
+    SATURATION("Saturation"),
+    CONTRAST("Contrast"),
+    CHANGE_HUE("Change hue"),
+    KEEP_HUE("Keep hue");
 
-
-
-    private String[] seekbars = {};
-    private String[] buttons = {};
+    private String name = "";
 
     //Constructeur
-    Effects(String[] seekbars, String[] buttons){
-        this.seekbars = seekbars;
-        this.buttons = buttons;
+    Effects(String name){
+        this.name = name;
     }
 
-    public String[] getSeekbars(){
-        return seekbars;
-    }
-
-    public String[] getButtons(){
-        return buttons;
+    public String getName(){
+        return name;
     }
 }

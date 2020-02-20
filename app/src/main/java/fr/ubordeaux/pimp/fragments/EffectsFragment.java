@@ -16,7 +16,7 @@ public class EffectsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.effects_list_layout, null);
+        View view = inflater.inflate(R.layout.fragment_effects_list, null);
         listeners(view);
         return view;
 
@@ -30,6 +30,9 @@ public class EffectsFragment extends Fragment {
         Button bBrightness = (Button) view.findViewById(R.id.bBrightness);
         Button bSaturation = (Button) view.findViewById(R.id.bSaturation);
         Button bContrast = (Button) view.findViewById(R.id.bContrast);
+        Button bChangeHue = (Button) view.findViewById(R.id.bChangeHue);
+        Button bKeepHue = (Button) view.findViewById(R.id.bKeepHue);
+        Button bConvolution = (Button) view.findViewById(R.id.bConvolution);
         //TODO ...
 
         bBrightness.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +55,25 @@ public class EffectsFragment extends Fragment {
                 main.inflateEffectSettings(Effects.CONTRAST);
             }
         });
+        bChangeHue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.inflateEffectSettings(Effects.CHANGE_HUE);
+            }
+        });
+        bKeepHue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.inflateEffectSettings(Effects.KEEP_HUE);
+            }
+        });
+        bConvolution.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //main.inflateEffectSettings(Effects.CONVOLUTION);
+            }
+        });
+
 
     }
 }
