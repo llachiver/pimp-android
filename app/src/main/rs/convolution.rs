@@ -28,7 +28,7 @@ const float* kernelY;
 //Normalize parameter must be set as true in the most of cases
 bool normal;
 
-
+//Classic 2D convolution
 uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
 {
     uchar4 ret = 0;
@@ -36,9 +36,9 @@ uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
     float4 temp = 0;
 
     uint32_t kIndex = 0;
-    for(ky = y - kCenterY; ky <= y + kCenterY ;ky++)
+    for(ky = y - kCenterY; ky <= y + kCenterY ;ky++) //Columns
     {
-        for(kx = x - kCenterX; kx <= x + kCenterX ;kx++)
+        for(kx = x - kCenterX; kx <= x + kCenterX ;kx++) //Rows
         {
 
             temp += rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, ky)) * kernel[kIndex];
@@ -59,7 +59,7 @@ uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
 
 
 
-uchar4 RS_KERNEL conv2dEdges(uchar4 in, uint32_t x, uint32_t y) //Image must be gray!!
+uchar4 RS_KERNEL conv2dEdges(uchar4 in, uint32_t x, uint32_t y)
 {
     uchar4 ret = 0;
     uint32_t kx, ky;
@@ -68,14 +68,14 @@ uchar4 RS_KERNEL conv2dEdges(uchar4 in, uint32_t x, uint32_t y) //Image must be 
     float4 tempY = 0;
     float4 pixelf;
     uint32_t kIndex = 0;
-    for(ky = y - kCenterY; ky <= y + kCenterY ;ky++)
+    for(ky = y - kCenterY; ky <= y + kCenterY ;ky++) //Columns
     {
-        for(kx = x - kCenterX; kx <= x + kCenterX ;kx++)
+        for(kx = x - kCenterX; kx <= x + kCenterX ;kx++) //Rows
         {
 
-            pixelf = rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, ky)); //Get only one channel cause greyscale image
-            tempX += pixelf * kernelX[kIndex];
-            tempY += pixelf * kernelY[kIndex];
+            pixelf = rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, ky));
+            tempX += pixelf * kernelX[kIndex]; //X operator
+            tempY += pixelf * kernelY[kIndex]; //Y Operator
             kIndex++;
 
 
@@ -137,7 +137,7 @@ uchar4 RS_KERNEL conv2dY(uchar4 in, uint32_t x, uint32_t y){
 
 void RS_KERNEL extendPadding(uchar4 in, uint32_t x, uint32_t y){
 
-
+    //Not a border
     if (!(x == kCenterX || y == kCenterY || x == (width - 1) - kCenterX ||  y == (height - 1) - kCenterY))
         return;
     if (x == kCenterX && y == kCenterY)
@@ -216,6 +216,7 @@ void RS_KERNEL extendPadding(uchar4 in, uint32_t x, uint32_t y){
 
 }
 
+//////////////Indexing optimizations
 static rs_script_call_t convolveOpts1dX(){
     rs_script_call_t optsX = {0};
     optsX.xStart = kCenterX;

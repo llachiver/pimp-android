@@ -9,17 +9,27 @@ import android.renderscript.RenderScript;
 import fr.ubordeaux.pimp.ScriptC_convolution;
 import fr.ubordeaux.pimp.util.Kernels;
 
+/**
+ * Class refereed to all convolution methods.
+ */
+
 public class Convolution {
 
+    /**
+     * Convolve an image with a kernel of width (kWidth) and height (kHeight) odds both exclusively, with a normalization boolean.
+     * @param bmp Image to convolve
+     * @param kernel Kernel to use
+     * @param kWidth Width of Kernel
+     * @param kHeight Height of kernel
+     * @param normalize Normalize or not the output (Most of the cases must be set to true)
+     * @param context MainActivity context.
+     */
     public static void convolve2d(Bitmap bmp, float [] kernel, int kWidth, int kHeight, boolean normalize, Context context){
         if (kWidth % 2 == 0 || kHeight % 2 == 0) return; //Pair kernels not allowed
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
         ScriptC_convolution sConvolution = new ScriptC_convolution(rs); //Create script
 
-        //int squareSize = (int) Math.sqrt(kernel.length); //Getting square size of kernel
-
-        //sConvolution.set_square_ksize(squareSize);
 
         Allocation kAlloc = Allocation.createSized(rs, Element.F32(rs),kWidth * kHeight); //Allocate memory for kernel
         kAlloc.copyFrom(kernel); //Copy data from kernel
@@ -56,16 +66,20 @@ public class Convolution {
 
     }
 
+    /**
+     * Computes a 1D Convolution twice (Once vertically and once horizontally) using a kernelX and a kernelY, this application is more faster than use a classic 2D Convolution.
+     * @param bmp Image to convolve
+     * @param kernelX kernel to convolve horizontally
+     * @param kernelY kernel to convolve vertically
+     * @param normalize normalize output
+     * @param context MainActivity context
+     */
     public static void convolve2dSeparable(Bitmap bmp, float[] kernelX, float[] kernelY, boolean normalize, Context context){
         int kXsize = kernelX.length; int kYsize = kernelY.length;
         if(kXsize != kYsize) return;
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
         ScriptC_convolution sConvolution = new ScriptC_convolution(rs); //Create script
-
-        //int squareSize = (int) Math.sqrt(kernel.length); //Getting square size of kernel
-
-        //sConvolution.set_square_ksize(squareSize);
 
         Allocation kAllocX = Allocation.createSized(rs, Element.F32(rs),kXsize); //Allocate memory for kernel
         kAllocX.copyFrom(kernelX); //Copy data from kernel
@@ -119,8 +133,14 @@ public class Convolution {
     }
 
 
-    //To replace by an edge detector method ?
-    public static void edgeDetection(Bitmap bmp, float[] kernelX, float[] kernelY, Context context){
+    /**
+     * 2D convolution adding the operator X and Y of kernelX and kernelY, used by operators as Sobel, Prewitt, Robertson, etc.
+     * @param bmp Image to convolve
+     * @param kernelX kernelX operator
+     * @param kernelY kernelY operator
+     * @param context MainActivity Context
+     */
+    public static void edgeDetectionConvolution(Bitmap bmp, float[] kernelX, float[] kernelY, Context context){
         //Create context
         int kXsize = kernelX.length; int kYsize = kernelY.length;
         if (kXsize != kYsize) return;

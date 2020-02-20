@@ -2,6 +2,9 @@ package fr.ubordeaux.pimp.util;
 
 import android.util.Log;
 
+/**
+ * Class that stores all the predefined Kernels and some methods to generate new kernels
+ */
 public class Kernels {
 
     //Sobel Filter
@@ -68,6 +71,7 @@ public class Kernels {
     //Separated kernel (to use for both x and y kernels)
     public static float[] gauss(int size, float sigma) {
         //Test if size is even
+        if( size%2 == 0) size++;
         float[] kernel = new float[size];
         for(int x = 0 ; x < size ; ++x) {
             kernel[x] = (float) ((1 / (Math.sqrt(2 * (Math.PI) * sigma * sigma))) * Math.exp(-((x - (size >> 1)) * (x - (size >> 1)) / (2 * sigma * sigma))));
@@ -79,6 +83,7 @@ public class Kernels {
     //Separated kernel (to use for both x and y kernels)
     public static float[] mean(int size) {
         //Test if size is even
+        if( size%2 == 0) size++;
         float[] kernel = new float[size];
         for(int x = 0 ; x < size ; ++x)
             kernel[x] = 1;
@@ -88,6 +93,7 @@ public class Kernels {
 
 
     public static float[] identity (int width, int height){
+        if (width % 2 == 0 || height % 2 == 0) return null;
         float [] kernel = new float[width * height];
         int xCenter = width / 2;
         int yCenter = height / 2;
@@ -97,11 +103,12 @@ public class Kernels {
     }
 
     /**
-     * Generate sharpenFilter in function of edgeDetection filter. Calculates the difference between identity matrix and edgeDetector filter.
+     * Generate sharpenFilter in function of edgeDetectionConvolution filter. Calculates the difference between identity matrix and edgeDetector filter.
      * @param edgeDetectionKernel
      * @return sharpenKernel of size of edgeDetectionKernel
      */
     public static float[] sharpenFilter(float [] edgeDetectionKernel, int width, int height){
+        if (width % 2 == 0 || height % 2 == 0) return null;
         float[] filter = identity(width, height);
         for (int i = 0; i < width*height; ++i){
             filter[i] -= edgeDetectionKernel[i];
@@ -110,8 +117,14 @@ public class Kernels {
     }
 
 
-
-    public static float[] laplaceOfGauss(int width, int height, float sigma) {
+    /**
+     * Generates a kernel of width and height using the Laplacian Of Gaussiian formula @Link https://homepages.inf.ed.ac.uk/rbf/HIPR2/log.htm
+     * @param width
+     * @param height
+     * @param sigma
+     * @return
+     */
+    public static float[] laplacianOfGaussian(int width, int height, float sigma) {
 
         float [] kernel = new float[width * height];
 
@@ -122,9 +135,6 @@ public class Kernels {
 
                 float res =  ((((x - (width >> 1)) * (x - (width >> 1)) ) + ((y - (height >> 1)) * (y - (height >> 1)) )) / (2*(sigma*sigma))) ;
                 kernel[index] = (float) ( - ( 1/ (Math.PI * Math.pow(sigma, 4))) * (1 - res) * Math.exp((-res)));
-                //kernel[index] *= 1000;
-                //Log.e("VALUES", String.valueOf(x) + " " + String.valueOf(y) + "   " + String.valueOf(kernel[index]));
-
             }
         }
         return kernel;

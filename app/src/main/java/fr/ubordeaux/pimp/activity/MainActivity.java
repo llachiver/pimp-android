@@ -5,12 +5,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -231,13 +229,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                //Convolution.convolve2d(image.getBitmap(), Kernels.laplaceOfGauss(9,9,1.8f), 9, 9 , true, MainActivity.this );
-                //float [] sharpKernel = Kernels.sharpenFilter(Kernels.laplaceOfGauss(9,9, 1.4f), 9,9);
+                //Convolution.convolve2d(image.getBitmap(), Kernels.laplacianOfGaussian(9,9,1.8f), 9, 9 , true, MainActivity.this );
+                //float [] sharpKernel = Kernels.sharpenFilter(Kernels.laplacianOfGaussian(9,9, 1.4f), 9,9);
                 //Convolution.convolve2d(image.getBitmap(), sharpKernel, 9, 9, true, MainActivity.this);
                 new ApplyEffectTask(MainActivity.this, new Runnable() {
                     @Override
                     public void run() {
-                        Convolution.convolve2d(image.getBitmap(), Kernels.laplaceOfGauss(9,9,1.8f), 9,9 ,true , MainActivity.this);
+                        Convolution.convolve2d(image.getBitmap(), Kernels.laplacianOfGaussian(9,9,1.8f), 9,9 ,true , MainActivity.this);
                     }
                 }).execute();
 
@@ -253,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                 new ApplyEffectTask(MainActivity.this, new Runnable() {
                     @Override
                     public void run() {
-                        Convolution.edgeDetection(image.getBitmap(), Kernels.SOBEL_X, Kernels.SOBEL_Y, MainActivity.this);
+                        Convolution.edgeDetectionConvolution(image.getBitmap(), Kernels.SOBEL_X, Kernels.SOBEL_Y, MainActivity.this);
                     }
                 }).execute();
 
