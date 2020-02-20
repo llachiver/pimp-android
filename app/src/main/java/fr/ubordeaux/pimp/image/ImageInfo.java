@@ -18,7 +18,7 @@ import java.util.Locale;
  * Class to pack some informations about Image object.
  * See {@link Image}.
  */
-public class ImageInfos {
+public class ImageInfo {
     private String height;
     private String width;
     private String date;
@@ -32,6 +32,8 @@ public class ImageInfos {
 
     private String weight;
     private String fileName;
+    private int loadedHeight;
+    private int loadedWidth;
 
 
     /**
@@ -39,23 +41,47 @@ public class ImageInfos {
      *
      * @param uri Uri of the file
      */
-    public ImageInfos(Uri uri, Context context) {
-        path = Utils.getRealPathFromURI(uri, context);
-        try {
-            ExifInterface exifInterface = new ExifInterface(path);
-            this.height = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH);
-            this.width = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH);
-            this.date = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);
-            this.deviceModel = exifInterface.getAttribute(ExifInterface.TAG_MODEL);
-            this.expositionTime = exifInterface.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
-            this.focalLength = exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH);
-            this.ISO = exifInterface.getAttribute(ExifInterface.TAG_ISO_SPEED_RATINGS);
-            this.longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE) + "," + exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
-            this.latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE) + "," + exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+    ImageInfo(Uri uri, Context context) { // friendly because Image only normally use this constructor
+        if (uri != null) {
+            this.path = Utils.getRealPathFromURI(uri, context);
+            try {
+                ExifInterface exifInterface = new ExifInterface(path);
+                this.height = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH);
+                this.width = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH);
+                this.date = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);
+                this.deviceModel = exifInterface.getAttribute(ExifInterface.TAG_MODEL);
+                this.expositionTime = exifInterface.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
+                this.focalLength = exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH);
+                this.ISO = exifInterface.getAttribute(ExifInterface.TAG_ISO_SPEED_RATINGS);
+                this.longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE) + "," + exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+                this.latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE) + "," + exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    /**
+     * Construct from antother pack of information
+     *
+     * @param original ImageInfo to copy
+     */
+    ImageInfo(ImageInfo original) {
+        this.path = original.path;
+        this.height = original.height;
+        this.width = original.width;
+        this.date = original.date;
+        this.deviceModel = original.deviceModel;
+        this.expositionTime = original.expositionTime;
+        this.focalLength = original.focalLength;
+        this.ISO = original.ISO;
+        this.longitude = original.longitude;
+        this.latitude = original.latitude;
+
+        this.weight = original.weight;
+        this.fileName = original.fileName;
+        this.loadedHeight = original.loadedHeight;
+        this.loadedWidth = original.loadedWidth;
     }
 
     /**

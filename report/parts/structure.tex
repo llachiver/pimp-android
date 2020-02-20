@@ -13,6 +13,11 @@ Le coeur de la classe est évidement une instance de Bitmap, qu'il est possible 
 \\
 On notera la nécessité pour Image d'avoir la référence d'une Activité de l'application, en effet elle est requise à plusieurs moments par les librairies Android pour charger la Bitmap en mémoire.
 
+\subsubsection{Classe \textbf{ImageInfo} :}
+La classe Image \ref{classeImage} génère et garde une instance de la classe \textbf{ImageInfo}, cette classe contient un grand nombre de valeurs à propos de l'Image (dimensions, coordonnées GPS, date de prise de vue, ...).
+\\
+L'idée de cette classe est d'empaqueter toutes ces informations afin de faciliter le passage de ces informations à l'avenir, notamment à travers des Fragments ou des Activités. On notera que tous les accesseurs appliquent des opérations de formatage sur ces données, certaines opérations pourraient être déplacées dans les constructeurs s'ils venaient à être utilisés régulièrement. 
+
 \subsection{Package \textbf{util} :}
 Ce package contient de nombreuses classes contenant des méthodes statiques permettant une meilleur factorisation du code.
 \\
