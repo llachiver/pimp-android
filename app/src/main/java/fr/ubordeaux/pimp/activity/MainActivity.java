@@ -34,7 +34,7 @@ import fr.ubordeaux.pimp.util.Effects;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
     /////////////////////////////////////////////////////////////////////////////////////
     // Settings :
     /////////////////////////////////////////////////////////////////////////////////////
@@ -192,9 +192,15 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
+        //FragmentManager fm = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        }
+        else if(effectSettingsFragment.isVisible()){
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.remove(effectSettingsFragment);
+            fragmentTransaction.commit();
+            findViewById(R.id.fragment_effects_container).setVisibility(View.VISIBLE);
         }
         else {
             moveTaskToBack(true);
@@ -262,7 +268,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     /**
-     * Inflates the list of effects at the bottom of the screen.
+     * Inflates the list of effects at the bottom of the screen w/ listeners.
      */
     public void inflateEffectsList(){
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -271,7 +277,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     /**
-     * Inflates the settings (seekbars, buttons...) of a specific effect.
+     * Inflates the settings (seekbars, buttons...) of a specific effect w/ listeners.
      * @param effect the enum of the effect
      */
     public void inflateEffectSettings(Effects effect){
