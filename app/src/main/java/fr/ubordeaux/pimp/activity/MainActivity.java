@@ -8,7 +8,6 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,12 +22,14 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import fr.ubordeaux.pimp.R;
-import fr.ubordeaux.pimp.filters.Convolution;
-import fr.ubordeaux.pimp.filters.Retouching;
+import fr.ubordeaux.pimp.fragments.EffectSettingsFragment;
+import fr.ubordeaux.pimp.fragments.EffectsFragment;
 import fr.ubordeaux.pimp.image.Image;
-import fr.ubordeaux.pimp.util.ApplyEffectTask;
-import fr.ubordeaux.pimp.util.Kernels;
+import fr.ubordeaux.pimp.util.Effects;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -37,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     // Settings :
     /////////////////////////////////////////////////////////////////////////////////////
     private static int DEFAULT_IMAGE = R.drawable.starwars;
+
+    private EffectsFragment effectsListFragment;
+    private EffectSettingsFragment effectSettingsFragment;
+    private FragmentManager fragmentManager;
 
 
     //Image currently modified.
@@ -164,8 +169,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        iv = findViewById(R.id.imageView);
+        iv = findViewById(R.id.photoView);
+        //Initialize MainSingleton
 
         //Loading default image from resources
         setImage(new Image(DEFAULT_IMAGE, this));
@@ -175,105 +180,31 @@ public class MainActivity extends AppCompatActivity {
 
         updateIv();
 
-        listeners();
+        //Init the fragments
+        effectsListFragment = new EffectsFragment();
+
+        //Used for fragment transactions
+        fragmentManager = getSupportFragmentManager();
+
+        inflateEffectsList();
     }
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
+        //FragmentManager fm = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        }
+        else if(effectSettingsFragment.isVisible()){
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.remove(effectSettingsFragment);
+            fragmentTransaction.commit();
+            findViewById(R.id.fragment_effects_container).setVisibility(View.VISIBLE);
         }
         else {
             moveTaskToBack(true);
         }
     }
-
-    public void listeners(){
-        Button bEqualization = this.findViewById(R.id.bEqualization);
-        Button bGray = this.findViewById(R.id.bGray);
-        Button bConvolution = this.findViewById(R.id.bConvolution);
-        Button bContrast = this.findViewById(R.id.bContrast);
-        Button bSelectHue = this.findViewById(R.id.bSelectHue);
-
-
-        bGray.setOnClickListener(new Button.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-
-                new ApplyEffectTask(MainActivity.this, new Runnable() {
-                    @Override
-                    public void run() {
-                        Retouching.toGray(image.getBitmap(), MainActivity.this);
-                    }
-                }).execute();
-            }
-        });
-
-
-        bEqualization.setOnClickListener(new Button.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                new ApplyEffectTask(MainActivity.this, new Runnable() {
-                    @Override
-                    public void run() {
-                       Retouching.histogramEqualization(image.getBitmap(), MainActivity.this);
-                    }
-                }).execute();
-            }
-        });
-
-        bConvolution.setOnClickListener(new Button.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                //Convolution.convolve2d(image.getBitmap(), Kernels.laplacianOfGaussian(9,9,1.8f), 9, 9 , true, MainActivity.this );
-                //float [] sharpKernel = Kernels.sharpenFilter(Kernels.laplacianOfGaussian(9,9, 1.4f), 9,9);
-                //Convolution.convolve2d(image.getBitmap(), sharpKernel, 9, 9, true, MainActivity.this);
-                new ApplyEffectTask(MainActivity.this, new Runnable() {
-                    @Override
-                    public void run() {
-                        Convolution.convolve2d(image.getBitmap(), Kernels.laplacianOfGaussian(9,9,1.8f), 9,9 ,true , MainActivity.this);
-                    }
-                }).execute();
-
-
-
-            }
-        });
-
-        bContrast.setOnClickListener(new Button.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                new ApplyEffectTask(MainActivity.this, new Runnable() {
-                    @Override
-                    public void run() {
-                        Convolution.edgeDetectionConvolution(image.getBitmap(), Kernels.SOBEL_X, Kernels.SOBEL_Y, MainActivity.this);
-                    }
-                }).execute();
-
-            }
-        });
-
-        bSelectHue.setOnClickListener(new Button.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                final float [] gauss = Kernels.gauss(3,1.8f);
-                new ApplyEffectTask(MainActivity.this, new Runnable() {
-                    @Override
-                    public void run() {
-                        Convolution.convolve2dSeparable(image.getBitmap(), gauss, gauss, true, MainActivity.this);
-                    }
-                }).execute();
-            }
-        });
-
-    }
-
 
     /**
      * Starts intent to pick an image from gallery
@@ -332,6 +263,32 @@ public class MainActivity extends AppCompatActivity {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);    // other 'case' lines to check for other
             // permissions this app might request.
         }
+    }
+
+    /**
+     * Inflates the list of effects at the bottom of the screen w/ listeners.
+     */
+    public void inflateEffectsList(){
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_effects_container, effectsListFragment);
+        fragmentTransaction.commit();
+    }
+
+    /**
+     * Inflates the settings (seekbars, buttons...) of a specific effect w/ listeners.
+     * @param effect the enum of the effect
+     */
+    public void inflateEffectSettings(Effects effect){
+        findViewById(R.id.fragment_effects_container).setVisibility(View.GONE);
+        effectSettingsFragment = new EffectSettingsFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable("effect", effect);
+        effectSettingsFragment.setArguments(args);
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_settings_container, effectSettingsFragment);
+        fragmentTransaction.commit();
     }
 
 

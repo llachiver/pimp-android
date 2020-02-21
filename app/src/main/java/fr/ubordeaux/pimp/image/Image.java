@@ -32,6 +32,9 @@ public class Image {
     //Core of the Image, Bitmap representing its pixels.
     private Bitmap bitmap;
 
+    //Quick save of the image done when opening an effect, in order to discard its modifications
+    private Bitmap bitmapSave;
+
     /**
      * Load an image from resources, size is automatically limited depending the screen size.
      *
@@ -174,6 +177,15 @@ public class Image {
     public void reset() {
         bitmap.setPixels(imgBase, 0, width, 0, 0, width, height);
     }
+
+    public void quickSave() {
+        bitmapSave = bitmap.copy(bitmap.getConfig(), true);
+    }
+
+    public void discard() {
+        bitmap = bitmap.copy(bitmapSave.getConfig(), true);
+    }
+
 
     /**
      * Getter of the Bitmap included in the Image, use it to convert this Image to a Bitmap.
