@@ -9,7 +9,9 @@ import android.widget.Button;
 import androidx.fragment.app.Fragment;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.util.Effects;
+import fr.ubordeaux.pimp.util.Kernels;
 
 public class EffectsFragment extends Fragment {
 
@@ -32,6 +34,7 @@ public class EffectsFragment extends Fragment {
         Button bContrast = (Button) view.findViewById(R.id.bContrast);
         Button bChangeHue = (Button) view.findViewById(R.id.bChangeHue);
         Button bKeepHue = (Button) view.findViewById(R.id.bKeepHue);
+        Button bNeon = (Button) view.findViewById(R.id.bNeon);
         //TODO ...
 
         bBrightness.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +74,15 @@ public class EffectsFragment extends Fragment {
                 main.inflateEffectSettings(Effects.KEEP_HUE);
             }
         });
+        bNeon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO the convolution is applied HERE
+                main.inflateEffectSettings(Effects.NEON);
+            }
+        });
+
+
 
     }
 }

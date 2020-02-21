@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.Effects;
@@ -48,6 +49,10 @@ public class EffectSettingsFragment extends Fragment {
 
         //Generate the view and set the listeners for the desired effect
         switch(effect){
+            case BRIGHTNESS:
+            case SATURATION:
+                simpleEffectView(effect);
+                break;
             case CONTRAST:
                 contrastView();
                 break;
@@ -58,7 +63,6 @@ public class EffectSettingsFragment extends Fragment {
                 keepHueView();
                 break;
             default :
-                simpleEffectView(effect);
                 break;
         }
         settingsLayout.addView(settingsList);
