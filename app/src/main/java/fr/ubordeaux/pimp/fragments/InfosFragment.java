@@ -1,4 +1,4 @@
-package fr.ubordeaux.pimp.activity;
+package fr.ubordeaux.pimp.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

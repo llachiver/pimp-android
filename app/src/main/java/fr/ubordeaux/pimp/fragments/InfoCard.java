@@ -1,4 +1,4 @@
-package fr.ubordeaux.pimp.activity;
+package fr.ubordeaux.pimp.fragments;
 
 /**
  * Object used by {@link InfoAdapter} to show some informations on two lines with an icone.

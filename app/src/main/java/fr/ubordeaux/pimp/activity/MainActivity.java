@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentTransaction;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.fragments.EffectSettingsFragment;
 import fr.ubordeaux.pimp.fragments.EffectsFragment;
+import fr.ubordeaux.pimp.fragments.InfosFragment;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.Effects;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
