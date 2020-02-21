@@ -38,6 +38,7 @@ public class EffectsFragment extends Fragment {
         bBrightness.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                main.getImage().quickSave();
                 main.inflateEffectSettings(Effects.BRIGHTNESS);
             }
         });
@@ -45,6 +46,7 @@ public class EffectsFragment extends Fragment {
         bSaturation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                main.getImage().quickSave();
                 main.inflateEffectSettings(Effects.SATURATION);
             }
         });
@@ -52,18 +54,21 @@ public class EffectsFragment extends Fragment {
         bContrast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                main.getImage().quickSave();
                 main.inflateEffectSettings(Effects.CONTRAST);
             }
         });
         bChangeHue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                main.getImage().quickSave();
                 main.inflateEffectSettings(Effects.CHANGE_HUE);
             }
         });
         bKeepHue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                main.getImage().quickSave();
                 main.inflateEffectSettings(Effects.KEEP_HUE);
             }
         });

@@ -6,10 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import fr.ubordeaux.pimp.R;
@@ -28,7 +31,6 @@ public class EffectSettingsFragment extends Fragment {
 
         //Get the desired effect
         Effects effect = (Effects) args.getSerializable("effect");
-
         settingsLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_effect_settings,null);
 
         RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -56,18 +58,21 @@ public class EffectSettingsFragment extends Fragment {
         }
         settingsLayout.addView(settingsList);
 
+        cancelConfirmListeners();
+
         return settingsLayout;
     }
 
     public void cancelConfirmListeners(){
         final MainActivity mainActivity = (MainActivity) getActivity();
 
-        Button bCancel = settingsLayout.findViewById(R.id.bCancel);
-        Button bConfirm = settingsLayout.findViewById(R.id.bCancel);
-
+        ImageButton bCancel = (ImageButton) settingsLayout.findViewById(R.id.bCancel);
+        ImageButton bConfirm = (ImageButton) settingsLayout.findViewById(R.id.bConfirm);
+        System.out.println(bCancel);
         bCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getActivity().onBackPressed();
                 mainActivity.getImage().discard();
             }
         });
@@ -75,6 +80,8 @@ public class EffectSettingsFragment extends Fragment {
         bConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO save applied effect into the queue
+                getActivity().onBackPressed();
             }
         });
 
