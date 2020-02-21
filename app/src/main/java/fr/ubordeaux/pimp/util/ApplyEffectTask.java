@@ -11,16 +11,15 @@ import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.image.Image;
 
 /**
- * Load asynchronously a new Image from Uri with async task
+ * General Async task any filter function from this project as an async ApplyEffectTask
  */
-public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
+public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
     private WeakReference<MainActivity> activityWeakReference; //MainActivity reference
-    private Image image;
-    private Uri source;
+    private Runnable effect;
 
-    public LoadImageUriTask(MainActivity activity, Uri source) {
+    public ApplyEffectTask(MainActivity activity, Runnable effect) {
         this.activityWeakReference = new WeakReference<>(activity);
-        this.source = source;
+        this.effect = effect;
     }
 
     //Work to do before heavy task
@@ -42,7 +41,7 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
             if (activity == null || activity.isFinishing()) {
                 return null;
             }
-            image = new Image(source, activity); //load and create Image
+            effect.run(); //Run runnable object
             return null;
         }
 
@@ -61,7 +60,6 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
 
         //***Linked to main activity ***/
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-        activity.setImage(image);
-        activity.updateIv();
+        //activity.updateIv();
     }
 }
