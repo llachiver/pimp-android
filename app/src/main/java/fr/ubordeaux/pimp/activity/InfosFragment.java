@@ -1,7 +1,6 @@
 package fr.ubordeaux.pimp.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,31 +36,57 @@ public class InfosFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (getView() == null) return;
+
         // Get ImageInfo to print
         Bundle bundle = this.getArguments();
         if (bundle != null)
             imageInfo = bundle.getParcelable("info");
 
+        if (imageInfo == null) return;
 
         //Fill layout:
-        if (imageInfo != null) {
-            Log.v("LOG", "test coord :" + imageInfo.getCoordinates());
-            Log.v("LOG", "test size :" + imageInfo.getSize());
-            Log.v("LOG", "test file size :" + imageInfo.getFileSize());
-            ArrayList<InfoCard> exampleList = new ArrayList<>();
-            exampleList.add(new InfoCard(android.R.drawable.star_on, imageInfo.getSize(), imageInfo.getLoadedHeight() + " x " + imageInfo.getLoadedWidth()));
 
-            RecyclerView mRecyclerView = getView().findViewById(R.id.info_recycler_view);
-            mRecyclerView.setHasFixedSize(true);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-            RecyclerView.Adapter mAdapter = new InfoAdapter(exampleList);
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.setAdapter(mAdapter);
-        } else {
-            //TODO
+        ArrayList<InfoCard> infoCardsList = new ArrayList<>();
+
+        //insert cards of information:
+        String fileName = imageInfo.getFileName();
+        if (fileName != null) { // File and resolution information
+            String resolution = imageInfo.getCaptorResolution();
+            String size = imageInfo.getSize();
+            String fileSize = imageInfo.getFileSize();
+            infoCardsList.add(new InfoCard(R.drawable.ic_image_white_24dp, fileName,
+                    (resolution == null ? "" : resolution + "    ") + (size == null ? "" : size + "    ") + (fileSize == null ? "" : fileSize)));
         }
 
+        String date = imageInfo.getDate();
+        if (date != null) // Date information
+            infoCardsList.add(new InfoCard(R.drawable.ic_date_range_white_24dp, "Date", date));
+
+
+        String device = imageInfo.getDeviceModel();
+        String exposition = imageInfo.getExpositionTime();
+        String focal = imageInfo.getFocalLength();
+        String iso = imageInfo.getISO();
+        if (device != null || exposition != null || focal != null || iso != null) { // Captor information
+            infoCardsList.add(new InfoCard(R.drawable.ic_camera_white_24dp, (device == null ? "Appareil Inconnu" : device),
+                    (exposition == null ? "" : exposition + "    ") + (focal == null ? "" : focal + "    ") + (iso == null ? "" : iso)
+            ));
+        }
+
+        String location = imageInfo.getCoordinates();
+        if (location != null) // Location information
+            infoCardsList.add(new InfoCard(R.drawable.ic_location_on_white_24dp, "Coordonnées", location));
+
+        // App information:
+        infoCardsList.add(new InfoCard(R.drawable.ic_settings_white_24dp, "Aperçu chargé", imageInfo.getLoadedWidth() + " x " + imageInfo.getLoadedHeight()));
+
+        RecyclerView mRecyclerView = getView().findViewById(R.id.info_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(new InfoAdapter(infoCardsList));
     }
+
 
     /**
      * Change ToolBar for this fragment.
