@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -129,8 +130,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.imageInfo:
+                InfosFragment fragment = new InfosFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("info", getImage().getInfo()); //send image info to fragment
+                fragment.setArguments(bundle);
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.contentFragment, new InfosFragment());
+                ft.replace(R.id.contentFragment, fragment);
                 ft.addToBackStack("info_fragment");
                 ft.commit();
                 return true;

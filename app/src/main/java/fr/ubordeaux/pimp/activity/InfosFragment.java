@@ -1,6 +1,7 @@
 package fr.ubordeaux.pimp.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,11 +14,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import fr.ubordeaux.pimp.R;
+import fr.ubordeaux.pimp.image.ImageInfo;
 
 public class InfosFragment extends Fragment {
+
+    private ImageInfo imageInfo;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Get ImageInfo to print
+        Bundle bundle = this.getArguments();
+        if (bundle != null)
+            imageInfo = bundle.getParcelable("info");
+
+
+        //Fill layout:
+        if (imageInfo != null) {
+            Log.v("LOG", "test coord :" + imageInfo.getCoordinates());
+            Log.v("LOG", "test size :" + imageInfo.getSize());
+            Log.v("LOG", "test file size :" + imageInfo.getFileSize());
+        } else {
+            //TODO
+        }
+
+
         setHasOptionsMenu(true); //change toolbar
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_infos, container, false);

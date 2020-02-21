@@ -5,6 +5,8 @@ import android.content.Context;
 import androidx.exifinterface.media.ExifInterface;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -19,7 +21,7 @@ import java.util.Locale;
  * Class to pack some informations about Image object.
  * See {@link Image}.
  */
-public class ImageInfo {
+public class ImageInfo implements Parcelable {
     private String height;
     private String width;
     private String date;
@@ -288,4 +290,65 @@ public class ImageInfo {
     void setLoadedWidth(int width) {// friendly access, work with Image
         loadedWidth = width;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(height);
+        dest.writeString(width);
+        dest.writeString(date);
+        dest.writeString(deviceModel);
+        dest.writeString(expositionTime);
+        dest.writeString(focalLength);
+        dest.writeString(ISO);
+        dest.writeString(longitude);
+        dest.writeString(latitude);
+        dest.writeString(path);
+        dest.writeLong(weight);
+        dest.writeString(fileName);
+        dest.writeInt(loadedHeight);
+        dest.writeInt(loadedWidth);
+    }
+
+    /**
+     * Generated to use {@link Parcelable} interface
+     *
+     * @param in Parcel
+     */
+    protected ImageInfo(Parcel in) {
+        height = in.readString();
+        width = in.readString();
+        date = in.readString();
+        deviceModel = in.readString();
+        expositionTime = in.readString();
+        focalLength = in.readString();
+        ISO = in.readString();
+        longitude = in.readString();
+        latitude = in.readString();
+        path = in.readString();
+        weight = in.readLong();
+        fileName = in.readString();
+        loadedHeight = in.readInt();
+        loadedWidth = in.readInt();
+    }
+
+    /**
+     * Generated to use {@link Parcelable} interface
+     */
+    public static final Creator<ImageInfo> CREATOR = new Creator<ImageInfo>() {
+        @Override
+        public ImageInfo createFromParcel(Parcel in) {
+            return new ImageInfo(in);
+        }
+
+        @Override
+        public ImageInfo[] newArray(int size) {
+            return new ImageInfo[size];
+        }
+    };
 }
