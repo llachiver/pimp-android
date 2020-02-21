@@ -1,7 +1,6 @@
 package fr.ubordeaux.pimp.activity;
 
 import android.Manifest;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -9,22 +8,25 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
 import java.io.IOException;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import fr.ubordeaux.pimp.R;
+import fr.ubordeaux.pimp.fragments.EffectSettingsFragment;
+import fr.ubordeaux.pimp.fragments.EffectsFragment;
 import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.util.Effects;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -33,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
     // Settings :
     /////////////////////////////////////////////////////////////////////////////////////
     private static int DEFAULT_IMAGE = R.drawable.starwars;
+
+    private EffectsFragment effectsListFragment;
+    private EffectSettingsFragment effectSettingsFragment;
+    private FragmentManager fragmentManager;
 
 
     //Image currently modified.
@@ -166,12 +172,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        iv = findViewById(R.id.imageView);
+        iv = findViewById(R.id.photoView);
 
         //Loading default image from resources
         setImage(new Image(DEFAULT_IMAGE, this));
@@ -180,16 +181,29 @@ public class MainActivity extends AppCompatActivity {
         iv.setMaximumScale(10);
         //Set imageview bitmap
         updateIv();
+
+        //Init the fragments
+        effectsListFragment = new EffectsFragment();
+
+        //Used for fragment transactions
+        fragmentManager = getSupportFragmentManager();
+
+        inflateEffectsList();
     }
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0)
-            fm.popBackStack();
-        else
-            super.onBackPressed();
-        moveTaskToBack(true);
+        //FragmentManager fm = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else if (effectSettingsFragment != null && effectSettingsFragment.isVisible()) {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.remove(effectSettingsFragment);
+            fragmentTransaction.commit();
+            findViewById(R.id.fragment_effects_container).setVisibility(View.VISIBLE);
+        } else {
+            moveTaskToBack(true);
+        }
     }
 
     public void startGalleryActivityWithPermissions() {
@@ -344,6 +358,33 @@ public class MainActivity extends AppCompatActivity {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);    // other 'case' lines to check for other
                 // permissions this app might request.
         }
+    }
+
+    /**
+     * Inflates the list of effects at the bottom of the screen w/ listeners.
+     */
+    public void inflateEffectsList() {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_effects_container, effectsListFragment);
+        fragmentTransaction.commit();
+    }
+
+    /**
+     * Inflates the settings (seekbars, buttons...) of a specific effect w/ listeners.
+     *
+     * @param effect the enum of the effect
+     */
+    public void inflateEffectSettings(Effects effect) {
+        findViewById(R.id.fragment_effects_container).setVisibility(View.GONE);
+        effectSettingsFragment = new EffectSettingsFragment();
+
+        Bundle args = new Bundle();
+        args.putSerializable("effect", effect);
+        effectSettingsFragment.setArguments(args);
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_settings_container, effectSettingsFragment);
+        fragmentTransaction.commit();
     }
 
 
