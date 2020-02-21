@@ -33,13 +33,14 @@ public class Retouching {
      * @param factor the brightness factor, whose range is based on the seekbar [-127 ; +127]
      */
     public static void setBrightness(Bitmap bmp, int factor, Context context){
+        int newFactor = factor - 127;
         RenderScript rs = RenderScript.create(context);
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Bitmap input
         Allocation output = Allocation.createTyped(rs, input.getType()); //Bitmap output
 
         ScriptC_brightness sBrightness = new ScriptC_brightness(rs);
 
-        sBrightness.set_factor(factor);
+        sBrightness.set_factor(newFactor);
         sBrightness.forEach_setBrightness(input, output);
 
         output.copyTo(bmp);
@@ -56,8 +57,9 @@ public class Retouching {
      * @param factor the saturation factor, whose range is based on the seekbar [-127 ; +127]
      */
     public static void setSaturation(Bitmap bmp, int factor, Context context){
+
         //We normalize the factor between -1 and 1.
-        float factorRS = factor/127f;
+        float factorRS = (factor-127)/127f;
         RenderScript rs = RenderScript.create(context);
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Bitmap input
         Allocation output = Allocation.createTyped(rs, input.getType()); //Bitmap output

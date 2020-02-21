@@ -7,26 +7,31 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.filters.Retouching;
+import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.Effects;
 
 public class EffectSettingsFragment extends Fragment {
 
     RelativeLayout settingsLayout;
     LinearLayout settingsList;
+    MainActivity mainActivity;
+    Image image;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mainActivity = (MainActivity) getActivity();
+        image = mainActivity.getImage();
+
         Bundle args = getArguments();
 
         //Get the desired effect
@@ -53,7 +58,7 @@ public class EffectSettingsFragment extends Fragment {
                 keepHueView();
                 break;
             default :
-                simpleEffectView(effect.getName());
+                simpleEffectView(effect);
                 break;
         }
         settingsLayout.addView(settingsList);
@@ -64,7 +69,7 @@ public class EffectSettingsFragment extends Fragment {
     }
 
     public void cancelConfirmListeners(){
-        final MainActivity mainActivity = (MainActivity) getActivity();
+
 
         ImageButton bCancel = (ImageButton) settingsLayout.findViewById(R.id.bCancel);
         ImageButton bConfirm = (ImageButton) settingsLayout.findViewById(R.id.bConfirm);
@@ -73,7 +78,7 @@ public class EffectSettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
-                mainActivity.getImage().discard();
+                image.discard();
             }
         });
 
@@ -92,11 +97,11 @@ public class EffectSettingsFragment extends Fragment {
      * @param effect the name of the effect.
      * @return the view of the layout
      */
-    public void simpleEffectView(final String effect){
+    public void simpleEffectView(final Effects effect){
         //Set the settings layout
         TextView tv = new TextView(super.getContext());
         tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tv.setText(effect);
+        tv.setText(effect.getName());
 
         SeekBar sb = new SeekBar(super.getContext());
         sb.setMax(255);
@@ -106,7 +111,15 @@ public class EffectSettingsFragment extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 switch(effect){
-                    //TODO method call
+                    case BRIGHTNESS:
+                        image.discard();
+                        Retouching.setBrightness(image.getBitmap(), progress, mainActivity);
+                        break;
+                    case SATURATION:
+                        image.discard();
+                        Retouching.setSaturation(image.getBitmap(), progress, mainActivity);
+                        break;
+
                 }
             }
 
@@ -137,7 +150,8 @@ public class EffectSettingsFragment extends Fragment {
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                //Contrast call
+                image.discard();
+                Retouching.dynamicExtensionRGB(image.getBitmap(), progress, mainActivity);
             }
 
             @Override
@@ -157,7 +171,7 @@ public class EffectSettingsFragment extends Fragment {
         bEqualization.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Equalization call
+                Retouching.histogramEqualization(image.getBitmap(), mainActivity);
             }
         });
 

@@ -29,11 +29,13 @@ public class Image {
     //Original version of the image at its creation
     private int[] imgBase;
 
+    //Quick save of the image done when opening an effect, in order to discard its modifications later
+    private int[] imgQuickSave;
+
     //Core of the Image, Bitmap representing its pixels.
     private Bitmap bitmap;
 
-    //Quick save of the image done when opening an effect, in order to discard its modifications
-    private Bitmap bitmapSave;
+
 
     /**
      * Load an image from resources, size is automatically limited depending the screen size.
@@ -124,7 +126,9 @@ public class Image {
         width = bmp.getWidth();
         height = bmp.getHeight();
         imgBase = new int[width * height];
+        imgQuickSave = new int[width * height];
         bitmap.getPixels(imgBase, 0, width, 0, 0, width, height);
+        bitmap.getPixels(imgQuickSave, 0, width, 0, 0, width, height);
     }
 
     /**
@@ -145,7 +149,9 @@ public class Image {
         width = newBitmap.getWidth();
         height = newBitmap.getHeight();
         imgBase = new int[width * height];
+        imgQuickSave = new int[width * height];
         bitmap.getPixels(imgBase, 0, width, 0, 0, width, height);
+        bitmap.getPixels(imgQuickSave, 0, width, 0, 0, width, height);
     }
 
     /**
@@ -179,11 +185,11 @@ public class Image {
     }
 
     public void quickSave() {
-        bitmapSave = bitmap.copy(bitmap.getConfig(), true);
+        bitmap.getPixels(imgQuickSave, 0, width, 0, 0, width, height);
     }
 
     public void discard() {
-        bitmap = bitmap.copy(bitmapSave.getConfig(), true);
+        bitmap.setPixels(imgQuickSave, 0, width, 0, 0, width, height);
     }
 
 

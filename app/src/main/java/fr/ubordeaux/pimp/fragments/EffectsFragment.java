@@ -32,7 +32,6 @@ public class EffectsFragment extends Fragment {
         Button bContrast = (Button) view.findViewById(R.id.bContrast);
         Button bChangeHue = (Button) view.findViewById(R.id.bChangeHue);
         Button bKeepHue = (Button) view.findViewById(R.id.bKeepHue);
-        Button bConvolution = (Button) view.findViewById(R.id.bConvolution);
         //TODO ...
 
         bBrightness.setOnClickListener(new View.OnClickListener() {
@@ -72,13 +71,6 @@ public class EffectsFragment extends Fragment {
                 main.inflateEffectSettings(Effects.KEEP_HUE);
             }
         });
-        bConvolution.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //main.inflateEffectSettings(Effects.CONVOLUTION);
-            }
-        });
-
 
     }
 }

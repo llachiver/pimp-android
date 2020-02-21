@@ -22,9 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.fragments.EffectSettingsFragment;
 import fr.ubordeaux.pimp.fragments.EffectsFragment;
