@@ -38,5 +38,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'org.jetbrains:annotations-java5:15.0'
     implementation "androidx.exifinterface:exifinterface:1.1.0"
-
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 }
