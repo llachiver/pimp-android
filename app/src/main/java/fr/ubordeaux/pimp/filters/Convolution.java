@@ -193,7 +193,7 @@ public class Convolution {
     }
 
     public static void sharpen(Bitmap bmp, Context context){
-        convolve2d(bmp, Kernels.SHARPEN3X3, 3,3, true, context);
+        convolve2d(bmp, Kernels.laplacianOfGaussian(9,9,1.8f),9,9, true, context);
     }
 
     public static void neon(Bitmap bmp, Context context){
