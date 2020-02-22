@@ -12,6 +12,7 @@ import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.util.ApplyEffectTask;
 import fr.ubordeaux.pimp.util.Effects;
 import fr.ubordeaux.pimp.util.Kernels;
 
@@ -69,7 +70,13 @@ public class EffectsFragment extends Fragment {
             public void onClick(View v) {
                 main.getImage().quickSave();
                 //No settings here, so we apply directly the effect.
-                Retouching.histogramEqualization(main.getImage().getBitmap(),main);
+                new ApplyEffectTask(main, new Runnable() {
+                    @Override
+                    public void run() {
+                        Retouching.histogramEqualization(main.getImage().getBitmap(),main);
+                    }
+                }).execute();
+
                 main.inflateEffectSettings(Effects.GENERIC);
             }
         });
@@ -98,7 +105,12 @@ public class EffectsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                Convolution.sharpen(main.getImage().getBitmap(), main);
+                new ApplyEffectTask(main, new Runnable() {
+                    @Override
+                    public void run() {
+                        Convolution.sharpen(main.getImage().getBitmap(), main);
+                    }
+                }).execute();
                 main.inflateEffectSettings(Effects.GENERIC);
             }
         });
@@ -106,7 +118,13 @@ public class EffectsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                Convolution.neon(main.getImage().getBitmap(), main);
+                new ApplyEffectTask(main, new Runnable() {
+                    @Override
+                    public void run() {
+                        Convolution.neon(main.getImage().getBitmap(), main);
+                    }
+                }).execute();
+
                 main.inflateEffectSettings(Effects.GENERIC);
             }
         });

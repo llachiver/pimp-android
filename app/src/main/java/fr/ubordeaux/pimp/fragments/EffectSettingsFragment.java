@@ -18,6 +18,7 @@ import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.util.ApplyEffectTask;
 import fr.ubordeaux.pimp.util.Effects;
 
 public class EffectSettingsFragment extends Fragment {
