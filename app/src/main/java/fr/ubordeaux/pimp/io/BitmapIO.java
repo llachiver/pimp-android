@@ -3,12 +3,9 @@ package fr.ubordeaux.pimp.io;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
@@ -20,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import androidx.annotation.RequiresApi;
 import fr.ubordeaux.pimp.util.Utils;
 
 /**

@@ -3,7 +3,6 @@ package fr.ubordeaux.pimp.image;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -25,6 +24,7 @@ public class Image {
     private int height;
 
     private Uri uri;
+    private ImageInfo infos; //embeds all available information
 
     //Original version of the image at its creation
     private int[] imgBase;
@@ -61,6 +61,7 @@ public class Image {
     /**
      * Load an image from resources with size limitation.
      * See {@link fr.ubordeaux.pimp.util.Utils#calculateInSampleSize(int, int, int, int)}
+     * Note that information are not yet managed with this constructor.
      *
      * @param id             int value of the resource
      * @param requiredWidth  The desired width for the image.
@@ -76,6 +77,9 @@ public class Image {
                 .appendPath(resources.getResourceTypeName(id))
                 .appendPath(resources.getResourceEntryName(id))
                 .build(); //TO TEST !!!!!!
+        infos = new ImageInfo(null, context); // todo ?
+        infos.setLoadedHeight(height);//set values n info pack
+        infos.setLoadedWidth(width);
     }
 
     /**
@@ -111,6 +115,9 @@ public class Image {
     public Image(Uri uri, int requiredWidth, int requiredHeight, Activity context) {
         this(BitmapIO.decodeAndScaleBitmapFromUri(uri, requiredWidth, requiredHeight, context));
         this.uri = uri;
+        infos = new ImageInfo(this.uri, context);
+        infos.setLoadedHeight(height);//set values n info pack
+        infos.setLoadedWidth(width);
     }
 
 
@@ -152,6 +159,9 @@ public class Image {
         imgQuickSave = new int[width * height];
         bitmap.getPixels(imgBase, 0, width, 0, 0, width, height);
         bitmap.getPixels(imgQuickSave, 0, width, 0, 0, width, height);
+        infos = new ImageInfo(null, null);
+        infos.setLoadedHeight(height);//set values n info pack
+        infos.setLoadedWidth(width);
     }
 
     /**
@@ -167,6 +177,7 @@ public class Image {
      * Constructor to create an Image from a rescaled other Image.
      * See {@link fr.ubordeaux.pimp.util.Utils#calculateInSampleSize(int, int, int, int)}
      * Note that the rescaling is using bilinear filtering, see {@link android.graphics.Bitmap#createScaledBitmap(Bitmap, int, int, boolean)}.
+     * Note that infos will be duplicated.
      *
      * @param source            Source Image
      * @param newRequiredWidth  The desired width for the image. (must be less than or equal to the original)
@@ -175,6 +186,9 @@ public class Image {
     public Image(Image source, int newRequiredWidth, int newRequiredHeight) {
         this(source.getBitmap(), newRequiredWidth, newRequiredHeight);
         this.uri = source.uri;
+        infos = new ImageInfo(source.getInfo());
+        infos.setLoadedHeight(height);//set values n info pack
+        infos.setLoadedWidth(width);
     }
 
     /**
@@ -217,18 +231,14 @@ public class Image {
     }
 
     /**
-     * Get the Uri of the original file from where come the Image.
-     * Can share this path with another Image if this Image is a copy rescaled or not.
-     * May be also be null, if this Image was created from a Bitmap.
-     *
-     * @return Uri
+     * @return Get a pack of information about this image: see {@link ImageInfo}. Note that depending if the image is loaded or if it was created from a Bitmap, some fiels can be null.
      */
-    public Uri getUri() {
-        return uri;
+    public ImageInfo getInfo() {
+        return infos;
     }
 
     /**
-     *  Export the current image to the devices gallery
+     * Export the current image to the devices gallery
      * Ask for the user's permission if not yet given to store the current
      * image in the gallery before calling the function that saves it to the gallery.
      *
@@ -244,7 +254,7 @@ public class Image {
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(context,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(context, "Permission is needed to save image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Permission is needed to save image", Toast.LENGTH_LONG).show();
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
