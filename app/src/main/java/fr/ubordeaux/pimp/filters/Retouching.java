@@ -171,6 +171,11 @@ public class Retouching {
         rs.destroy();
     }
 
+    /**
+     * Set an image to gray scale.
+     * @param bmp Bmp to modify
+     * @param context MainActivity Context
+     */
     public static void toGray(Bitmap bmp, Context context){
         RenderScript rs = RenderScript.create(context);
 
@@ -187,6 +192,30 @@ public class Retouching {
         output.destroy();
         rs.destroy();
         grayScript.destroy();
+
+    }
+
+    /**
+     * Set invert to an image computing the difference of each 255 - pixel.
+     * @param bmp Bmp to modify
+     * @param context MainActivity Context
+     */
+    public static void invert(Bitmap bmp, Context context){
+        RenderScript rs = RenderScript.create(context);
+
+        Allocation input = Allocation.createFromBitmap(rs, bmp);
+        Allocation output = Allocation.createTyped(rs, input.getType());
+
+        ScriptC_utils invertScript = new ScriptC_utils(rs);
+
+        invertScript.forEach_invert(input,output);
+
+        output.copyTo(bmp);
+
+        input.destroy();
+        output.destroy();
+        rs.destroy();
+        invertScript.destroy();
 
     }
 

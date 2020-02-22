@@ -41,7 +41,41 @@ public class EffectsFragment extends Fragment {
         Button bBlur = (Button) view.findViewById(R.id.bBlur);
         Button bSharpen = (Button) view.findViewById(R.id.bSharpen);
         Button bNeon = (Button) view.findViewById(R.id.bNeon);
+        Button bToGray = (Button) view.findViewById(R.id.bToGray);
+        Button bInvert = (Button) view.findViewById(R.id.bInvert);
 
+
+        bToGray.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.getImage().quickSave();
+                //No settings here, so we apply directly the effect.
+                new ApplyEffectTask(main, new Runnable() {
+                    @Override
+                    public void run() {
+                        Retouching.toGray(main.getImage().getBitmap(),main);
+                    }
+                }).execute();
+
+                main.inflateEffectSettings(Effects.GENERIC);
+            }
+        });
+
+        bInvert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.getImage().quickSave();
+                //No settings here, so we apply directly the effect.
+                new ApplyEffectTask(main, new Runnable() {
+                    @Override
+                    public void run() {
+                        Retouching.invert(main.getImage().getBitmap(),main);
+                    }
+                }).execute();
+
+                main.inflateEffectSettings(Effects.GENERIC);
+            }
+        });
         bBrightness.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
