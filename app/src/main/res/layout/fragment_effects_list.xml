@@ -46,6 +46,14 @@
                 android:text="SATURATION" />
 
             <Button
+                android:id="@+id/bEnhance"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_star_black_24dp"
+                android:text="ENHANCE" />
+
+            <Button
                 android:id="@+id/bChangeHue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

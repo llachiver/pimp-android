@@ -182,6 +182,24 @@ public class Convolution {
 
     }
 
+    //-------------------------------------
+    // Called effects
+    //-------------------------------------
+
+    public static void gaussianBlur(Bitmap bmp, int progress, Context context){
+        int size = progress/5;
+        float[] kernel = Kernels.gauss(size);
+        convolve2dSeparable(bmp, kernel, kernel, true, context);
+    }
+
+    public static void sharpen(Bitmap bmp, Context context){
+        convolve2d(bmp, Kernels.SHARPEN3X3, 3,3, true, context);
+    }
+
+    public static void neon(Bitmap bmp, Context context){
+        edgeDetectionConvolution(bmp, Kernels.SOBEL_X, Kernels.SOBEL_Y, context);
+    }
+
 
 
 }

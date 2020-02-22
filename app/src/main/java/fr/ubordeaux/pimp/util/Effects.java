@@ -1,7 +1,8 @@
 package fr.ubordeaux.pimp.util;
 
-import java.lang.reflect.Method;
-
+/**
+ * This enum is used for generating the layout (see EffectSettingsFragment.java).
+ */
 public enum Effects {
     BRIGHTNESS("Brightness"),
     SATURATION("Saturation"),
@@ -9,12 +10,11 @@ public enum Effects {
     CHANGE_HUE("Change hue"),
     KEEP_HUE("Keep hue"),
     BLUR("Blur"),
-    SHARPEN("Sharpen"),
-    NEON("Neon");
+    //Generic is used when an effect doesn't have settings, and therefore no layout.
+    GENERIC("");
 
     private String name = "";
 
-    //Constructeur
     Effects(String name){
         this.name = name;
     }

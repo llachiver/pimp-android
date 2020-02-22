@@ -51,10 +51,9 @@ public class EffectSettingsFragment extends Fragment {
         switch(effect){
             case BRIGHTNESS:
             case SATURATION:
-                simpleEffectView(effect);
-                break;
+            case BLUR:
             case CONTRAST:
-                contrastView();
+                simpleEffectView(effect);
                 break;
             case CHANGE_HUE:
                 hueView();
@@ -123,6 +122,14 @@ public class EffectSettingsFragment extends Fragment {
                         image.discard();
                         Retouching.setSaturation(image.getBitmap(), progress, mainActivity);
                         break;
+                    case BLUR:
+                        image.discard();
+                        Convolution.gaussianBlur(image.getBitmap(),progress,mainActivity);
+                        break;
+                    case CONTRAST:
+                        image.discard();
+                        Retouching.dynamicExtensionRGB(image.getBitmap(),progress,mainActivity);
+                        break;
 
                 }
             }
@@ -142,47 +149,6 @@ public class EffectSettingsFragment extends Fragment {
         settingsList.addView(sb);
     }
 
-
-    public void contrastView(){
-        TextView tv = new TextView(super.getContext());
-        tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tv.setText("Contrast");
-
-        SeekBar sb = new SeekBar(super.getContext());
-        sb.setMax(255);
-
-        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                image.discard();
-                Retouching.dynamicExtensionRGB(image.getBitmap(), progress, mainActivity);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        Button bEqualization = new Button(super.getContext());
-        bEqualization.setText("EQUALIZATION");
-
-        bEqualization.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Retouching.histogramEqualization(image.getBitmap(), mainActivity);
-            }
-        });
-
-        settingsList.addView(tv);
-        settingsList.addView(sb);
-        settingsList.addView(bEqualization);
-    }
 
 
     public void hueView(){
