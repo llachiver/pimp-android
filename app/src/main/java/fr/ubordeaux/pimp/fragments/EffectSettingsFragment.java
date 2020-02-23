@@ -19,6 +19,7 @@ import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.ApplyEffectTask;
+import fr.ubordeaux.pimp.util.BitmapRunnable;
 import fr.ubordeaux.pimp.util.Effects;
 
 public class EffectSettingsFragment extends Fragment {
@@ -27,6 +28,7 @@ public class EffectSettingsFragment extends Fragment {
     LinearLayout settingsList;
     MainActivity mainActivity;
     Image image;
+    BitmapRunnable currentEffect;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,6 +93,8 @@ public class EffectSettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //TODO save applied effect into the queue
+                if(image.getEffectQueue() != null)  //Temporaly
+                    image.getEffectQueue().add(currentEffect);
                 getActivity().onBackPressed();
             }
         });
@@ -114,23 +118,50 @@ public class EffectSettingsFragment extends Fragment {
 
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
                 switch(effect){
                     case BRIGHTNESS:
                         image.discard();
-                        Retouching.setBrightness(image.getBitmap(), progress, mainActivity);
+                        currentEffect = new BitmapRunnable(image.getBitmap()) {
+                            @Override
+                            public void run() {
+                                Retouching.setBrightness(this.getBmp(), progress, mainActivity);
+                            }
+                        };
+                        currentEffect.run();
                         break;
                     case SATURATION:
                         image.discard();
-                        Retouching.setSaturation(image.getBitmap(), progress, mainActivity);
+                        currentEffect = new BitmapRunnable(image.getBitmap()) {
+                            @Override
+                            public void run() {
+                                Retouching.setSaturation(this.getBmp(), progress, mainActivity);
+                            }
+                        };
+                        currentEffect.run();
+
                         break;
                     case BLUR:
                         image.discard();
-                        Convolution.gaussianBlur(image.getBitmap(),progress,mainActivity);
+                        currentEffect = new BitmapRunnable(image.getBitmap()) {
+                            @Override
+                            public void run() {
+                                Convolution.gaussianBlur(this.getBmp(),progress,mainActivity);
+                            }
+                        };
+                        currentEffect.run();
+
                         break;
                     case CONTRAST:
                         image.discard();
-                        Retouching.dynamicExtensionRGB(image.getBitmap(),progress,mainActivity);
+                        currentEffect = new BitmapRunnable(image.getBitmap()) {
+                            @Override
+                            public void run() {
+                                Retouching.dynamicExtensionRGB(this.getBmp(),progress,mainActivity);
+                            }
+                        };
+                        currentEffect.run();
+
                         break;
 
                 }

@@ -13,7 +13,11 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import fr.ubordeaux.pimp.io.BitmapIO;
+import fr.ubordeaux.pimp.util.BitmapRunnable;
 import fr.ubordeaux.pimp.util.Utils;
 
 import static fr.ubordeaux.pimp.activity.MainActivity.REQUEST_WRITE_EXTERNAL_STORAGE;
@@ -31,6 +35,8 @@ public class Image {
 
     //Quick save of the image done when opening an effect, in order to discard its modifications later
     private int[] imgQuickSave;
+
+    private Queue <BitmapRunnable> effectQueue;
 
     //Core of the Image, Bitmap representing its pixels.
     private Bitmap bitmap;
@@ -136,6 +142,7 @@ public class Image {
         imgQuickSave = new int[width * height];
         bitmap.getPixels(imgBase, 0, width, 0, 0, width, height);
         bitmap.getPixels(imgQuickSave, 0, width, 0, 0, width, height);
+        effectQueue = new LinkedList<>();
     }
 
     /**
@@ -162,6 +169,7 @@ public class Image {
         infos = new ImageInfo(null, null);
         infos.setLoadedHeight(height);//set values n info pack
         infos.setLoadedWidth(width);
+        effectQueue = new LinkedList<>();
     }
 
     /**
@@ -196,6 +204,7 @@ public class Image {
      */
     public void reset() {
         bitmap.setPixels(imgBase, 0, width, 0, 0, width, height);
+        effectQueue.clear();
     }
 
     public void quickSave() {
@@ -237,6 +246,11 @@ public class Image {
         return infos;
     }
 
+    public Queue<BitmapRunnable> getEffectQueue() {
+        return effectQueue;
+    }
+
+
     /**
      * Export the current image to the devices gallery
      * Ask for the user's permission if not yet given to store the current
@@ -272,6 +286,8 @@ public class Image {
             // result of the request.
 
         }
+
+
 
 
     }
