@@ -98,7 +98,7 @@ public class EffectSettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //TODO save applied effect into the queue
-                if(image.getEffectQueue() != null)  //Temporaly
+                if(image.getEffectQueue() != null && currentEffect != null)  //Temporaly
                     image.getEffectQueue().add(currentEffect);
                 getActivity().onBackPressed();
             }

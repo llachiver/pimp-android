@@ -16,7 +16,10 @@ import androidx.core.content.ContextCompat;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.io.BitmapIO;
+import fr.ubordeaux.pimp.util.ApplyEffectTask;
+import fr.ubordeaux.pimp.util.ApplyFilterQueue;
 import fr.ubordeaux.pimp.util.BitmapRunnable;
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -262,8 +265,10 @@ public class Image {
         if (ContextCompat.checkSelfPermission(context,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
-            BitmapIO.saveBitmap(this.getBitmap(), "pimp", context);
-            Toast.makeText(context, "Saved successfully", Toast.LENGTH_SHORT).show();
+            //Load new Bitmap and apply with async task
+            Bitmap bmp = BitmapIO.decodeAndScaleBitmapFromUri(this.uri, 9999,9999, context); //TODO must set a limit for width and height and maintain aspect-ratio
+            new ApplyFilterQueue((MainActivity) context, this.effectQueue, bmp).execute(); //Apply effectQueue
+            //BitmapIO.saveBitmap(this.getBitmap(), "pimp", context);
 
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(context,
