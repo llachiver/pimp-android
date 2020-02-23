@@ -2,6 +2,8 @@ package fr.ubordeaux.pimp.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
@@ -32,6 +36,7 @@ public class EffectSettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mainActivity = (MainActivity) getActivity();
+        setHasOptionsMenu(true); //change toolbar
         image = mainActivity.getImage();
 
         Bundle args = getArguments();
@@ -229,6 +234,17 @@ public class EffectSettingsFragment extends Fragment {
         settingsList.addView(sbSelectedHue);
         settingsList.addView(tvTolerance);
         settingsList.addView(sbTolerance);
+    }
+
+
+    /**
+     * Change ToolBar for this fragment.
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear(); //hide main ToolBar
+        assert (getActivity() != null); //avoid warnings
     }
 
 }
