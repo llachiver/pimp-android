@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private EffectsFragment effectsListFragment;
     private EffectSettingsFragment effectSettingsFragment;
     private FragmentManager fragmentManager;
+    private AsyncTask currentTask; //Current asyncTask
 
 
     //Image currently modified.
@@ -74,6 +76,13 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_READ_EXTERNAL_STORAGE = 68;
     public static final int REQUEST_CAMERA = 67;
 
+    public AsyncTask getCurrentTask() {
+        return currentTask;
+    }
+
+    public void setCurrentTask(AsyncTask currentTask) {
+        this.currentTask = currentTask;
+    }
 
     /**
      * Load image from internal storage

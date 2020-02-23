@@ -82,6 +82,7 @@ public class EffectSettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
+                if (mainActivity.getCurrentTask() != null) mainActivity.getCurrentTask().cancel(true); //Interrupt async task if it exists.
                 image.discard();
             }
         });

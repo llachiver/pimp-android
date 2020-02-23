@@ -1,5 +1,6 @@
 package fr.ubordeaux.pimp.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,12 +51,12 @@ public class EffectsFragment extends Fragment {
             public void onClick(View v) {
                 main.getImage().quickSave();
                 //No settings here, so we apply directly the effect.
-                new ApplyEffectTask(main, new Runnable() {
+                main.setCurrentTask(new ApplyEffectTask(main, new Runnable() {
                     @Override
                     public void run() {
                         Retouching.toGray(main.getImage().getBitmap(),main);
                     }
-                }).execute();
+                }).execute());
 
                 main.inflateEffectSettings(Effects.GENERIC);
             }
@@ -66,12 +67,12 @@ public class EffectsFragment extends Fragment {
             public void onClick(View v) {
                 main.getImage().quickSave();
                 //No settings here, so we apply directly the effect.
-                new ApplyEffectTask(main, new Runnable() {
+                main.setCurrentTask(new ApplyEffectTask(main, new Runnable() {
                     @Override
                     public void run() {
                         Retouching.invert(main.getImage().getBitmap(),main);
                     }
-                }).execute();
+                }).execute());
 
                 main.inflateEffectSettings(Effects.GENERIC);
             }
@@ -104,12 +105,12 @@ public class EffectsFragment extends Fragment {
             public void onClick(View v) {
                 main.getImage().quickSave();
                 //No settings here, so we apply directly the effect.
-                new ApplyEffectTask(main, new Runnable() {
+                main.setCurrentTask(new ApplyEffectTask(main, new Runnable() {
                     @Override
                     public void run() {
                         Retouching.histogramEqualization(main.getImage().getBitmap(),main);
                     }
-                }).execute();
+                }).execute());
 
                 main.inflateEffectSettings(Effects.GENERIC);
             }
@@ -139,12 +140,12 @@ public class EffectsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                new ApplyEffectTask(main, new Runnable() {
+                main.setCurrentTask(new ApplyEffectTask(main, new Runnable() {
                     @Override
                     public void run() {
                         Convolution.sharpen(main.getImage().getBitmap(), main);
                     }
-                }).execute();
+                }).execute());
                 main.inflateEffectSettings(Effects.GENERIC);
             }
         });
@@ -152,12 +153,13 @@ public class EffectsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                new ApplyEffectTask(main, new Runnable() {
+                main.setCurrentTask(new ApplyEffectTask(main, new Runnable() {
                     @Override
                     public void run() {
                         Convolution.neon(main.getImage().getBitmap(), main);
                     }
-                }).execute();
+                }).execute());
+
 
                 main.inflateEffectSettings(Effects.GENERIC);
             }

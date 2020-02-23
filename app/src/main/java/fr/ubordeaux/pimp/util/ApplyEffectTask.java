@@ -62,4 +62,17 @@ public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
         //activity.updateIv();
     }
+
+    //User cancelled effect
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        MainActivity activity = activityWeakReference.get();
+        if (activity == null || activity.isFinishing()) {
+            return;
+        }
+        activity.getImage().discard(); //Reset image
+        activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE); //Hide progressbar
+
+    }
 }
