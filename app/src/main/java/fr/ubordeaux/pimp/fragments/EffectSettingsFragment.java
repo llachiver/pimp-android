@@ -25,6 +25,9 @@ import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.ApplyEffectTask;
 import fr.ubordeaux.pimp.util.Effects;
 
+import static fr.ubordeaux.pimp.filters.Retouching.colorize;
+import static fr.ubordeaux.pimp.filters.Retouching.keepColor;
+
 public class EffectSettingsFragment extends Fragment {
 
     RelativeLayout settingsLayout;
@@ -191,6 +194,8 @@ public class EffectSettingsFragment extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Change hue call
+                image.discard();
+                colorize(image.getBitmap(), progress, getContext());
             }
 
             @Override
@@ -228,11 +233,34 @@ public class EffectSettingsFragment extends Fragment {
         SeekBar sbTolerance = new SeekBar(super.getContext());
         sbTolerance.setMax(255);
         sbTolerance.setProgress(127);
+        final int[] args = new int[2];
+        sbTolerance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //Keep hue call
+                image.discard();
+                args[1] = progress;
+                keepColor(image.getBitmap(), args[0], progress, getContext());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         sbSelectedHue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Keep hue call
+                image.discard();
+                args[0] = progress;
+                keepColor(image.getBitmap(), progress, args[1], getContext());
             }
 
             @Override

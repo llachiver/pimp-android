@@ -9,12 +9,14 @@ package fr.ubordeaux.pimp.filters;
         import android.renderscript.Short2;
         import android.util.Log;
 
+        import fr.ubordeaux.pimp.ScriptC_colorize;
         import fr.ubordeaux.pimp.ScriptC_cummulativeHistogram;
 
         import fr.ubordeaux.pimp.ScriptC_assignLut;
         import fr.ubordeaux.pimp.ScriptC_brightness;
         import fr.ubordeaux.pimp.ScriptC_dynamicExtension;
         import fr.ubordeaux.pimp.ScriptC_findMinMax;
+        import fr.ubordeaux.pimp.ScriptC_keepColor;
         import fr.ubordeaux.pimp.ScriptC_saturation;
         import fr.ubordeaux.pimp.ScriptC_utils;
         import fr.ubordeaux.pimp.io.BitmapIO;
@@ -217,6 +219,53 @@ public class Retouching {
         rs.destroy();
         invertScript.destroy();
 
+    }
+
+    /**
+     * Change the image's hue to the one chosen by the user
+     * @param bmp Bmp to modify
+     * @param context MainActivity Context
+     * @param hue hue that is selected by the user
+     */
+    public static void colorize ( Bitmap bmp , int hue, Context context) {
+
+        RenderScript rs = RenderScript.create ( context ) ;
+        Allocation input = Allocation.createFromBitmap ( rs , bmp ) ;
+        Allocation output = Allocation.createTyped ( rs , input.getType () ) ;
+
+        ScriptC_colorize colorize = new ScriptC_colorize ( rs ) ;
+        colorize.set_randh(hue);
+
+        colorize.forEach_colorize ( input , output ) ;
+        output.copyTo ( bmp ) ;
+        input.destroy () ;
+        output.destroy () ;
+        colorize.destroy () ;
+        rs.destroy () ;
+    }
+
+    /**
+     * Keep the image's hue with tolerance level that is chosen by the user
+     * @param bmp Bmp to modify
+     * @param hue hue that is selected by the user
+     * @param tolerance the degree of tolerance chosen by the user
+     * @param context MainActivity Context
+     */
+    public static void keepColor ( Bitmap bmp , int hue, int tolerance, Context context) {
+
+        RenderScript rs = RenderScript.create ( context ) ;
+        Allocation input = Allocation.createFromBitmap ( rs , bmp ) ;
+        Allocation output = Allocation.createTyped ( rs , input.getType () ) ;
+
+        ScriptC_keepColor keepColor = new ScriptC_keepColor ( rs ) ;
+        keepColor.set_randh(hue);
+        keepColor.set_tolerance(tolerance);
+        keepColor.forEach_keepColor ( input , output );
+        output.copyTo ( bmp ) ;
+        input.destroy () ;
+        output.destroy () ;
+        keepColor.destroy () ;
+        rs.destroy () ;
     }
 
 }
