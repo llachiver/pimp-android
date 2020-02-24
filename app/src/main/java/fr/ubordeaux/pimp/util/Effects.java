@@ -5,13 +5,16 @@ package fr.ubordeaux.pimp.util;
  */
 public enum Effects {
     BRIGHTNESS("Brightness"),
-    SATURATION("Saturation"),
     CONTRAST("Contrast"),
+    SATURATION("Saturation"),
+    ENHANCE("Enhance"),
+    TOGRAY("To gray"),
+    INVERT("Invert"),
     CHANGE_HUE("Change hue"),
     KEEP_HUE("Keep hue"),
     BLUR("Blur"),
-    //Generic is used when an effect doesn't have settings, and therefore no layout.
-    GENERIC("");
+    SHARPEN("Sharpen"),
+    NEON("Neon");
 
     private String name = "";
 

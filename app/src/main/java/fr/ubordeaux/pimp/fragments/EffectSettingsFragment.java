@@ -67,6 +67,22 @@ public class EffectSettingsFragment extends Fragment {
             case KEEP_HUE:
                 keepHueView();
                 break;
+            //Effects without layout are directly applied :
+            case ENHANCE:
+                Retouching.histogramEqualization(image.getBitmap(),mainActivity);
+                break;
+            case TOGRAY:
+                Retouching.toGray(image.getBitmap(), mainActivity);
+                break;
+            case INVERT:
+                Retouching.invert(image.getBitmap(), mainActivity);
+                break;
+            case SHARPEN:
+                Convolution.sharpen(image.getBitmap(),mainActivity);
+                break;
+            case NEON:
+                Convolution.neon(image.getBitmap(),mainActivity);
+                break;
             default :
                 break;
         }
