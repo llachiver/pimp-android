@@ -180,7 +180,7 @@ public class EffectSettingsFragment extends Fragment {
     public void hueView(){
         TextView tvUniform = new TextView(super.getContext());
         tvUniform.setText("Uniform hue");
-        CheckBox cbUniform = new CheckBox(super.getContext());
+        final CheckBox cbUniform = new CheckBox(super.getContext());
 
         TextView tvHue = new TextView(super.getContext());
         tvHue.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -195,7 +195,7 @@ public class EffectSettingsFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Change hue call
                 image.discard();
-                colorize(image.getBitmap(), progress, getContext());
+                colorize(image.getBitmap(), progress, getContext(), cbUniform.isChecked());
             }
 
             @Override

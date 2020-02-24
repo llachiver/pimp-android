@@ -227,15 +227,15 @@ public class Retouching {
      * @param context MainActivity Context
      * @param hue hue that is selected by the user
      */
-    public static void colorize ( Bitmap bmp , int hue, Context context) {
+    public static void colorize ( Bitmap bmp , int hue, Context context, boolean uniform) {
 
         RenderScript rs = RenderScript.create ( context ) ;
         Allocation input = Allocation.createFromBitmap ( rs , bmp ) ;
         Allocation output = Allocation.createTyped ( rs , input.getType () ) ;
 
         ScriptC_colorize colorize = new ScriptC_colorize ( rs ) ;
-        colorize.set_randh(hue);
-
+        colorize.set_selectedHue(hue);
+        colorize.set_uniform(uniform);
         colorize.forEach_colorize ( input , output ) ;
         output.copyTo ( bmp ) ;
         input.destroy () ;
@@ -258,7 +258,7 @@ public class Retouching {
         Allocation output = Allocation.createTyped ( rs , input.getType () ) ;
 
         ScriptC_keepColor keepColor = new ScriptC_keepColor ( rs ) ;
-        keepColor.set_randh(hue);
+        keepColor.set_selectedHue(hue);
         keepColor.set_tolerance(tolerance);
         keepColor.forEach_keepColor ( input , output );
         output.copyTo ( bmp ) ;
