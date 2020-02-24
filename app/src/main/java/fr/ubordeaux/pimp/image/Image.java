@@ -39,6 +39,7 @@ public class Image {
     //Quick save of the image done when opening an effect, in order to discard its modifications later
     private int[] imgQuickSave;
 
+    
     private Queue <BitmapRunnable> effectQueue;
 
     //Core of the Image, Bitmap representing its pixels.
@@ -253,6 +254,13 @@ public class Image {
         return effectQueue;
     }
 
+    /**
+     *
+     * @return Get uri from image
+     */
+    public Uri getUri() {
+        return uri;
+    }
 
     /**
      * Export the current image to the devices gallery
@@ -266,8 +274,8 @@ public class Image {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
             //Load new Bitmap and apply with async task
-            Bitmap bmp = BitmapIO.decodeAndScaleBitmapFromUri(this.uri, 9999,9999, context); //TODO must set a limit for width and height and maintain aspect-ratio
-            new ApplyFilterQueue((MainActivity) context, this.effectQueue, bmp).execute(); //Apply effectQueue
+
+            new ApplyFilterQueue((MainActivity) context,this).execute(); //Apply effectQueue
             //BitmapIO.saveBitmap(this.getBitmap(), "pimp", context);
 
         } else {

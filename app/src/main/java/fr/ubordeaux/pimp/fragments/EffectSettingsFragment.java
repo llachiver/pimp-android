@@ -71,19 +71,54 @@ public class EffectSettingsFragment extends Fragment {
                 break;
             //Effects without layout are directly applied :
             case ENHANCE:
-                Retouching.histogramEqualization(image.getBitmap(),mainActivity);
+                image.discard();
+                currentEffect = new BitmapRunnable(image.getBitmap()) {
+                    @Override
+                    public void run() {
+                        Retouching.histogramEqualization(this.getBmp(),mainActivity);
+                    }
+                };
+                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
                 break;
             case TOGRAY:
-                Retouching.toGray(image.getBitmap(), mainActivity);
+                image.discard();
+                currentEffect = new BitmapRunnable(image.getBitmap()) {
+                    @Override
+                    public void run() {
+                        Retouching.toGray(this.getBmp(), mainActivity);
+                    }
+                };
+                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
                 break;
             case INVERT:
-                Retouching.invert(image.getBitmap(), mainActivity);
+                image.discard();
+                currentEffect = new BitmapRunnable(image.getBitmap()) {
+                    @Override
+                    public void run() {
+                        Retouching.invert(this.getBmp(), mainActivity);
+                    }
+                };
+                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
                 break;
             case SHARPEN:
-                Convolution.sharpen(image.getBitmap(),mainActivity);
+                image.discard();
+                currentEffect = new BitmapRunnable(image.getBitmap()) {
+                    @Override
+                    public void run() {
+                        Convolution.sharpen(this.getBmp(),mainActivity);
+                    }
+                };
+                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
                 break;
             case NEON:
-                Convolution.neon(image.getBitmap(),mainActivity);
+                image.discard();
+                currentEffect = new BitmapRunnable(image.getBitmap()) {
+                    @Override
+                    public void run() {
+                        Convolution.neon(this.getBmp(),mainActivity);
+                    }
+                };
+                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
                 break;
             default :
                 break;
@@ -222,6 +257,7 @@ public class EffectSettingsFragment extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //Change hue call
+
             }
 
             @Override
@@ -259,6 +295,7 @@ public class EffectSettingsFragment extends Fragment {
         SeekBar sbTolerance = new SeekBar(super.getContext());
         sbTolerance.setMax(255);
         sbTolerance.setProgress(127);
+
 
         sbSelectedHue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

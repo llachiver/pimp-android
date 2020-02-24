@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.util.LinkedList;
 import java.util.Queue;
 
 import fr.ubordeaux.pimp.R;
@@ -19,13 +20,12 @@ import fr.ubordeaux.pimp.io.BitmapIO;
  */
 public class ApplyFilterQueue extends AsyncTask<Void, Void, Void> {
     private WeakReference<MainActivity> activityWeakReference; //MainActivity reference
-    private Queue <BitmapRunnable> effectQueue;
+    private Image image;
     private Bitmap bmp;
 
-    public ApplyFilterQueue (MainActivity activity, Queue <BitmapRunnable> effectQueue, Bitmap bmp) {
+    public ApplyFilterQueue (MainActivity activity, Image image) {
         this.activityWeakReference = new WeakReference<>(activity);
-        this.effectQueue = effectQueue;
-        this.bmp = bmp;
+        this.image = image;
     }
 
     //Work to do before heavy task
@@ -47,7 +47,10 @@ public class ApplyFilterQueue extends AsyncTask<Void, Void, Void> {
             if (activity == null || activity.isFinishing()) {
                 return null;
             }
+            bmp = BitmapIO.decodeAndScaleBitmapFromUri(image.getUri(), 9999,9999, activity); //TODO must set a limit for width and height and maintain aspect-ratio
+            Queue<BitmapRunnable> effectQueue = new LinkedList<>(image.getEffectQueue()); //Get copy of queue
             BitmapRunnable effect;
+
             effect = effectQueue.poll(); // Get first effect
             while(effect != null){
                 effect.setBmp(bmp); //Set new bitmap to run
