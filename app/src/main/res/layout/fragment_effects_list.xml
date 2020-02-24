@@ -21,22 +21,6 @@
             android:gravity="center">
 
             <Button
-                android:id="@+id/bToGray"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@android:drawable/editbox_dropdown_dark_frame"
-                android:text="TO GRAY" />
-
-            <Button
-                android:id="@+id/bInvert"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@android:drawable/editbox_background_normal"
-                android:text="INVERT" />
-
-            <Button
                 android:id="@+id/bBrightness"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -68,6 +52,23 @@
                 android:layout_weight="1"
                 android:drawableTop="@drawable/ic_star_black_24dp"
                 android:text="ENHANCE" />
+
+            <Button
+                android:id="@+id/bToGray"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_gradient_black_24dp"
+                android:text="TO GRAY" />
+
+            <Button
+                android:id="@+id/bInvert"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_invert_colors_black_24dp"
+                android:text="INVERT" />
+
 
             <Button
                 android:id="@+id/bChangeHue"

@@ -50,31 +50,14 @@ public class EffectsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                //No settings here, so we apply directly the effect.
-                main.setCurrentTask(new ApplyEffectTask(main, new Runnable() {
-                    @Override
-                    public void run() {
-                        Retouching.toGray(main.getImage().getBitmap(),main);
-                    }
-                }).execute());
-
-                main.inflateEffectSettings(Effects.GENERIC);
+                main.inflateEffectSettings(Effects.TOGRAY);
             }
         });
-
         bInvert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                //No settings here, so we apply directly the effect.
-                main.setCurrentTask(new ApplyEffectTask(main, new Runnable() {
-                    @Override
-                    public void run() {
-                        Retouching.invert(main.getImage().getBitmap(),main);
-                    }
-                }).execute());
-
-                main.inflateEffectSettings(Effects.GENERIC);
+                main.inflateEffectSettings(Effects.INVERT);
             }
         });
         bBrightness.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +67,6 @@ public class EffectsFragment extends Fragment {
                 main.inflateEffectSettings(Effects.BRIGHTNESS);
             }
         });
-
         bSaturation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,15 +86,7 @@ public class EffectsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                //No settings here, so we apply directly the effect.
-                main.setCurrentTask(new ApplyEffectTask(main, new Runnable() {
-                    @Override
-                    public void run() {
-                        Retouching.histogramEqualization(main.getImage().getBitmap(),main);
-                    }
-                }).execute());
-
-                main.inflateEffectSettings(Effects.GENERIC);
+                main.inflateEffectSettings(Effects.ENHANCE);
             }
         });
         bChangeHue.setOnClickListener(new View.OnClickListener() {
@@ -140,28 +114,14 @@ public class EffectsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.setCurrentTask(new ApplyEffectTask(main, new Runnable() {
-                    @Override
-                    public void run() {
-                        Convolution.sharpen(main.getImage().getBitmap(), main);
-                    }
-                }).execute());
-                main.inflateEffectSettings(Effects.GENERIC);
+                main.inflateEffectSettings(Effects.SHARPEN);
             }
         });
         bNeon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.setCurrentTask(new ApplyEffectTask(main, new Runnable() {
-                    @Override
-                    public void run() {
-                        Convolution.neon(main.getImage().getBitmap(), main);
-                    }
-                }).execute());
-
-
-                main.inflateEffectSettings(Effects.GENERIC);
+                main.inflateEffectSettings(Effects.NEON);
             }
         });
     }
