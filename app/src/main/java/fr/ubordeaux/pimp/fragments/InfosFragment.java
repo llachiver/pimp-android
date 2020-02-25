@@ -69,17 +69,17 @@ public class InfosFragment extends Fragment {
         String focal = imageInfo.getFocalLength();
         String iso = imageInfo.getISO();
         if (device != null || exposition != null || focal != null || iso != null) { // Captor information
-            infoCardsList.add(new InfoCard(R.drawable.ic_camera_white_24dp, (device == null ? "Appareil Inconnu" : device),
+            infoCardsList.add(new InfoCard(R.drawable.ic_camera_white_24dp, (device == null ? "Unknown device" : device),
                     (exposition == null ? "" : exposition + "    ") + (focal == null ? "" : focal + "    ") + (iso == null ? "" : iso)
             ));
         }
 
         String location = imageInfo.getCoordinates();
         if (location != null) // Location information
-            infoCardsList.add(new InfoCard(R.drawable.ic_location_on_white_24dp, "Coordonnées", location));
+            infoCardsList.add(new InfoCard(R.drawable.ic_location_on_white_24dp, "Location", location));
 
         // App information:
-        infoCardsList.add(new InfoCard(R.drawable.ic_settings_white_24dp, "Aperçu chargé", imageInfo.getLoadedWidth() + " x " + imageInfo.getLoadedHeight()));
+        infoCardsList.add(new InfoCard(R.drawable.ic_settings_white_24dp, "Loaded preview", imageInfo.getLoadedWidth() + " x " + imageInfo.getLoadedHeight()));
 
         RecyclerView mRecyclerView = getView().findViewById(R.id.info_recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -99,7 +99,7 @@ public class InfosFragment extends Fragment {
         ActionBar toolBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         assert (toolBar != null);
         toolBar.setDisplayHomeAsUpEnabled(true); //Display Back button
-        toolBar.setTitle("Détails de l'image");
+        toolBar.setTitle("Picture details");
     }
 
     @Override
