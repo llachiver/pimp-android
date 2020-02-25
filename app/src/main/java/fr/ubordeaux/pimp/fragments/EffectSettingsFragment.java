@@ -39,6 +39,7 @@ public class EffectSettingsFragment extends Fragment {
     MainActivity mainActivity;
     //The image we modify.
     Image image;
+
     BitmapRunnable currentEffect;
 
     @Override

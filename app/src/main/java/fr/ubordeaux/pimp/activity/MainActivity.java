@@ -395,13 +395,21 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    public void hideEffectsList(){
+        findViewById(R.id.fragment_effects_container).setVisibility(View.GONE);
+    }
+
+    public void showEffectsList(){
+        findViewById(R.id.fragment_effects_container).setVisibility(View.VISIBLE);
+    }
+
     /**
      * Inflates the settings (seekbars, buttons...) of a specific effect w/ listeners.
      *
      * @param effect the enum of the effect
      */
     public void inflateEffectSettings(Effects effect) {
-        findViewById(R.id.fragment_effects_container).setVisibility(View.GONE);
+        hideEffectsList();
         effectSettingsFragment = new EffectSettingsFragment();
 
         Bundle args = new Bundle();
@@ -417,7 +425,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(effectSettingsFragment);
         fragmentTransaction.commit();
-        findViewById(R.id.fragment_effects_container).setVisibility(View.VISIBLE);
+        showEffectsList();
     }
 
 

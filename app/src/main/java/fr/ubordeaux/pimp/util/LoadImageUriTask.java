@@ -32,7 +32,8 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
             return;
         }
 
-        activity.hideMenu();
+        activity.hideMenu(); //Hide menu
+        activity.hideEffectsList();
         activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE); //Show progressBar
     }
 
@@ -63,6 +64,7 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
 
 
         activity.showMenu();
+        activity.showEffectsList();
         //***Linked to main activity ***/
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
         activity.setImage(image);
