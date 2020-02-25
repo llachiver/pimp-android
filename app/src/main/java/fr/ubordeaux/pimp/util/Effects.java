@@ -14,7 +14,8 @@ public enum Effects {
     KEEP_HUE("Keep hue"),
     BLUR("Blur"),
     SHARPEN("Sharpen"),
-    NEON("Neon");
+    NEON("Neon"),
+    LAPLACE("Laplace");
 
     private String name = "";
 
