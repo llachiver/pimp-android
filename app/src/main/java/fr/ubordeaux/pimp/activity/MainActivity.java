@@ -170,12 +170,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
-        menu.clear();
+        hideMenu();
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.app_name);
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+        showMenu();
         return true;
     }
 
@@ -224,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //FragmentManager fm = getSupportFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
         } else if (effectSettingsFragment != null && effectSettingsFragment.isVisible()) {
@@ -256,9 +255,6 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQUEST_READ_EXTERNAL_STORAGE);
 
-            // MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE is an
-            // app-defined int constant. The callback method gets the
-            // result of the request.
 
         }
     }
@@ -284,9 +280,6 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.CAMERA},
                     REQUEST_CAMERA);
 
-            // MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE is an
-            // app-defined int constant. The callback method gets the
-            // result of the request.
         }
     }
 
@@ -313,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 ex.printStackTrace();
-                Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Something went wrong loading from camera", Toast.LENGTH_LONG).show();
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -339,7 +332,6 @@ public class MainActivity extends AppCompatActivity {
                     image.exportToGallery(this);
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    Toast.makeText(this, "Save success", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Write permission denied", Toast.LENGTH_SHORT).show();
                     // permission denied, boo! Disable the

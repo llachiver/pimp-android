@@ -111,37 +111,6 @@ public class Retouching {
         rs.destroy();
     }
 
-
-    /**
-     * Extends the dynamic (histogram) of a grayscale image in order to set up the contrast.
-     * @param bmp the image to modify
-     * @param factor the contrast factor, whose range is based on the seekbar [0 ; 255]
-     * @param context
-     */
-    public static void dynamicExtensionGray(Bitmap bmp, int factor, Context context){
-        RenderScript rs = RenderScript.create(context);
-        Allocation input = Allocation.createFromBitmap(rs, bmp); //Bitmap input
-        Allocation output = Allocation.createTyped(rs, input.getType()); //Bitmap output
-
-        ScriptC_findMinMax sMinMax = new ScriptC_findMinMax(rs);
-        Short2[] minMax;
-        sMinMax.set_valueMode(true);
-        minMax = sMinMax.reduce_findMinMax(input).get();
-        sMinMax.destroy();
-        if (minMax[0].x == minMax[0].y) //Exit if only one color
-            return;
-
-        ScriptC_dynamicExtension sDynExtension = new ScriptC_dynamicExtension(rs);
-        sDynExtension.set_minMaxGray(minMax[0]);
-        sDynExtension.set_factor(factor);
-        sDynExtension.invoke_dynamicExtensionGray(input, output);
-        output.copyTo(bmp);
-
-        input.destroy();
-        output.destroy();
-        rs.destroy();
-    }
-
     /**
      * Equalizes the histogram of the image.
      * @param bmp

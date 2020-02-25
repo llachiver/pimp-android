@@ -38,7 +38,7 @@ public class Image {
     //Quick save of the image done when opening an effect, in order to discard its modifications later
     private int[] imgQuickSave;
 
-    
+    //Queue of effects to be applied at save
     private Queue <BitmapRunnable> effectQueue;
 
     //Core of the Image, Bitmap representing its pixels.
@@ -275,7 +275,6 @@ public class Image {
             //Load new Bitmap and apply with async task
 
             new ApplyFilterQueueTask((MainActivity) context,this).execute(); //Apply effectQueue
-            //BitmapIO.saveBitmap(this.getBitmap(), "pimp", context);
 
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(context,
@@ -292,10 +291,6 @@ public class Image {
             ActivityCompat.requestPermissions(context,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_WRITE_EXTERNAL_STORAGE);
-
-            // MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE is an
-            // app-defined int constant. The callback method gets the
-            // result of the request.
 
         }
 
