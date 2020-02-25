@@ -27,6 +27,11 @@ public class FirstActivity extends AppCompatActivity {
         setContentView(R.layout.activity_first);
     }
 
+    @Override
+    public void onBackPressed() {
+            moveTaskToBack(true);
+    }
+
     public void gallery(View v) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(LAUNCH_CODE, 0);

@@ -182,14 +182,14 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Hide items from menu
      */
-    public void hideMenu(){
+    public void hideMenu() {
         menu.clear();
     }
 
     /**
      * Show items from menu
      */
-    public void showMenu(){
+    public void showMenu() {
         getMenuInflater().inflate(R.menu.activity_main, menu);
     }
 
@@ -356,6 +356,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Read permission denied", Toast.LENGTH_SHORT).show();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
+                    if (getImage() == null)
+                        startActivity(new Intent(this, FirstActivity.class));
                 }
                 return;
 
@@ -372,6 +374,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
+                    if (getImage() == null)
+                        startActivity(new Intent(this, FirstActivity.class));
                 }
                 return;
 
@@ -393,11 +397,11 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public void hideEffectsList(){
+    public void hideEffectsList() {
         findViewById(R.id.fragment_effects_container).setVisibility(View.GONE);
     }
 
-    public void showEffectsList(){
+    public void showEffectsList() {
         findViewById(R.id.fragment_effects_container).setVisibility(View.VISIBLE);
     }
 
@@ -419,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public void deflateEffectSettings(){
+    public void deflateEffectSettings() {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(effectSettingsFragment);
         fragmentTransaction.commit();
