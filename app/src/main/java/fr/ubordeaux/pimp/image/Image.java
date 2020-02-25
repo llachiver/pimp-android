@@ -16,13 +16,12 @@ import androidx.core.content.ContextCompat;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import fr.ubordeaux.pimp.activity.ActivityIO;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.io.BitmapIO;
 import fr.ubordeaux.pimp.util.ApplyFilterQueueTask;
 import fr.ubordeaux.pimp.util.BitmapRunnable;
 import fr.ubordeaux.pimp.util.Utils;
-
-import static fr.ubordeaux.pimp.activity.MainActivity.REQUEST_WRITE_EXTERNAL_STORAGE;
 
 public class Image {
 
@@ -290,7 +289,7 @@ public class Image {
 
             ActivityCompat.requestPermissions(context,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_WRITE_EXTERNAL_STORAGE);
+                    ActivityIO.REQUEST_WRITE_EXTERNAL_STORAGE);
 
         }
 
