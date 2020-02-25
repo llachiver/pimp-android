@@ -142,7 +142,7 @@ public class ImageInfo implements Parcelable {
             return null;
         }
         if (d == null) return null;
-        return new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRANCE).format(d); // french format only for the moment.
+        return new SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.US).format(d); // us format only for the moment.
     }
 
     /**

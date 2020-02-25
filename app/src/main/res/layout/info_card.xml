@@ -15,7 +15,7 @@
         app:autoSizeMaxTextSize="30sp"
         app:autoSizeMinTextSize="6sp"
         app:autoSizeTextType="uniform"
-        android:text="Ligne 1"
+        android:text="Line 1"
         app:layout_constraintBottom_toTopOf="@+id/second_line"
         app:layout_constraintStart_toEndOf="@+id/icone"
         app:layout_constraintTop_toTopOf="@+id/icone" />
@@ -27,7 +27,7 @@
         app:autoSizeMaxTextSize="25sp"
         app:autoSizeMinTextSize="5sp"
         app:autoSizeTextType="uniform"
-        android:text="Ligne 2"
+        android:text="Line 2"
         app:layout_constraintBottom_toBottomOf="@+id/icone"
         app:layout_constraintStart_toStartOf="@+id/main_line"
         app:layout_constraintTop_toBottomOf="@+id/main_line" />
