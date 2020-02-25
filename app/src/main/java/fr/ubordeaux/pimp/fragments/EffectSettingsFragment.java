@@ -159,8 +159,8 @@ public class EffectSettingsFragment extends Fragment {
                 //TODO save applied effect into the queue
                 if(image.getEffectQueue() != null && currentEffect != null)  //Temporaly
                     image.getEffectQueue().add(currentEffect);
-                getActivity().onBackPressed();
                 mainActivity.deflateEffectSettings();
+
             }
         });
 

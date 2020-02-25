@@ -133,6 +133,7 @@ uchar4 RS_KERNEL invert (uchar4 in ) {
     out.r = 255 - in.r;
     out.g = 255 - in.g;
     out.b = 255 - in.b;
+    out.a = in.a;
     return out;
 
 }

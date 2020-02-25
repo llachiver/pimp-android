@@ -76,6 +76,7 @@ public class ApplyFilterQueue extends AsyncTask<Void, Void, Void> {
         //***Linked to main activity ***/
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
         BitmapIO.saveBitmap(bmp, "pimp", activity); // Save edited bitmap
+        BitmapIO.saveBitmap(image.getBitmap(),"pimpDownscaled", activity);
         Toast.makeText(activity, "Save success", Toast.LENGTH_SHORT).show();
         //activity.updateIv();
     }
