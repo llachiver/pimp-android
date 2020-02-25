@@ -140,7 +140,7 @@ public class Convolution {
      * @param kernelY kernelY operator
      * @param context MainActivity Context
      */
-    public static void edgeDetectionConvolution(Bitmap bmp, float[] kernelX, float[] kernelY, Context context){
+    public static void edgeDetectionConvolution(Bitmap bmp, float[] kernelX, float[] kernelY, int size, Context context){
         //Create context
         int kXsize = kernelX.length; int kYsize = kernelY.length;
         if (kXsize != kYsize) return;
@@ -160,8 +160,8 @@ public class Convolution {
         sConvolution.bind_kernelY(kernelYAlloc);
         sConvolution.set_height(bmp.getHeight());
         sConvolution.set_width(bmp.getWidth());
-        sConvolution.set_kWidth(3);
-        sConvolution.set_kHeight(3);
+        sConvolution.set_kWidth(size);
+        sConvolution.set_kHeight(size);
         sConvolution.set_pIn(input);
         sConvolution.set_pOut(output);
         //Allocate output
@@ -197,7 +197,7 @@ public class Convolution {
     }
 
     public static void neon(Bitmap bmp, Context context){
-        edgeDetectionConvolution(bmp, Kernels.SOBEL_X, Kernels.SOBEL_Y, context);
+        edgeDetectionConvolution(bmp, Kernels.sobelX(3), Kernels.sobelY(3),3, context);
     }
 
 

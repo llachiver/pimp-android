@@ -27,9 +27,13 @@ import fr.ubordeaux.pimp.util.Effects;
 
 public class EffectSettingsFragment extends Fragment {
 
+    //Contains the cancel/confirm buttons + the settings list.
     RelativeLayout settingsLayout;
+    //The settings list only (containing buttons, seekbars etc).
     LinearLayout settingsList;
+
     MainActivity mainActivity;
+    //The image we modify.
     Image image;
 
     @Override
@@ -43,14 +47,17 @@ public class EffectSettingsFragment extends Fragment {
 
         //Get the desired effect
         Effects effect = (Effects) args.getSerializable("effect");
+
         settingsLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_effect_settings,null);
 
+        //Those params are used to align the settings widgets to the bottom.
         RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        rlp.bottomMargin = 200;
         rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 
+        //Create the layout containing the widgets.
         settingsList = new LinearLayout(super.getContext());
         settingsList.setOrientation(LinearLayout.VERTICAL);
-        //;
         settingsList.setLayoutParams(rlp);
 
         //Generate the view and set the listeners for the desired effect
@@ -86,6 +93,7 @@ public class EffectSettingsFragment extends Fragment {
             default :
                 break;
         }
+        //We add the settings list to the existing layout.
         settingsLayout.addView(settingsList);
 
         cancelConfirmListeners();
@@ -102,7 +110,7 @@ public class EffectSettingsFragment extends Fragment {
         bCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                mainActivity.onBackPressed();
                 if (mainActivity.getCurrentTask() != null) mainActivity.getCurrentTask().cancel(true); //Interrupt async task if it exists.
                 image.discard();
             }
@@ -112,7 +120,7 @@ public class EffectSettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //TODO save applied effect into the queue
-                getActivity().onBackPressed();
+                mainActivity.deflateEffectSettings();
             }
         });
 
