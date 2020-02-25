@@ -31,6 +31,7 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
         if (activity == null || activity.isFinishing()) { //Prevent memory leaks
             return;
         }
+        activity.getSupportActionBar().hide();
         activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE); //Show progressBar
     }
 
@@ -59,6 +60,7 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
             return;
         }
 
+        activity.getSupportActionBar().show();
         //***Linked to main activity ***/
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
         activity.setImage(image);

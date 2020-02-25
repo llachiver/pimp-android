@@ -36,7 +36,7 @@ public class ApplyFilterQueue extends AsyncTask<Void, Void, Void> {
         if (activity == null || activity.isFinishing()) { //Prevent memory leaks
             return;
         }
-
+        activity.getSupportActionBar().hide();
         activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE); //Show progressBar
     }
 
@@ -75,6 +75,7 @@ public class ApplyFilterQueue extends AsyncTask<Void, Void, Void> {
         }
 
         //***Linked to main activity ***/
+        activity.getSupportActionBar().show();
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
         BitmapIO.saveBitmap(bmp, "pimp", activity); // Save edited bitmap
         //BitmapIO.saveBitmap(image.getBitmap(),"pimpDownscaled", activity); //For debugging, save downscaled image too
