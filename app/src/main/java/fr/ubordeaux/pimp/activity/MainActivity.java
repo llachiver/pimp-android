@@ -210,10 +210,15 @@ public class MainActivity extends AppCompatActivity {
         inflateEffectsList();
 
         //Open first image :
+        /*
         if (getIntent().getIntExtra(FirstActivity.LAUNCH_CODE, 0) == 0)
             startGalleryActivityWithPermissions();
         else
             startCameraActivityWithPermissions();
+            */
+        
+        setImage(new Image(R.drawable.clone, this));
+        updateIv();
 
     }
 
