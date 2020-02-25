@@ -93,7 +93,7 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Void, Void> {
             return;
         }
         activity.showMenu();
-       // activity.getImage().discard(); //Reset image
+        activity.showEffectsList();
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE); //Hide progressbar
 
     }
