@@ -207,6 +207,7 @@ public class Convolution {
     }
 
     public static void laplace (Bitmap bmp, Context context){
+        Retouching.toGray(bmp,context);
         convolve2d(bmp, Kernels.LAPLACIAN3x3,3,3, true, context);
     }
 
