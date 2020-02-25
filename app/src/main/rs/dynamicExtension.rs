@@ -55,6 +55,7 @@ uchar4 RS_KERNEL assignLutGray(uchar4 in) {
 
 uchar4 RS_KERNEL assignLutRGB(uchar4 in){
     uchar4 out;
+    if (in.a == 0) return in;
     out.r =  lutRGB[in.r].r;
     out.g =  lutRGB[in.g].g;
     out.b =  lutRGB[in.b].b;

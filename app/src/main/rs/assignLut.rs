@@ -17,6 +17,7 @@ static uchar3 lutRGB [LUT_SIZE];
 //Compute Lut
 uchar4 RS_KERNEL assignLutSingle(uchar4 in){
     uchar4 out;
+    if (in.a == 0) return in;
     out.rgb = lutSingle[in.r];
     out.a = in.a;
     return out;
@@ -26,6 +27,7 @@ uchar4 RS_KERNEL assignLutSingle(uchar4 in){
 //Compute LUT fot value HSV
 uchar4 RS_KERNEL assignLutHSV(uchar4 in){
     float4 out = rsUnpackColor8888(in);
+    if (in.a == 0) return in;
     out = RGBtoHSV(out); //Change to HSV
     //uint32_t tmp = (uint32_t) (out.s2 * 255);
     out.s2 = lutSingle[(uint32_t) (out.s2 * 255)]; //Search new HSV value
@@ -37,22 +39,11 @@ uchar4 RS_KERNEL assignLutHSV(uchar4 in){
     return rsPackColorTo8888(out.r , out.g , out.b , out.a);
 }
 
-//Assign LUT into image
-uchar4 RS_KERNEL assignLutRGB(uchar4 in) {
-    uchar4 out;
-    out.r =  lutRGB[in.r].r;
-    out.g =  lutRGB[in.g].g;
-    out.b =  lutRGB[in.b].b;
-
-    out.a = in.a;
-
-    return out;
-
-}
 
 //LUT for RGB luminance computation
 uchar4 RS_KERNEL assignLutRGBAverage(uchar4 in) {
     uchar4 out;
+    if (in.a == 0) return in;
     out.r =  lutSingle[in.r];
     out.g =  lutSingle[in.g];
     out.b =  lutSingle[in.b];
