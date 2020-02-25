@@ -18,8 +18,7 @@ import java.util.Queue;
 
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.io.BitmapIO;
-import fr.ubordeaux.pimp.util.ApplyEffectTask;
-import fr.ubordeaux.pimp.util.ApplyFilterQueue;
+import fr.ubordeaux.pimp.util.ApplyFilterQueueTask;
 import fr.ubordeaux.pimp.util.BitmapRunnable;
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -275,7 +274,7 @@ public class Image {
                 == PackageManager.PERMISSION_GRANTED) {
             //Load new Bitmap and apply with async task
 
-            new ApplyFilterQueue((MainActivity) context,this).execute(); //Apply effectQueue
+            new ApplyFilterQueueTask((MainActivity) context,this).execute(); //Apply effectQueue
             //BitmapIO.saveBitmap(this.getBitmap(), "pimp", context);
 
         } else {

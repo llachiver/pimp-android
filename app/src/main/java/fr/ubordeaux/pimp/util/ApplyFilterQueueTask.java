@@ -18,12 +18,12 @@ import fr.ubordeaux.pimp.io.BitmapIO;
 /**
  * Apply queue of filters
  */
-public class ApplyFilterQueue extends AsyncTask<Void, Void, Void> {
+public class ApplyFilterQueueTask extends AsyncTask<Void, Void, Void> {
     private WeakReference<MainActivity> activityWeakReference; //MainActivity reference
     private Image image;
     private Bitmap bmp;
 
-    public ApplyFilterQueue (MainActivity activity, Image image) {
+    public ApplyFilterQueueTask(MainActivity activity, Image image) {
         this.activityWeakReference = new WeakReference<>(activity);
         this.image = image;
     }
@@ -36,7 +36,7 @@ public class ApplyFilterQueue extends AsyncTask<Void, Void, Void> {
         if (activity == null || activity.isFinishing()) { //Prevent memory leaks
             return;
         }
-        activity.getSupportActionBar().hide();
+        activity.hideMenu();
         activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE); //Show progressBar
     }
 
@@ -75,7 +75,7 @@ public class ApplyFilterQueue extends AsyncTask<Void, Void, Void> {
         }
 
         //***Linked to main activity ***/
-        activity.getSupportActionBar().show();
+        activity.showMenu();
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
         BitmapIO.saveBitmap(bmp, "pimp", activity); // Save edited bitmap
         //BitmapIO.saveBitmap(image.getBitmap(),"pimpDownscaled", activity); //For debugging, save downscaled image too
@@ -83,7 +83,6 @@ public class ApplyFilterQueue extends AsyncTask<Void, Void, Void> {
         //activity.updateIv();
     }
 
-    //User cancelled effect
     @Override
     protected void onCancelled() {
         super.onCancelled();
@@ -91,7 +90,8 @@ public class ApplyFilterQueue extends AsyncTask<Void, Void, Void> {
         if (activity == null || activity.isFinishing()) {
             return;
         }
-        activity.getImage().discard(); //Reset image
+        activity.showMenu();
+       // activity.getImage().discard(); //Reset image
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE); //Hide progressbar
 
     }

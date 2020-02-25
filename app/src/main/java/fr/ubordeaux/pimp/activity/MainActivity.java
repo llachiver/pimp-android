@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
     private PhotoView iv;
 
+    private Menu menu;
+
     public Image getImage() {
         return image;
     }
@@ -170,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         menu.clear();
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.app_name);
@@ -177,6 +180,20 @@ public class MainActivity extends AppCompatActivity {
         }
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
+    }
+
+    /**
+     * Hide items from menu
+     */
+    public void hideMenu(){
+        menu.clear();
+    }
+
+    /**
+     * Show items from menu
+     */
+    public void showMenu(){
+        getMenuInflater().inflate(R.menu.activity_main, menu);
     }
 
     @Override
