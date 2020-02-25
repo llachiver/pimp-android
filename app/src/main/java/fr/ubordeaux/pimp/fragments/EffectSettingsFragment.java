@@ -1,6 +1,7 @@
 package fr.ubordeaux.pimp.fragments;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +11,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -70,7 +73,6 @@ public class EffectSettingsFragment extends Fragment {
         switch(effect){
             case BRIGHTNESS:
             case SATURATION:
-            case BLUR:
             case CONTRAST:
                 simpleEffectView(effect);
                 break;
@@ -79,6 +81,9 @@ public class EffectSettingsFragment extends Fragment {
                 break;
             case KEEP_HUE:
                 keepHueView();
+                break;
+            case BLUR:
+                blurView();
                 break;
             //Effects without layout are directly applied :
             case ENHANCE:
@@ -127,6 +132,16 @@ public class EffectSettingsFragment extends Fragment {
                     @Override
                     public void run() {
                         Convolution.neon(this.getBmp(),mainActivity);
+                    }
+                };
+                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
+                break;
+            case LAPLACE:
+                image.discard();
+                currentEffect = new BitmapRunnable(image.getBitmap()) {
+                    @Override
+                    public void run() {
+                        Convolution.laplace(this.getBmp(),mainActivity);
                     }
                 };
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
@@ -379,6 +394,74 @@ public class EffectSettingsFragment extends Fragment {
         settingsList.addView(tvTolerance);
         settingsList.addView(sbTolerance);
     }
+
+
+
+    public void blurView(){
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER_HORIZONTAL;
+
+        RadioGroup rbGroup = new RadioGroup(mainActivity);
+        rbGroup.setOrientation(LinearLayout.HORIZONTAL);
+        rbGroup.setLayoutParams(lp);
+
+        final RadioButton rbMean = new RadioButton(mainActivity);
+        rbMean.setText("Mean");
+
+        final RadioButton rbGauss = new RadioButton(mainActivity);
+        rbGauss.setText("Gauss      ");
+
+        rbGroup.addView(rbGauss);
+        rbGroup.addView(rbMean);
+
+        rbGroup.check(rbGauss.getId());
+
+        SeekBar sbBlur = new SeekBar(mainActivity);
+        sbBlur.setMax(255);
+        sbBlur.setProgress(127);
+
+        sbBlur.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
+                if(rbGauss.isChecked()) {
+                    image.discard();
+                    currentEffect = new BitmapRunnable(image.getBitmap()) {
+                        @Override
+                        public void run() {
+                            Convolution.gaussianBlur(this.getBmp(), progress, mainActivity);
+                        }
+                    };
+                    currentEffect.run();
+
+                }
+                if(rbMean.isChecked()){
+                    image.discard();
+                    currentEffect = new BitmapRunnable(image.getBitmap()) {
+                        @Override
+                        public void run() {
+                            Convolution.meanBlur(this.getBmp(), progress, mainActivity);
+                        }
+                    };
+                    currentEffect.run();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        settingsList.addView(sbBlur);
+        settingsList.addView(rbGroup);
+
+    }
+
+
 
 
     /**
