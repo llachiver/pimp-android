@@ -157,10 +157,8 @@ public class MainActivity extends AppCompatActivity {
 
         inflateEffectsList();
 
-
         try {
-            setImage(new Image(getIntent().getData(), this));
-            updateIv();
+            new LoadImageUriTask(this, getIntent().getData(), true).execute();
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Can't load first picture", Toast.LENGTH_LONG).show();

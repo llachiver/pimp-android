@@ -17,10 +17,16 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
     private WeakReference<MainActivity> activityWeakReference; //MainActivity reference
     private Image image;
     private Uri source;
+    private boolean first;
 
     public LoadImageUriTask(MainActivity activity, Uri source) {
+        this(activity, source, false);
+    }
+
+    public LoadImageUriTask(MainActivity activity, Uri source, boolean first) {
         this.activityWeakReference = new WeakReference<>(activity);
         this.source = source;
+        this.first = first;
     }
 
     //Work to do before heavy task
@@ -32,8 +38,10 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
             return;
         }
 
-        activity.hideMenu(); //Hide menu
-        activity.hideEffectsList();
+        if (!first) {
+            activity.hideMenu(); //Hide menu
+            activity.hideEffectsList();
+        }
         activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE); //Show progressBar
     }
 
@@ -62,9 +70,10 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
             return;
         }
 
-
-        activity.showMenu();
-        activity.showEffectsList();
+        if (!first) {
+            activity.showMenu();
+            activity.showEffectsList();
+        }
         //***Linked to main activity ***/
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
         activity.setImage(image);
