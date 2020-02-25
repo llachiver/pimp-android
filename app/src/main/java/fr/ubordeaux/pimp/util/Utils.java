@@ -21,10 +21,9 @@ import java.util.Objects;
 
 
 /**
- * Class with static methods, usefull calculations for several things.
+ * Class with static methods, useful calculations for several things.
  */
 public class Utils {
-
 
     /**
      * Function to calculate integer to load sample of an image.

@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/ic_menu_black_24dp"
+                android:drawableTop="@drawable/ic_brightness_medium_black_24dp"
                 android:text="BRIGHTNESS" />
 
 
@@ -46,6 +46,31 @@
                 android:text="SATURATION" />
 
             <Button
+                android:id="@+id/bEnhance"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_star_black_24dp"
+                android:text="ENHANCE" />
+
+            <Button
+                android:id="@+id/bToGray"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_gradient_black_24dp"
+                android:text="TO GRAY" />
+
+            <Button
+                android:id="@+id/bInvert"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_invert_colors_black_24dp"
+                android:text="INVERT" />
+
+
+            <Button
                 android:id="@+id/bChangeHue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -58,16 +83,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/ic_colorize_black_24dp"
+                android:drawableTop="@drawable/ic_brush_black_24dp"
                 android:text="KEEP HUE" />
 
             <Button
-                android:id="@+id/bConvolution"
+                android:id="@+id/bBlur"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:drawableTop="@drawable/ic_blur_on_black_24dp"
-                android:text="CONVOLUTION" />
+                android:text="BLUR" />
+
+            <Button
+                android:id="@+id/bSharpen"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_details_black_24dp"
+                android:text="SHARPEN" />
+
+            <Button
+                android:id="@+id/bNeon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_wb_iridescent_black_24dp"
+                android:text="NEON" />
 
         </LinearLayout>
     </HorizontalScrollView>

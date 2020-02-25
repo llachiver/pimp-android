@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
@@ -29,6 +30,7 @@ import fr.ubordeaux.pimp.fragments.EffectsFragment;
 import fr.ubordeaux.pimp.fragments.InfosFragment;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.Effects;
+import fr.ubordeaux.pimp.util.Kernels;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -37,12 +39,15 @@ public class MainActivity extends AppCompatActivity {
     private EffectsFragment effectsListFragment;
     private EffectSettingsFragment effectSettingsFragment;
     private FragmentManager fragmentManager;
+    private AsyncTask currentTask; //Current asyncTask
 
 
     //Image currently modified.
     private Image image;
 
     private PhotoView iv;
+
+    private Menu menu;
 
     public Image getImage() {
         return image;
@@ -71,6 +76,13 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_READ_EXTERNAL_STORAGE = 68;
     public static final int REQUEST_CAMERA = 67;
 
+    public AsyncTask getCurrentTask() {
+        return currentTask;
+    }
+
+    public void setCurrentTask(AsyncTask currentTask) {
+        this.currentTask = currentTask;
+    }
 
     /**
      * Load image from internal storage
@@ -157,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         menu.clear();
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.app_name);
@@ -164,6 +177,20 @@ public class MainActivity extends AppCompatActivity {
         }
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
+    }
+
+    /**
+     * Hide items from menu
+     */
+    public void hideMenu(){
+        menu.clear();
+    }
+
+    /**
+     * Show items from menu
+     */
+    public void showMenu(){
+        getMenuInflater().inflate(R.menu.activity_main, menu);
     }
 
     @Override
@@ -196,10 +223,8 @@ public class MainActivity extends AppCompatActivity {
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
         } else if (effectSettingsFragment != null && effectSettingsFragment.isVisible()) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.remove(effectSettingsFragment);
-            fragmentTransaction.commit();
-            findViewById(R.id.fragment_effects_container).setVisibility(View.VISIBLE);
+            image.discard();
+            deflateEffectSettings();
         } else {
             moveTaskToBack(true);
         }
@@ -368,13 +393,21 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    public void hideEffectsList(){
+        findViewById(R.id.fragment_effects_container).setVisibility(View.GONE);
+    }
+
+    public void showEffectsList(){
+        findViewById(R.id.fragment_effects_container).setVisibility(View.VISIBLE);
+    }
+
     /**
      * Inflates the settings (seekbars, buttons...) of a specific effect w/ listeners.
      *
      * @param effect the enum of the effect
      */
     public void inflateEffectSettings(Effects effect) {
-        findViewById(R.id.fragment_effects_container).setVisibility(View.GONE);
+        hideEffectsList();
         effectSettingsFragment = new EffectSettingsFragment();
 
         Bundle args = new Bundle();
@@ -384,6 +417,13 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_settings_container, effectSettingsFragment);
         fragmentTransaction.commit();
+    }
+
+    public void deflateEffectSettings(){
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.remove(effectSettingsFragment);
+        fragmentTransaction.commit();
+        showEffectsList();
     }
 
 

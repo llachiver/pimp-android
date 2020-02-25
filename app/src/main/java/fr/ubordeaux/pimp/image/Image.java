@@ -13,7 +13,13 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
+import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.io.BitmapIO;
+import fr.ubordeaux.pimp.util.ApplyFilterQueueTask;
+import fr.ubordeaux.pimp.util.BitmapRunnable;
 import fr.ubordeaux.pimp.util.Utils;
 
 import static fr.ubordeaux.pimp.activity.MainActivity.REQUEST_WRITE_EXTERNAL_STORAGE;
@@ -29,11 +35,16 @@ public class Image {
     //Original version of the image at its creation
     private int[] imgBase;
 
+    //Quick save of the image done when opening an effect, in order to discard its modifications later
+    private int[] imgQuickSave;
+
+    
+    private Queue <BitmapRunnable> effectQueue;
+
     //Core of the Image, Bitmap representing its pixels.
     private Bitmap bitmap;
 
-    //Quick save of the image done when opening an effect, in order to discard its modifications
-    private Bitmap bitmapSave;
+
 
     /**
      * Load an image from resources, size is automatically limited depending the screen size.
@@ -131,7 +142,10 @@ public class Image {
         width = bmp.getWidth();
         height = bmp.getHeight();
         imgBase = new int[width * height];
+        imgQuickSave = new int[width * height];
         bitmap.getPixels(imgBase, 0, width, 0, 0, width, height);
+        bitmap.getPixels(imgQuickSave, 0, width, 0, 0, width, height);
+        effectQueue = new LinkedList<>();
     }
 
     /**
@@ -152,10 +166,13 @@ public class Image {
         width = newBitmap.getWidth();
         height = newBitmap.getHeight();
         imgBase = new int[width * height];
+        imgQuickSave = new int[width * height];
         bitmap.getPixels(imgBase, 0, width, 0, 0, width, height);
+        bitmap.getPixels(imgQuickSave, 0, width, 0, 0, width, height);
         infos = new ImageInfo(null, null);
         infos.setLoadedHeight(height);//set values n info pack
         infos.setLoadedWidth(width);
+        effectQueue = new LinkedList<>();
     }
 
     /**
@@ -190,14 +207,15 @@ public class Image {
      */
     public void reset() {
         bitmap.setPixels(imgBase, 0, width, 0, 0, width, height);
+        effectQueue.clear();
     }
 
     public void quickSave() {
-        bitmapSave = bitmap.copy(bitmap.getConfig(), true);
+        bitmap.getPixels(imgQuickSave, 0, width, 0, 0, width, height);
     }
 
     public void discard() {
-        bitmap = bitmap.copy(bitmapSave.getConfig(), true);
+        bitmap.setPixels(imgQuickSave, 0, width, 0, 0, width, height);
     }
 
 
@@ -231,6 +249,18 @@ public class Image {
         return infos;
     }
 
+    public Queue<BitmapRunnable> getEffectQueue() {
+        return effectQueue;
+    }
+
+    /**
+     *
+     * @return Get uri from image
+     */
+    public Uri getUri() {
+        return uri;
+    }
+
     /**
      * Export the current image to the devices gallery
      * Ask for the user's permission if not yet given to store the current
@@ -242,8 +272,10 @@ public class Image {
         if (ContextCompat.checkSelfPermission(context,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
-            BitmapIO.saveBitmap(this.getBitmap(), "pimp", context);
-            Toast.makeText(context, "Saved successfully", Toast.LENGTH_SHORT).show();
+            //Load new Bitmap and apply with async task
+
+            new ApplyFilterQueueTask((MainActivity) context,this).execute(); //Apply effectQueue
+            //BitmapIO.saveBitmap(this.getBitmap(), "pimp", context);
 
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(context,
@@ -266,6 +298,8 @@ public class Image {
             // result of the request.
 
         }
+
+
 
 
     }

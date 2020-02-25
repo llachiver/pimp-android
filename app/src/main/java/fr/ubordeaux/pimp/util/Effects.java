@@ -1,17 +1,23 @@
 package fr.ubordeaux.pimp.util;
 
-import java.lang.reflect.Method;
-
+/**
+ * This enum is used for generating the layout (see EffectSettingsFragment.java).
+ */
 public enum Effects {
     BRIGHTNESS("Brightness"),
-    SATURATION("Saturation"),
     CONTRAST("Contrast"),
+    SATURATION("Saturation"),
+    ENHANCE("Enhance"),
+    TOGRAY("To gray"),
+    INVERT("Invert"),
     CHANGE_HUE("Change hue"),
-    KEEP_HUE("Keep hue");
+    KEEP_HUE("Keep hue"),
+    BLUR("Blur"),
+    SHARPEN("Sharpen"),
+    NEON("Neon");
 
     private String name = "";
 
-    //Constructeur
     Effects(String name){
         this.name = name;
     }
