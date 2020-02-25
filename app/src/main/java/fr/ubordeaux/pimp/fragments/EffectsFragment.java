@@ -44,6 +44,7 @@ public class EffectsFragment extends Fragment {
         Button bNeon = (Button) view.findViewById(R.id.bNeon);
         Button bToGray = (Button) view.findViewById(R.id.bToGray);
         Button bInvert = (Button) view.findViewById(R.id.bInvert);
+        Button bLaplace = (Button) view.findViewById(R.id.bLaplace);
 
 
         bToGray.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +123,13 @@ public class EffectsFragment extends Fragment {
             public void onClick(View v) {
                 main.getImage().quickSave();
                 main.inflateEffectSettings(Effects.NEON);
+            }
+        });
+        bLaplace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.getImage().quickSave();
+                main.inflateEffectSettings(Effects.LAPLACE);
             }
         });
     }

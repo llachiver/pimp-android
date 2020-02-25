@@ -65,8 +65,7 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
-
-    //Update image when heavy task is finished
+    //Save big bitmap
     @Override
     protected void onPostExecute(Void voids) {
         super.onPostExecute(voids);

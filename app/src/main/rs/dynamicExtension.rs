@@ -17,22 +17,11 @@ uchar2 minMaxRGB[NBR_COLOR_CHANS];
 //the new min & max RGB values of the bitmap (after the dynamic extension)
 uchar2 newMinMaxRGB[NBR_COLOR_CHANS];
 
-//the min & max values of the bitmap (calculated with the findMinMax script)
-uchar2 minMaxGray;
-
-//the new min & max of the value of the bitmap (after the dynamic extension)
-uchar2 newMinMaxGray;
-
 
 //LUT for the 3 RGB channels
 static uchar3 lutRGB [LUT_SIZE];
 
-//LUT for the value (max between 3 RGB channels)
-uchar lutGray[LUT_SIZE];
 
-void RS_KERNEL computeLutGray(uchar in, uint32_t x){
-    lutGray[x] = newMinMaxGray.x + (newMinMaxGray.y - newMinMaxGray.x) * (x - minMaxGray.x) / (minMaxGray.y - minMaxGray.x);
-}
 
 void RS_KERNEL computeLutRGB(uchar in, uint32_t x){
     lutRGB[x].r = newMinMaxRGB[0].x + (newMinMaxRGB[0].y - newMinMaxRGB[0].x) * (x - minMaxRGB[0].x) / (minMaxRGB[0].y - minMaxRGB[0].x);
@@ -41,20 +30,10 @@ void RS_KERNEL computeLutRGB(uchar in, uint32_t x){
 }
 
 
-uchar4 RS_KERNEL assignLutGray(uchar4 in) {
-    uchar4 out;
-    out.r =  lutGray[in.r];
-    out.g =  lutGray[in.g];
-    out.b =  lutGray[in.b];
-
-    out.a = in.a;
-
-    return out;
-
-}
 
 uchar4 RS_KERNEL assignLutRGB(uchar4 in){
     uchar4 out;
+    if (in.a == 0) return in;
     out.r =  lutRGB[in.r].r;
     out.g =  lutRGB[in.g].g;
     out.b =  lutRGB[in.b].b;
@@ -62,13 +41,6 @@ uchar4 RS_KERNEL assignLutRGB(uchar4 in){
     out.a = in.a;
 
     return out;
-}
-
-void computeNewMinMaxGray(){
-    uchar middle;
-    middle = (minMaxGray.y - minMaxGray.x)/2 + minMaxGray.x;
-    newMinMaxGray.x = middle - factor < 0 ? 0 : middle - factor;
-    newMinMaxGray.y = middle + factor > 255 ? 255 : middle + factor;
 }
 
 void computeNewMinMaxRGB(){
@@ -85,13 +57,6 @@ void dynamicExtensionRGB(rs_allocation inputImage, rs_allocation outputImage){
     rs_allocation lutRGBIn = rsCreateAllocation_uchar(256);
     rsForEach(computeLutRGB, lutRGBIn);
     rsForEach(assignLutRGB, inputImage, outputImage);
-}
-
-void dynamicExtensionGray(rs_allocation inputImage, rs_allocation outputImage){
-    computeNewMinMaxGray();
-    rs_allocation lutGrayIn = rsCreateAllocation_uchar(256);
-    rsForEach(computeLutGray, lutGrayIn);
-    rsForEach(assignLutGray,inputImage,outputImage);
 }
 
 

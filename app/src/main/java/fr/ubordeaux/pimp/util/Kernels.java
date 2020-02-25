@@ -5,18 +5,6 @@ package fr.ubordeaux.pimp.util;
  */
 public class Kernels {
 
-    //Sobel Filter
-    public static final float[] SOBEL_X = {
-            1, 0, -1,
-            2, 0, -2,
-            1, 0, -1,
-    };
-    public static final float[] SOBEL_Y = {
-            1, 2, 1,
-            0, 0, 0,
-            -1, -2, -1,
-    };
-    //-------------------------------------
 
     public static final float[] LAPLACIAN3x3 = {
             1, 1, 1,

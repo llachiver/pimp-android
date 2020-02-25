@@ -192,12 +192,23 @@ public class Convolution {
         convolve2dSeparable(bmp, kernel, kernel, true, context);
     }
 
+    public static void meanBlur(Bitmap bmp, int progress, Context context){
+        int size = progress/5;
+        float[] kernel = Kernels.mean(size);
+        convolve2dSeparable(bmp, kernel, kernel, true, context);
+    }
+
     public static void sharpen(Bitmap bmp, Context context){
         convolve2d(bmp, Kernels.laplacianOfGaussian(9,9,1.8f),9,9, true, context);
     }
 
     public static void neon(Bitmap bmp, Context context){
         edgeDetectionConvolution(bmp, Kernels.sobelX(3), Kernels.sobelY(3),3, context);
+    }
+
+    public static void laplace (Bitmap bmp, Context context){
+        Retouching.toGray(bmp,context);
+        convolve2d(bmp, Kernels.LAPLACIAN3x3,3,3, true, context);
     }
 
 
