@@ -11,17 +11,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.github.chrisbanes.photoview.PhotoView;
-
-import java.io.File;
-import java.io.IOException;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.github.chrisbanes.photoview.PhotoView;
+
+import java.io.File;
+import java.io.IOException;
+
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.fragments.EffectSettingsFragment;
 import fr.ubordeaux.pimp.fragments.EffectsFragment;
@@ -32,10 +33,6 @@ import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
 public class MainActivity extends AppCompatActivity {
-    /////////////////////////////////////////////////////////////////////////////////////
-    // Settings :
-    /////////////////////////////////////////////////////////////////////////////////////
-    private static int DEFAULT_IMAGE = R.drawable.starwars;
 
     private EffectsFragment effectsListFragment;
     private EffectSettingsFragment effectSettingsFragment;
@@ -173,23 +170,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         iv = findViewById(R.id.photoView);
-
-        //Loading default image from resources
-        setImage(new Image(DEFAULT_IMAGE, this));
-
         //Allow more zooming
         iv.setMaximumScale(10);
-        //Set imageview bitmap
-        updateIv();
 
         //Init the fragments
         effectsListFragment = new EffectsFragment();
-
         //Used for fragment transactions
         fragmentManager = getSupportFragmentManager();
 
         inflateEffectsList();
+
+        //Open first image :
+        if (getIntent().getIntExtra(FirstActivity.LAUNCH_CODE, 0) == 0)
+            startGalleryActivityWithPermissions();
+        else
+            startCameraActivityWithPermissions();
+
     }
 
     @Override
