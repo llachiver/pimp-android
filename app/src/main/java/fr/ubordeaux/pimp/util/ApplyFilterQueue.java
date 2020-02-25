@@ -36,6 +36,7 @@ public class ApplyFilterQueue extends AsyncTask<Void, Void, Void> {
         if (activity == null || activity.isFinishing()) { //Prevent memory leaks
             return;
         }
+
         activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE); //Show progressBar
     }
 
@@ -47,7 +48,7 @@ public class ApplyFilterQueue extends AsyncTask<Void, Void, Void> {
             if (activity == null || activity.isFinishing()) {
                 return null;
             }
-            bmp = BitmapIO.decodeAndScaleBitmapFromUri(image.getUri(), 9999,9999, activity); //TODO must set a limit for width and height and maintain aspect-ratio
+            bmp = BitmapIO.decodeAndScaleBitmapFromUri(image.getUri(), 5000,3000, activity); //TODO must set a limit for width and height and maintain aspect-ratio
             Queue<BitmapRunnable> effectQueue = new LinkedList<>(image.getEffectQueue()); //Get copy of queue
             BitmapRunnable effect;
 
