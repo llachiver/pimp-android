@@ -1,7 +1,5 @@
 package fr.ubordeaux.pimp.util;
 
-import android.util.Log;
-
 /**
  * Class that stores all the predefined Kernels and some methods to generate new kernels
  */
@@ -87,7 +85,6 @@ public class Kernels {
         return kernel;
     }
 
-
     public static float[] identity (int width, int height){
         if (width % 2 == 0 || height % 2 == 0) return null;
         float [] kernel = new float[width * height];
@@ -95,7 +92,55 @@ public class Kernels {
         int yCenter = height / 2;
         kernel [xCenter + (yCenter * width)] = 1;
         return kernel;
+    }
 
+    //Full sobel-x kernel
+    public static float[] sobelX(int size) {
+        if (size % 2 == 0) size++;
+        float [] kernel = new float[size * size];
+        int xCenter = size / 2;
+        int yCenter = size / 2;
+        for(int y = 0 ; y < size ; y++){
+            for(int x = 0 ; x < size ; x++){
+                int idx = y*size + x;
+                float value = 0;
+                if(y < yCenter || y > yCenter)
+                    value = 1;
+                else if(y == yCenter)
+                    value = 2;
+                if(x > xCenter)
+                    value *= -1;
+                else if(x == xCenter)
+                    value = 0;
+                kernel[idx] = value;
+            }
+        }
+        return kernel;
+    }
+
+
+    //Full sobel-y kernel
+    public static float[] sobelY(int size) {
+        if (size % 2 == 0) size++;
+        float [] kernel = new float[size * size];
+        int xCenter = size / 2;
+        int yCenter = size / 2;
+        for(int y = 0 ; y < size ; y++){
+            for(int x = 0 ; x < size ; x++){
+                int idx = y*size + x;
+                float value = 0;
+                if(x < xCenter || x > xCenter)
+                    value = 1;
+                else if(x == xCenter)
+                    value = 2;
+                if(y > yCenter)
+                    value *= -1;
+                else if(y == yCenter)
+                    value = 0;
+                kernel[idx] = value;
+            }
+        }
+        return kernel;
     }
 
     /**

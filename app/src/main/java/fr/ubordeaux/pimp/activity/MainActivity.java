@@ -29,6 +29,7 @@ import fr.ubordeaux.pimp.fragments.EffectsFragment;
 import fr.ubordeaux.pimp.fragments.InfosFragment;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.Effects;
+import fr.ubordeaux.pimp.util.Kernels;
 import fr.ubordeaux.pimp.util.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
@@ -207,10 +208,8 @@ public class MainActivity extends AppCompatActivity {
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
         } else if (effectSettingsFragment != null && effectSettingsFragment.isVisible()) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.remove(effectSettingsFragment);
-            fragmentTransaction.commit();
-            findViewById(R.id.fragment_effects_container).setVisibility(View.VISIBLE);
+            image.discard();
+            deflateEffectSettings();
         } else {
             moveTaskToBack(true);
         }
@@ -395,6 +394,13 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_settings_container, effectSettingsFragment);
         fragmentTransaction.commit();
+    }
+
+    public void deflateEffectSettings(){
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.remove(effectSettingsFragment);
+        fragmentTransaction.commit();
+        findViewById(R.id.fragment_effects_container).setVisibility(View.VISIBLE);
     }
 
 
