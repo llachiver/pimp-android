@@ -2,9 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="20dp">
 
     <ImageButton
         android:id="@+id/bCancel"
@@ -29,15 +32,5 @@
         android:background="#00FFFFFF"
         app:srcCompat="@drawable/ic_done_black_24dp"
         tools:ignore="VectorDrawableCompat" />
-
-    <LinearLayout
-        android:id="@+id/settings_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="4dp"
-        android:orientation="vertical" />
-
-
 
 </RelativeLayout>
