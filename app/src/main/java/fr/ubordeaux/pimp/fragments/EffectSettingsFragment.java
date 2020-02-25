@@ -267,10 +267,16 @@ public class EffectSettingsFragment extends Fragment {
 
         sbChangeHue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
                 //Change hue call
                 image.discard();
-                colorize(image.getBitmap(), progress, getContext(), cbUniform.isChecked());
+                currentEffect = new BitmapRunnable(image.getBitmap()) {
+                    @Override
+                    public void run() {
+                        colorize(this.getBmp(), progress, mainActivity, cbUniform.isChecked());
+                    }
+                };
+                currentEffect.run();
             }
 
             @Override
@@ -309,13 +315,24 @@ public class EffectSettingsFragment extends Fragment {
         sbTolerance.setMax(255);
         sbTolerance.setProgress(127);
         final int[] args = new int[2];
+        args[0] = 127;
+        args[1] = 127;
         sbTolerance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
+
+
                 //Keep hue call
                 image.discard();
                 args[1] = progress;
-                keepColor(image.getBitmap(), args[0], progress, getContext());
+
+                currentEffect = new BitmapRunnable(image.getBitmap()) {
+                    @Override
+                    public void run() {
+                        keepColor(this.getBmp(), args[0], progress, mainActivity);
+                    }
+                };
+                currentEffect.run();
             }
 
             @Override
@@ -332,11 +349,17 @@ public class EffectSettingsFragment extends Fragment {
 
         sbSelectedHue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
                 //Keep hue call
                 image.discard();
                 args[0] = progress;
-                keepColor(image.getBitmap(), progress, args[1], getContext());
+                currentEffect = new BitmapRunnable(image.getBitmap()) {
+                    @Override
+                    public void run() {
+                        keepColor(this.getBmp(), progress, args[1], mainActivity);
+                    }
+                };
+                currentEffect.run();
             }
 
             @Override
