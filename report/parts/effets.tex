@@ -14,6 +14,9 @@ La classe \emph{Convolution} contient tous les effets liés à la convolution (f
 Toutes ces méthodes sont appelées lors de l'appui de boutons ou de glissement de seekbars. Les seekbars ont généralement
 une étendue allant de 0 à 255 (sauf pour les réglages de teinte), et certains effets nécessitent des valeurs pouvant être
 négatives. Ainsi la valeur de seekbar est modifiée dans la méthode appelante de ces mêmes effets.
+
+Tous les effets nécessitant l'histogramme utilise celui de la \emph{valeur}, soit le maximum entre les trois canaux RGB.
+
 \subsection{Luminosité (Brightness) :}
 \includegraphics[width=0.5\textwidth]{report_src/brightness_low.jpeg}
 \includegraphics[width=0.5\textwidth]{report_src/brightness_high.jpeg}
@@ -23,7 +26,7 @@ négatives. Ainsi la valeur de seekbar est modifiée dans la méthode appelante 
 \emph{Script : brightness.rs}
 \\
 
-Ce réglage se contente d'ajouter une valeur (positive ou négative) aux trois canaux RGB de l'image. Cette valeur est fixée par la seekbar.
+Ce réglage ajoute une valeur (positive ou négative) aux trois canaux RGB de l'image. Cette valeur est fixée par la seekbar.
 Les valeurs sont tronquées entre 0 et 255, par conséquent on perd de l'information dans les valeurs extrêmes de luminosité.
 
 Cet effet n'utilise pas la luminosité existante de l'image, ainsi on peut obtenir des résultats qui sont parfois discutables, par exemple
@@ -41,13 +44,37 @@ de laisser l'algorithme tel quel.
 
 Ce réglage effectue une extension linéaire de dynamique. Les nouveaux extremum de l'histogramme sont définis à partir de la position de la seekbar.
 La dynamique est ainsi étendue autour d'une valeur se situant au milieu des deux anciens extremum de l'histogramme*. On a donc une image uniforme lorsque
-l'on règle le contraste au minimum.
-\\
-Le principal problème de l'extension dynamique est qu'elle ne permet pas d'augmenter le contraste à des grandes valeurs. En effet, les extremum sont vite
-atteints. La solution serait de faire une transformation linéaire par morceaux.
+l'on règle le contraste au minimum. En augmentant le contraste, les extremum peuvent sortir de l'intervalle [0;255], ce qui provoque une distorsion de l'image.
 \\
 
-*Il serait peut-être plus juste de prendre la médiane de l'histogramme cumulé afin d'avoir une valeur qui représente mieux la "valeur moyenne" de l'image.
+*Il serait peut-être plus judicieux de prendre la médiane de l'histogramme cumulé afin d'avoir une valeur qui représente mieux la "valeur moyenne" de l'image.
 
 
 \subsection{Saturation (Saturation) :}
+
+\emph{Méthode appelante : Retouching.setSaturation()}
+
+\emph{Script : saturation.rs}
+\\
+
+Ce réglage permet de régler la saturation de l'image. Soit S la saturation existante, S' la nouvelle saturation et F le facteur de saturation. S et S' vont de 0 à 1.
+
+On a S' = S + F * (1 - S) * S. 
+
+On observe que la nouvelle saturation est proportionnelle à deux facteurs : l'espace restant avant une saturation totale (1-S) et la saturation existante S.
+Par conséquent, en augmentant la saturation, chaque pixel tend vers sa saturation maximale, tout en garantissant une saturation proportionnelle à celle existante, évitant ainsi de saturer le gris.
+
+\subsection{Egalisation d'histogramme (Enhance) :}
+
+\emph{Méthode appelante : Retouching.histogramEqualization()}
+
+\emph{Scripts : cumulativeHistogram.rs, assignLut.rs} 
+\\
+
+Comme son nom l'indique, cet effet utilise l'égalisation d'histogramme afin d'améliorer le contraste.
+On calcule d'abord l'histogramme cumulé et on en déduit la LUT (Look Up Table), que nous assignons ensuite à chaque pixel.
+\\
+
+Cependant, afin d'égaliser l'histogramme, l'algorithme éclaircit les zones sombres, ce qui donne un résultat peu convaincant sur les images de faible luminosité.
+Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE), mais nous n'avons pas eu le temps de l'implémenter pour ce rendu.
+
