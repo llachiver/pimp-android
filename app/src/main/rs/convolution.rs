@@ -1,6 +1,6 @@
 #pragma version (1)
 #pragma rs java_package_name (fr.ubordeaux.pimp)
-#pragma rs_fp_relaxed
+#pragma rs_fp_imprecise
 #include "utils.rs"
 
 //image input and output (used for kernel mapping)
