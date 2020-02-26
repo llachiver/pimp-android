@@ -64,17 +64,85 @@ atteints. La solution serait de faire une transformation linéaire par morceaux.
     de Laplace.
     \\
 
-    Pour cet effet nous avons implémenté 3 types de convolution.
-    \subsection*{Tata}
+    Pour cet effet nous avons implémenté 3 méthodes de convolution.
+
     
 
     \begin{itemize}
         \item Convolution classique.
         \item Convolution séparable.
-        \item Opérateur de convolution.
+        \item Produit de convolution.
     \end{itemize}
 
+    \subsubsection*{Convolution classique}
+    
+        Cette méthode de convolution suit le même algorithme vu en cours, on peut l'appliquer avec des noyaux asymétriques de dimensions impaires uniquement,
+        cette opération a été parallélisée grâce à l'outil "renderscript" qui parallélise le calcul par CPU multithreading/GPU. En plus dans cette méthode (et dans toutes les autres) nous avons rajouté
+        des optimisations pour parcourir seulement les index nécessaires de l'image lors de la convolution. En calculant les index des centres des deux dimensions du kernel
+        on peut anticiper et éviter les appels de fonction inutiles sur les bords de l'image par exemple.
+        \newpage
+        
+        $X_{d\acute{e}but}$ et $X{fin}$ étant le premier et dernier index à parcourir dans l'axe des abscisses respectivement et
+        $Y_{d\acute{e}but}$ et $Y_{fin}$ étant le premier et dernier index à parcourir dans l'axe des ordonnées respectivement.
+        \[
+            Kernel_{CentreX} =   \frac{Largeur_{kernel}}{2}            
+        \]
+        \[
+            Kernel_{CentreY} =   \frac{Hauteur_{kernel}}{2}            
+        \]
+        \[
+            X_{d\acute{e}but} = Kernel_{CentreX}      
+        \]
+        \[
+            X_{fin} = Largeur_{image} - Kernel_{CentreX}           
+        \]
+        \[
+            Y_{d\acute{e}but} = Kernel_{CentreY}      
+        \]
+        \[
+            Y_{fin} = Hauteur_{image} - Kernel_{CentreY}           
+        \]
 
+        En définissant les index du début et de fin de parcours pour les deux dimensions de l'image sur le script de lancement renderscript
+        comme ci-dessus on peut s'en passer de quelques appels de fonctions sur les bords de l'image et ainsi gagner du temps de calcul.
+
+    \subsubsection*{Convolution séparable}
+
+        Pour la convolution classique avec un kernel de taille $N*M$ on doit faire $N*M$ multiplications pour chaque échantillon,
+        cependant si le kernel est séparable on peut passer à $N+M$ opérations.
+        \\
+
+        Or afin d'optimiser le calcul de la convolution sur des filtres séparables comme le filtre gaussien et moyenneur nous avons implémenté une
+        méthode de convolution séparable.
+        
+        \begin{figure}[!h]
+            \centering
+            \begin{subfigure}[b]{1\textwidth}
+                \centering
+                \includegraphics[width=0.5\textwidth]{report_src/separableConv1.png}
+            \end{subfigure}
+        \end{figure}
+
+        Un kernel est séparable quand sa matrice des poids peut être représentée par le produit de deux vecteurs.
+        \\
+
+        Ce calcul est réalisé en faisant deux convolutions unidimensionnelles successives (en X et en Y) sur l'image d'origine en stockant le résultat dans une image intermédiaire.
+        La propriété d'associativité de la convolution rend ce calcul possible.
+
+        \[
+            x * (N * N)  \iff (x * N) * N
+        \]
+
+        La limite de cette méthode c'est que l'on doit passer par une image partielle pour la réalisation du calcul en
+        utilisant plus de mémoire que pour une convolution classique.
+
+
+
+    \subsubsection*{Produit de convolution}
+
+        Cette méthode prend en paramètre deux kernels de même taille et réalise deux convolutions avec chaque kernel et ensuite calcule le produit des deux.
+        Vu que ces deux convolutions sont indépendantes l'une de l'autre on peut se permettre de les réaliser au même temps dans le script et de faire l'addition
+        des valeurs absolues résultantes des deux accumulateurs. Cette méthode est utilisé notamment pour faire des convolutions avec les opérateurs de Sobel, Kirsch, Prewitt.
 
 
     \subsubsection{Flou gaussien et moyenneur (Blur) : }
