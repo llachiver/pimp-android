@@ -1,8 +1,8 @@
 \section{Effets :}
 \emph{Interface :}
 
-L'utilisateur choisit un effet parmi la liste d'effets affichée en bas de l'écran. Il a ensuite accès aux 
-réglages disponibles, s'il y en a. L'utilisateur peut ensuite choisir de confirmer ou d'annuler la modification
+L'utilisateur choisit un effet parmi la liste d'effets affichée en bas de l'écran, ce qui affiche les 
+réglages disponibles (s'il y en a). L'utilisateur peut ensuite choisir de confirmer ou d'annuler la modification
 apportée par l'effet choisi.
 \\
 
@@ -11,10 +11,43 @@ apportée par l'effet choisi.
 Les effets sont rassemblés dans le package filters (fr.ubordeaux.pimp.filters).
 La classe \emph{Retouching} contient les réglages de luminosité, contraste, saturation et teinte.
 La classe \emph{Convolution} contient tous les effets liés à la convolution (flou, détection de contour etc.).
-Toutes ces méthodes sont appelées lors de l'appui de boutons ou de glissement de seekbars.
+Toutes ces méthodes sont appelées lors de l'appui de boutons ou de glissement de seekbars. Les seekbars ont généralement
+une étendue allant de 0 à 255 (sauf pour les réglages de teinte), et certains effets nécessitent des valeurs pouvant être
+négatives. Ainsi la valeur de seekbar est modifiée dans la méthode appelante de ces mêmes effets.
 \subsection{Luminosité (Brightness) :}
 \includegraphics[width=0.5\textwidth]{report_src/brightness_low.jpeg}
 \includegraphics[width=0.5\textwidth]{report_src/brightness_high.jpeg}
 
+\emph{Méthode appelante : Retouching.setBrightness()}
+
+\emph{Script : brightness.rs}
+\\
+
+Ce réglage se contente d'ajouter une valeur (positive ou négative) aux trois canaux RGB de l'image. Cette valeur est fixée par la seekbar.
+Les valeurs sont tronquées entre 0 et 255, par conséquent on perd de l'information dans les valeurs extrêmes de luminosité.
+
+Cet effet n'utilise pas la luminosité existante de l'image, ainsi on peut obtenir des résultats qui sont parfois discutables, par exemple
+le noir qui s'éclaircit et inversement pour le blanc. Pour pallier à ce problème, on pourrait introduire une multiplication afin de modifier
+la luminosité proportionnellement à celle existante. Cependant, cette solution modifie aussi le contraste, nous avons donc choisi
+de laisser l'algorithme tel quel.
+
+
 \subsection{Contraste (Contrast) :}
+
+\emph{Méthode appelante : Retouching.dynamicExtensionRGB()}
+
+\emph{Script : dynamicExtension.rs}
+\\
+
+Ce réglage effectue une extension linéaire de dynamique. Les nouveaux extremum de l'histogramme sont définis à partir de la position de la seekbar.
+La dynamique est ainsi étendue autour d'une valeur se situant au milieu des deux anciens extremum de l'histogramme*. On a donc une image uniforme lorsque
+l'on règle le contraste au minimum.
+\\
+Le principal problème de l'extension dynamique est qu'elle ne permet pas d'augmenter le contraste à des grandes valeurs. En effet, les extremum sont vite
+atteints. La solution serait de faire une transformation linéaire par morceaux.
+\\
+
+*Il serait peut-être plus juste de prendre la médiane de l'histogramme cumulé afin d'avoir une valeur qui représente mieux la "valeur moyenne" de l'image.
+
+
 \subsection{Saturation (Saturation) :}
