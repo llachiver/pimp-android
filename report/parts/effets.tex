@@ -57,6 +57,42 @@ atteints. La solution serait de faire une transformation linéaire par morceaux.
 
 
 \subsection{Convolution (Blur, Sharpen, Neon) :}
-\includegraphics[width=0.5\textwidth]{report_src/brightness_low.jpeg}
-\includegraphics[width=0.5\textwidth]{report_src/brightness_high.jpeg}
-\emph{Méthode appelante : Convolution.conv}
+
+    Dans cette sous-section on retrouve des effets pour flouter une image en passant par deux types différents de kernel : Gaussien et moyenneur
+    (bouton "Blur"), des effets pour améliorer la netteté d'une image avec la fonction "Laplacian of gaussian" (bouton Sharpen) et des effets de 
+    détection de contours (bouton "Neon") en réalisant une convolution avec des opérateurs comme Sobel, Prewitt, Kirsch ou simplement avec un kernel
+    de Laplace.
+    \\
+
+    Pour cet effet nous avons implémenté 3 types de convolution.
+    \subsection*{Tata}
+    
+
+    \begin{itemize}
+        \item Convolution classique.
+        \item Convolution séparable.
+        \item Opérateur de convolution.
+    \end{itemize}
+
+
+
+
+    \subsubsection{Flou gaussien et moyenneur (Blur) : }
+
+        \begin{figure}[!h]
+            \centering
+            \begin{subfigure}[b]{0.4\textwidth}
+                \includegraphics[width=1\textwidth]{report_src/picOrg.jpeg}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.4\textwidth}
+                \includegraphics[width=1\textwidth]{report_src/blur.jpeg}
+            \end{subfigure}
+            \caption{Image originale et image avec flou gaussien
+                    Méthode appelante }
+        \end{figure}
+
+
+
+
+
+        
