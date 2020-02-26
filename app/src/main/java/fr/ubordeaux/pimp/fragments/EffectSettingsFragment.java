@@ -7,8 +7,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -17,8 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
@@ -127,24 +125,7 @@ public class EffectSettingsFragment extends Fragment {
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
                 break;
             case NEON:
-                image.discard();
-                currentEffect = new BitmapRunnable(image.getBitmap()) {
-                    @Override
-                    public void run() {
-                        Convolution.neon(this.getBmp(),mainActivity);
-                    }
-                };
-                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
-                break;
-            case LAPLACE:
-                image.discard();
-                currentEffect = new BitmapRunnable(image.getBitmap()) {
-                    @Override
-                    public void run() {
-                        Convolution.laplace(this.getBmp(),mainActivity);
-                    }
-                };
-                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
+                neonView();
                 break;
             default :
                 break;
@@ -421,7 +402,7 @@ public class EffectSettingsFragment extends Fragment {
         sbBlur.setProgress(127);
 
         sbBlur.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
+                @Override
             public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
                 if(rbGauss.isChecked()) {
                     image.discard();
@@ -459,6 +440,85 @@ public class EffectSettingsFragment extends Fragment {
         settingsList.addView(sbBlur);
         settingsList.addView(rbGroup);
 
+    }
+
+
+
+    public void neonView(){
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER_HORIZONTAL;
+
+        RadioGroup rbGroup = new RadioGroup(mainActivity);
+        rbGroup.setOrientation(LinearLayout.HORIZONTAL);
+        rbGroup.setLayoutParams(lp);
+
+        final RadioButton rbSobel = new RadioButton(mainActivity);
+        rbSobel.setText("Sobel");
+
+        final RadioButton rbPrewitt = new RadioButton(mainActivity);
+        rbPrewitt.setText("Prewitt");
+
+        final RadioButton rbKirsch = new RadioButton(mainActivity);
+        rbKirsch.setText("Kirsch");
+
+        final RadioButton rbLaplace = new RadioButton(mainActivity);
+        rbLaplace.setText("Laplace");
+
+        rbGroup.addView(rbSobel);
+        rbGroup.addView(rbPrewitt);
+        rbGroup.addView(rbKirsch);
+        rbGroup.addView(rbLaplace);
+        rbGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(rbSobel.isChecked()){
+                    image.discard();
+                    currentEffect = new BitmapRunnable(image.getBitmap()) {
+                        @Override
+                        public void run() {
+                            Convolution.neonSobel(this.getBmp(),mainActivity);
+                        }
+                    };
+                    mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
+                }
+
+                else if(rbPrewitt.isChecked()){
+                    image.discard();
+                    currentEffect = new BitmapRunnable(image.getBitmap()) {
+                        @Override
+                        public void run() {
+                            Convolution.neonPrewitt(this.getBmp(),mainActivity);
+                        }
+                    };
+                    mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
+                }
+                else if(rbKirsch.isChecked()){
+                    image.discard();
+                    currentEffect = new BitmapRunnable(image.getBitmap()) {
+                        @Override
+                        public void run() {
+                            Convolution.neonKirsch(this.getBmp(),mainActivity);
+                        }
+                    };
+                    mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
+
+                }
+
+                else if(rbLaplace.isChecked()){
+                    image.discard();
+                    currentEffect = new BitmapRunnable(image.getBitmap()) {
+                        @Override
+                        public void run() {
+                            Convolution.laplace(this.getBmp(),mainActivity);
+                        }
+                    };
+                    mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
+
+                }
+            }
+        });
+
+        settingsList.addView(rbGroup);
     }
 
 

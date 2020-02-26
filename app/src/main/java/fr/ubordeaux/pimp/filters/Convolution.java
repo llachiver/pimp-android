@@ -228,12 +228,17 @@ public class Convolution {
         convolve2d(bmp, Kernels.laplacianOfGaussian(9,9,1.8f),9,9, true, context);
     }
 
-    public static void neon(Bitmap bmp, Context context){
+    public static void neonSobel(Bitmap bmp, Context context){
         edgeDetectionConvolution(bmp, Kernels.sobelX(3), Kernels.sobelY(3),3, context);
     }
+    public static void neonPrewitt(Bitmap bmp, Context context){
+        edgeDetectionConvolution(bmp, Kernels.PREWITT_X, Kernels.PREWITT_Y,3, context);
+    }
+    public static void neonKirsch(Bitmap bmp, Context context){
+        edgeDetectionConvolution(bmp, Kernels.KIRSCH_X, Kernels.KIRSCH_Y,3, context);
+    }
 
-    public static void laplace (Bitmap bmp, Context context){
-        Retouching.toGray(bmp,context);
+    public static void laplace(Bitmap bmp, Context context){
         convolve2d(bmp, Kernels.LAPLACIAN3x3,3,3, true, context);
     }
 
