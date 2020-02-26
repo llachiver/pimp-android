@@ -206,17 +206,6 @@ public class EffectSettingsFragment extends Fragment {
                         currentEffect.run();
 
                         break;
-                    case BLUR:
-                        image.discard();
-                        currentEffect = new BitmapRunnable(image.getBitmap()) {
-                            @Override
-                            public void run() {
-                                Convolution.gaussianBlur(this.getBmp(),progress,mainActivity);
-                            }
-                        };
-                        currentEffect.run();
-
-                        break;
                     case CONTRAST:
                         image.discard();
                         currentEffect = new BitmapRunnable(image.getBitmap()) {
