@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.util.Log;
 
 import fr.ubordeaux.pimp.ScriptC_convolution;
 import fr.ubordeaux.pimp.util.Kernels;
@@ -182,18 +184,42 @@ public class Convolution {
 
     }
 
+    public static void intrinsecBlur(Bitmap bmp, int progress, Context context){
+        progress = progress < 1 ? 1 : (progress > 24 ? 24 : progress);
+        RenderScript rs = RenderScript.create(context); //Create rs context
+        Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
+        Allocation output = Allocation.createTyped(rs, input.getType());
+
+
+        ScriptIntrinsicBlur sBlur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+
+        sBlur.setInput(input);
+        sBlur.setRadius(progress);
+        sBlur.forEach(output);
+        output.copyTo(bmp);
+        rs.destroy();
+        sBlur.destroy();
+        input.destroy();
+        output.destroy();
+
+
+
+
+    }
+
     //-------------------------------------
     // Called effects
     //-------------------------------------
 
     public static void gaussianBlur(Bitmap bmp, int progress, Context context){
-        int size = progress/5;
-        float[] kernel = Kernels.gauss(size);
-        convolve2dSeparable(bmp, kernel, kernel, true, context);
+        int size = progress /10;
+        //float[] kernel = Kernels.gauss(size);
+        //convolve2dSeparable(bmp, kernel, kernel, true, context);
+        intrinsecBlur(bmp, size, context);
     }
 
     public static void meanBlur(Bitmap bmp, int progress, Context context){
-        int size = progress/5;
+        int size = progress/10;
         float[] kernel = Kernels.mean(size);
         convolve2dSeparable(bmp, kernel, kernel, true, context);
     }
