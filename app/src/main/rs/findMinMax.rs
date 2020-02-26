@@ -1,6 +1,7 @@
 #pragma version (1)
 #pragma rs java_package_name ( fr.ubordeaux.pimp)
-#pragma rs_fp_imprecise
+#pragma rs_fp_relaxed
+
 
 #define NB_COLOR_CHANS 3
 #define UCHAR_MIN 0

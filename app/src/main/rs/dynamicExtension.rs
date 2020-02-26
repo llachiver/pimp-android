@@ -1,6 +1,6 @@
 #pragma version (1)
 #pragma rs java_package_name (fr.ubordeaux.pimp)
-#pragma rs_fp_imprecise
+#pragma rs_fp_relaxed
 
 #define NBR_COLOR_CHANS 3
 #define LUT_SIZE 256

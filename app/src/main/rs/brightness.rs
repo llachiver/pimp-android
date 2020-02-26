@@ -1,7 +1,6 @@
 #pragma version (1)
 #pragma rs java_package_name ( fr.ubordeaux.pimp)
-#pragma rs_fp_imprecise
-
+#pragma rs_fp_relaxed
 int factor;
 
 uchar4 RS_KERNEL setBrightness ( uchar4 in  ) {

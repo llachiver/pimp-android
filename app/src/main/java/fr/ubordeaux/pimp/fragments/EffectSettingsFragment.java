@@ -259,8 +259,8 @@ public class EffectSettingsFragment extends Fragment {
         tvHue.setText("Hue");
 
         SeekBar sbChangeHue = new SeekBar(super.getContext());
-        sbChangeHue.setMax(255);
-        sbChangeHue.setProgress(127);
+        sbChangeHue.setMax(360);
+        sbChangeHue.setProgress(0);
 
         sbChangeHue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -301,16 +301,16 @@ public class EffectSettingsFragment extends Fragment {
         tvHue.setText("Hue");
 
         SeekBar sbSelectedHue = new SeekBar(super.getContext());
-        sbSelectedHue.setMax(255);
-        sbSelectedHue.setProgress(127);
+        sbSelectedHue.setMax(360);
+        sbSelectedHue.setProgress(0);
 
         TextView tvTolerance = new TextView(super.getContext());
         tvTolerance.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         tvTolerance.setText("Tolerance");
 
         SeekBar sbTolerance = new SeekBar(super.getContext());
-        sbTolerance.setMax(255);
-        sbTolerance.setProgress(127);
+        sbTolerance.setMax(360);
+        sbTolerance.setProgress(180);
         final int[] args = new int[2];
         args[0] = 127;
         args[1] = 127;
