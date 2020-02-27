@@ -18,8 +18,20 @@ public class Kernels {
             0, -1, 0,
     };
 
+    //-------------------------------------
+    //SOBEL Filter
+    public static final float[] SOBEL_X = {
+            -1,  0,  1,
+            -2,  0,  2,
+            -1,  0,  1,
+    };
+    public static final float[] SOBEL_Y = {
+             1,  2,  1,
+             0,  0,  0,
+            -1, -2, -1,
+    };
 
-
+    //-------------------------------------
     //KIRSCH Filter
     public static final float[] KIRSCH_X = {
               5,  5,  5,
