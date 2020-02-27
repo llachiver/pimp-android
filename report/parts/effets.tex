@@ -86,21 +86,22 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
 
 \subsection{Convolution (Blur, Sharpen, Neon) :}
 
-    Dans cette sous-section on retrouve des effets pour flouter une image en passant par deux types différents de kernel : Gaussien et moyenneur
+    Dans cette sous-section on retrouve des effets réalisés avec des convolutions pour flouter une image en passant par deux types différents de kernel : Gaussien et moyenneur
     (bouton "Blur"), des effets pour améliorer la netteté d'une image avec la fonction "Laplacian of gaussian" (bouton Sharpen) et des effets de 
-    détection de contours (bouton "Neon") en réalisant une convolution avec des opérateurs comme Sobel, Prewitt, Kirsch ou simplement avec un kernel
-    de Laplace.
+    détection de contours (bouton "Neon") en réalisant des convolutions avec des opérateurs comme Sobel, Prewitt, Kirsch ou une convolution simple avec un kernel
+    laplacien.
+
     \\
 
-    Pour cet effet nous avons implémenté 3 méthodes de convolution.
+    Pour ces effets nous avons implémenté 3 méthodes de convolution.
 
-    
 
     \begin{itemize}
         \item Convolution classique.
         \item Convolution séparable.
-        \item Produit de convolution.
+        \item Convolution détection de contours.
     \end{itemize}
+    
 
     \subsubsection*{Convolution classique}
     
@@ -108,7 +109,6 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
         cette opération a été parallélisée grâce à l'outil "renderscript" qui parallélise le calcul par CPU multithreading/GPU. En plus dans cette méthode (et dans toutes les autres) nous avons rajouté
         des optimisations pour parcourir seulement les index nécessaires de l'image lors de la convolution. En calculant les index des centres des deux dimensions du kernel
         on peut anticiper et éviter les appels de fonction inutiles sur les bords de l'image par exemple.
-        \newpage
         
         $X_{d\acute{e}but}$ et $X{fin}$ étant le premier et dernier index à parcourir dans l'axe des abscisses respectivement et
         $Y_{d\acute{e}but}$ et $Y_{fin}$ étant le premier et dernier index à parcourir dans l'axe des ordonnées respectivement.
@@ -166,12 +166,16 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
 
 
 
-    \subsubsection*{Produit de convolution}
+    \subsubsection*{Convolution détection de contours}
 
         Cette méthode prend en paramètre deux kernels de même taille et réalise deux convolutions avec chaque kernel et ensuite calcule le produit des deux.
         Vu que ces deux convolutions sont indépendantes l'une de l'autre on peut se permettre de les réaliser au même temps dans le script et de faire l'addition
-        des valeurs absolues résultantes des deux accumulateurs. Cette méthode est utilisé notamment pour faire des convolutions avec les opérateurs de Sobel, Kirsch, Prewitt.
+        des valeurs absolues résultantes des deux accumulateurs. Comme son nom l'indique cette méthode est utilisée notamment pour faire des convolutions pour la détection de contours
+        avec des opérateurs comme Sobel, Kirsch, Prewitt, etc.
+    \\
 
+    Un des points de réflexion sur la convolution c'est que jusqu'à présent on la réalise sur les 3 canaux RGB, ce qui est assez lourd au niveau de calcul,
+    cependant on pourrait passer l'image en échelle de gris et la faire seulement sur un des canaux ou passer pour l'espace HSV en utilisant la value ou la saturation.
 
     \subsubsection{Flou gaussien et moyenneur (Blur) : }
 
@@ -185,7 +189,7 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
             \end{subfigure}
             \caption{Image originale et image avec flou gaussien
                     Méthode appelante }
-        \end{figure}
+        \end{figure} 
 
 
 
