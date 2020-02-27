@@ -388,7 +388,7 @@ public class EffectSettingsFragment extends Fragment {
 
         SeekBar sbBlur = new SeekBar(mainActivity);
         sbBlur.setMax(255);
-        sbBlur.setProgress(127);
+        sbBlur.setProgress(0);
 
         sbBlur.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
