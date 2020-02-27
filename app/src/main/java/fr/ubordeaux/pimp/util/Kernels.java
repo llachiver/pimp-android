@@ -71,6 +71,12 @@ public class Kernels {
         return kernel;
     }
 
+    /**
+     * Generates identity matrix of width and height size.
+     * @param width
+     * @param height
+     * @return
+     */
     public static float[] identity (int width, int height){
         if (width % 2 == 0 || height % 2 == 0) return null;
         float [] kernel = new float[width * height];
@@ -145,7 +151,7 @@ public class Kernels {
 
 
     /**
-     * Generates a 2D kernel of size dimensions using the Laplacian Of Gaussiian formula @Link https://homepages.inf.ed.ac.uk/rbf/HIPR2/log.htm
+     * Generates a 2D kernel of size dimensions using the Laplacian Of Gaussiian formula @Link https://homepages.inf.ed.ac.uk/rbf/HIPR2/log.html
      * @return
      */
     public static float[] laplacianOfGaussian(int size) {
