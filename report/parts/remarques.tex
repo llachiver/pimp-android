@@ -5,9 +5,16 @@ TODO Remarques poids mémoire de la copie orginale des Images.
 \\
 
 Lors du chargement d'une nouvelle image, nous ré-instancions un objet de la classe Image. Ce qui veut techniquement dire que jusqu'au prochain passage du ramasse miette Android, deux images sont en mémoires, donc deux Bitmap et deux tableaux de pixels (la copie originale des Images, voir \ref{classeImage}). C'est un élément discutable cependant notre application limite la taille des Images chargées. Ce qui évite largement les dépassements mémoire.
+\\
+
+Dans la partie \ref{navig} nous créons une \textbf{MainActivity} après avoir récupéré une \textbf{Uri}, il aurait été idéal de rester dans \textbf{FirstActivity} jusqu'à chargement complet de la première image. Ce qui éviterait un éventuel aller-retour entre les activités en cas d'erreur. Cependant les limites de \textbf{Parcelable} \ref{parcelable} ainsi que l'utilisation d'une \textbf{AsyncTask} (donc un Thread différent) nous ont contraint à garder ce fonctionnement.
 
 \subsection{Remarques sur les librairies Android}
 TODO Remarques sur l'utilisation obligatoire d'une activité contexte pour charger une Bitmap.
+\\
+
+\label{parcelable}
+Pour manipuler des objets d'une activité à l'autre ou entre fragments, Android utilise des \textbf{Intent} ou des \textbf{Bundle}, passer des objets entiers devient assez lourd dans le code et nécessite l'utilisation de l'interface \textbf{Parcelable}, de plus passer un objet trop gros entraîne une \textbf{RuntimeException}. Finalement au sein d'une même application on peut se demander s'il est bien nécessaire de systématiser leur utilisation ou s'il ne serait pas plus simple de passer une référence ou simplement faire des accès statiques (au risque de perdre un peu la modularité du code).
 
 \subsection{Améliorations à court terme :}
 TODO

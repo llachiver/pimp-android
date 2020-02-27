@@ -1,10 +1,13 @@
 \section{Structure du projet :}
 
-\subsection{Structure graphique Android et navigation :}
-Pour afficher certains éléments d'interface comme par exemple les informations de l'image (bouton \faInfoCircle) nous utilisons des \textbf{Fragment}. En effet une activité supplémentaire n'est pas nécessaire car cette petite partie de l'application ne correspond pas à un point d'entrée de l'application. Par ailleurs changer de fragment (plutôt que de changer directement de layout) pourrait faciliter l'implémentation d'une interface différente, pour tablette par exemple.
+\subsection{Structure graphique Android et navigation :} \label{navig}
+Pour afficher certains éléments d'interface comme par exemple les informations de l'image (bouton \faInfoCircle) ou les paramètres d'effet nous utilisons des \textbf{Fragment}. En effet une activité supplémentaire n'est pas nécessaire car cette petite partie de l'application ne correspond pas à un point d'entrée de l'application. Par ailleurs changer de fragment (plutôt que de changer directement de layout) pourrait faciliter l'implémentation d'une interface différente, pour tablette par exemple.
 \\
-On notera que dans la structure actuelle de l'application, l'image actuellement éditée est contenue et manipulée depuis l'activité principale. Les fragments n'apportent à l'application que des éléments d'interface.
+
+On notera que dans la structure actuelle de l'application, l'image actuellement éditée est contenue et manipulée depuis l'activité principale. Les fragments n'apportent à l'application que des éléments d'interface. Seul le fragment d'information se voit transmettre un objet ImageInfo, il implémente donc l'interface \textbf{Parcelable}. (voir \ref{parcelable})
 \\
+
+Une seconde activité est cependant utilisée pour la page d'accueil à l'ouverture de l'application, cette \textbf{FirstActivity} utilise des méthodes génériques de \textbf{ActivityIO} afin de gérer l'ouverture de la galerie ou de la caméra. L'application reste dans cette activité tant qu'une \textbf{Uri} valable ($\approx$ chemin) n'a pas été sélectionnée. Ensuite cette Uri est transférée à \textbf{MainActivity} qui va alors charger cette première Image, en cas de problème de chargement l'application peut retourner dans FirstActivity.
 
 \subsection{Classe \textbf{Image} :} \label{classeImage}
 Cette classe a été conçu comme une alternative à l'utilisation directe de la classe \textbf{Bitmap} fournie par Android.
