@@ -236,7 +236,7 @@ public class Convolution {
     }
 
     public static void neonSobel(Bitmap bmp, Context context){
-*        edgeDetectionConvolution(bmp, Kernels.SOBEL_X, Kernels.SOBEL_Y,3, context);
+        edgeDetectionConvolution(bmp, Kernels.SOBEL_X, Kernels.SOBEL_Y,3, context);
     }
     public static void neonPrewitt(Bitmap bmp, Context context){
         edgeDetectionConvolution(bmp, Kernels.PREWITT_X, Kernels.PREWITT_Y,3, context);

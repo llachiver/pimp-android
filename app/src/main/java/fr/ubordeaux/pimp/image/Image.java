@@ -19,7 +19,7 @@ import java.util.Queue;
 import fr.ubordeaux.pimp.activity.ActivityIO;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.io.BitmapIO;
-import fr.ubordeaux.pimp.util.ApplyFilterQueueTask;
+import fr.ubordeaux.pimp.task.ApplyFilterQueueTask;
 import fr.ubordeaux.pimp.util.BitmapRunnable;
 import fr.ubordeaux.pimp.util.Utils;
 

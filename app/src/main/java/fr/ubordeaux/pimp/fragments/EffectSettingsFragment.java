@@ -23,7 +23,7 @@ import fr.ubordeaux.pimp.filters.Color;
 import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.Image;
-import fr.ubordeaux.pimp.util.ApplyEffectTask;
+import fr.ubordeaux.pimp.task.ApplyEffectTask;
 import fr.ubordeaux.pimp.util.BitmapRunnable;
 import fr.ubordeaux.pimp.util.Effects;
 

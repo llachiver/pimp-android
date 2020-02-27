@@ -1,4 +1,4 @@
-package fr.ubordeaux.pimp.util;
+package fr.ubordeaux.pimp.task;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -13,6 +13,7 @@ import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.io.BitmapIO;
+import fr.ubordeaux.pimp.util.BitmapRunnable;
 
 /**
  * Apply queue of filters
