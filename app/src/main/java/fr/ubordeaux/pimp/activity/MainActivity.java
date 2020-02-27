@@ -18,6 +18,7 @@ import com.github.chrisbanes.photoview.PhotoView;
 import java.io.File;
 
 import fr.ubordeaux.pimp.R;
+import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.fragments.EffectSettingsFragment;
 import fr.ubordeaux.pimp.fragments.EffectsFragment;
 import fr.ubordeaux.pimp.fragments.InfosFragment;
@@ -164,7 +165,39 @@ public class MainActivity extends AppCompatActivity {
             // Rare situation, then go back to FirstActivity :
             startActivity(new Intent(this, FirstActivity.class));
         }
+
     }
+
+
+    /**
+     * Used to benchmark an effect, linked to the BRIGHTNESS button for the moment
+     */
+    public void timeBenchmark(){
+        long startTime = 0;
+        long elapsedTime = 0;
+        float min = Float.MAX_VALUE, max = 0;
+        float sum = 0;
+        float mean;
+        Retouching.setBrightness(image.getBitmap(), 127, this);
+
+        for(int i = 0 ; i < 10 ; i++){
+            startTime = System.currentTimeMillis();
+
+            //HERE, effect call :
+            Retouching.setSaturation(image.getBitmap(), 255, this);
+
+            elapsedTime = System.currentTimeMillis() - startTime;
+
+            if(elapsedTime < min) min = elapsedTime;
+            if(elapsedTime > max) max = elapsedTime;
+
+            sum += elapsedTime;
+        }
+        mean = sum/10;
+        System.out.println("Min : " + min + " ms, max : " + max + " ms, mean : " + mean + " ms");
+    }
+
+
 
     @Override
     public void onBackPressed() {
@@ -289,6 +322,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
         showEffectsList();
     }
+
+
 
 
 }
