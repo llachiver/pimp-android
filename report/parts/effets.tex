@@ -1,21 +1,5 @@
 \section{Effets :}
-\emph{Interface :}
-
-L'utilisateur choisit un effet parmi la liste d'effets affichée en bas de l'écran, ce qui affiche les 
-réglages disponibles (s'il y en a). L'utilisateur peut ensuite choisir de confirmer ou d'annuler la modification
-apportée par l'effet choisi.
-\\
- 
-\emph{Structure du code :}
-
-Les effets sont rassemblés dans le package filters (fr.ubordeaux.pimp.filters).
-La classe \emph{Retouching} contient les réglages de luminosité, contraste, saturation et teinte.
-La classe \emph{Convolution} contient tous les effets liés à la convolution (flou, détection de contour etc.).
-Toutes ces méthodes sont appelées lors de l'appui de boutons ou de glissement de seekbars. Les seekbars ont généralement
-une étendue allant de 0 à 255 (sauf pour les réglages de teinte), et certains effets nécessitent des valeurs pouvant être
-négatives. Ainsi la valeur de seekbar est modifiée dans la méthode appelante de ces mêmes effets.
-
-Tous les effets nécessitant l'histogramme utilise celui de la \emph{valeur}, soit le maximum entre les trois canaux RGB.
+\textbf{NB:} Tous les effets nécessitant un histogramme utilise celui de la "\emph{valeur}", soit le maximum entre les trois canaux de l'espace de couleur Rouge Vert Bleu.
 
 \subsection{Luminosité (Brightness) :}
 \includegraphics[width=0.5\textwidth]{report_src/brightness_low.jpeg}

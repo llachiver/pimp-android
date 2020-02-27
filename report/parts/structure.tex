@@ -1,4 +1,4 @@
-\section{Structure du projet :}
+\section{Structure du projet}
 
 \subsection{Structure graphique Android et navigation :}\label{navig}
 \includegraphics[width=1\textwidth]{report_src/app_flowchart_fragments.PNG}
@@ -12,7 +12,7 @@ On notera que dans la structure actuelle de l'application, l'image actuellement 
 
 Une seconde activité est cependant utilisée pour la page d'accueil à l'ouverture de l'application, cette \textbf{FirstActivity} utilise des méthodes génériques de \textbf{ActivityIO} afin de gérer l'ouverture de la galerie ou de la caméra. L'application reste dans cette activité tant qu'une \textbf{Uri} valable ($\approx$ chemin) n'a pas été sélectionnée. Ensuite cette Uri est transférée à \textbf{MainActivity} qui va alors charger cette première Image, en cas de problème de chargement l'application peut retourner dans FirstActivity.
 
-\subsection{Classe \textbf{Image} :} \label{classeImage}
+\subsection{Classe \textbf{Image}} \label{classeImage}
 Cette classe a été conçu comme une alternative à l'utilisation directe de la classe \textbf{Bitmap} fournie par Android.
 \\
 Le coeur de la classe est évidement une instance de Bitmap, qu'il est possible de récupérer à tout moment. Par ailleurs la classe offre des fonctionnalités supplémentaires, parmi celle ci notamment la possibilité de restaurer l'image à son état au moment de sa création ou de son chargement via la méthode \textbf{reset()}, ou d'annuler les dernières modifications apportées par un effet grâce aux méthodes \textbf{quicksave()} et \textbf{discard()}.
@@ -20,13 +20,13 @@ Le coeur de la classe est évidement une instance de Bitmap, qu'il est possible 
 
 On notera la nécessité pour Image d'avoir la référence d'une Activité de l'application, en effet elle est requise à plusieurs moments par les librairies Android pour charger la Bitmap en mémoire.
 
-\subsubsection{Classe \textbf{ImageInfo} :}
+\subsubsection{Classe \textbf{ImageInfo}}
 La classe Image \ref{classeImage} génère et garde une instance de la classe \textbf{ImageInfo}, cette classe contient un grand nombre de valeurs à propos de l'Image (dimensions, coordonnées GPS, date de prise de vue, ...).
 \\
 L'idée de cette classe était d'empaqueter toutes ces informations afin de faciliter le passage de ces informations à travers des Fragments ou des Activités (voir \ref{navig}). On notera que tous les accesseurs appliquent des opérations de formatage sur ces données, certaines opérations pourraient être déplacées dans les constructeurs si elles venaient à être utilisées régulièrement.
 
 
-\subsubsection{File d'effets :} \label{file_effets}
+\subsubsection{File d'effets} \label{file_effets}
 Pour pouvoir exporter l'image éditée, il est nécessaire de ré appliquer sur l'image d'origine tout les effets appliqués à l'image affichée dans l'application.
 \\
 C'est pourquoi la classe Image permet d'empaqueter une Queue de \textbf{BitmapRunnable}. Les BitmapRunnable permettent de transporter des méthodes d'effets, en effet en définissant la méthode \textbf{run()} à l'instanciation de ces objets on peut empaqueter un effet applicable à un objet \textbf{Bitmap}. Ce qui permet de passer n'importe quel effet venant de n'importe quel auteur, ce qui renforce la modularité des effets et de la classe Image.
@@ -41,7 +41,22 @@ Ainsi \textbf{LoadImageUriTask} et \textbf{ApplyFilterQueueTask} permettent resp
 \\
 \textbf{ApplyEffectTask} est un peu différente, elle permet de mettre en arrière plan le calcul d'application d'un effet. Elle fonctionne pour n'importe quel effet, pour ce faire elle a besoin d'un paramètre, le type d'effet sous la forme d'un \textbf{Runnable}.
 
-\subsection{Packages utilitaires :}
+\subsection{Classes d'effets}
+Les effets applicables dans notre application sur des Bitmap sont rangés dans 3 classes du package \textbf{fr.ubordeaux.pimp.filters}.
+\\
+\textbf{Retouching} contient les effets les plus classiques d'amélioration d'une image et notamment ceux utilisant des histogrammes (luminosité, contraste, et saturation).
+\\
+\textbf{Color} contient tout les effets ayant un impact sur la colorimétrie de l'image (modification de teinte, noir et blanc et sélection de couleur).
+\\
+\textbf{Convolution} contient tout les effets utilisant des méthodes de convolution (flou, détection de contour etc).
+\\
+
+\subsection{Fragment \textbf{EffectSettingsFragment}}
+Ce fragment un peu particulier joue le rôle le plus important dans l'application des effets sur l'image, en effet selon le bouton d'effet sélectionné il génère les curseurs nécessaires au paramétrage de l'effet.
+\\
+Leur nombre peut varier d'un effet à l'autre mais également leur fourchette de valeurs, ainsi cette classe convertit les méthodes d'effets et leurs arguments en éléments d'interfaces pour l'utilisateur.
+
+\subsection{Packages utilitaires}
 De nombreuses classes du code permettent une factorisation et une clarification du code en offrant des méthodes pratiques, généralement statiques. Parmi ces classes on pourra retrouver:
 \\
 
