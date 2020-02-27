@@ -49,7 +49,7 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Void, Void> {
             if (activity == null || activity.isFinishing()) {
                 return null;
             }
-            bmp = BitmapIO.decodeAndScaleBitmapFromUri(image.getUri(), 5000,3000, activity); //TODO must set a limit for width and height and maintain aspect-ratio
+            bmp = BitmapIO.decodeAndScaleBitmapFromUri(image.getUri(), 5000,5000, activity); 
             Queue<BitmapRunnable> effectQueue = new LinkedList<>(image.getEffectQueue()); //Get copy of queue
             BitmapRunnable effect;
 
