@@ -78,12 +78,6 @@ On calcule d'abord l'histogramme cumulé et on en déduit la LUT (Look Up Table)
 Cependant, afin d'égaliser l'histogramme, l'algorithme éclaircit les zones sombres, ce qui donne un résultat peu convaincant sur les images de faible luminosité.
 Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE), mais nous n'avons pas eu le temps de l'implémenter pour ce rendu.
 
-\subsection{Saturation (Saturation) :}
-
-
-
-
-
 \subsection{Convolution (Blur, Sharpen, Neon) :}
 
     Dans cette sous-section on retrouve des effets réalisés avec des convolutions pour flouter une image en passant par deux types différents de kernel : Gaussien et moyenneur
@@ -176,6 +170,13 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
     Un des points de réflexion sur la convolution c'est que jusqu'à présent on la réalise sur les 3 canaux RGB, ce qui est assez lourd au niveau de calcul,
     cependant on pourrait passer l'image en échelle de gris et la faire seulement sur un des canaux ou passer pour l'espace HSV en utilisant la value ou la saturation.
     \newpage
+
+    \subsubsection*{Les kernels} \label{kernels}
+
+    Tous les kernels sont définis dans la classe fr.ubordeaux.pimp.util.Kernels. Les kernels de détection de contour (Sobel, Kirsch, Laplace, Prewitt) sont définis
+    en variable statique et finale, car leur taille est fixe, les autres sont générés par une méthode. Si on prend le cas du kernel de Gauss, la méthode gauss permet 
+    de générer la version séparée du kernel, c'est-à-dire une seule ligne. Les méthodes génératrices de kernel prennent en argument la taille de celui-ci, ce qui sert
+    aux effets paramétrables tels que blur et sharpen.
 
     \subsubsection{Flou gaussien et moyenneur (Blur) : }
 

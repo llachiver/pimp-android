@@ -57,8 +57,9 @@ public class EffectsFragment extends Fragment {
         bBrightness.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.BRIGHTNESS);
+                main.timeBenchmark();
+                /*main.getImage().quickSave();
+                main.inflateEffectSettings(Effects.BRIGHTNESS);*/
             }
         });
         bSaturation.setOnClickListener(new View.OnClickListener() {
