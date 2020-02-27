@@ -5,7 +5,7 @@ L'utilisateur choisit un effet parmi la liste d'effets affichée en bas de l'éc
 réglages disponibles (s'il y en a). L'utilisateur peut ensuite choisir de confirmer ou d'annuler la modification
 apportée par l'effet choisi.
 \\
-
+ 
 \emph{Structure du code :}
 
 Les effets sont rassemblés dans le package filters (fr.ubordeaux.pimp.filters).
@@ -90,7 +90,6 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
     (bouton "Blur"), des effets pour améliorer la netteté d'une image avec la fonction "Laplacian of gaussian" (bouton Sharpen) et des effets de 
     détection de contours (bouton "Neon") en réalisant des convolutions avec des opérateurs comme Sobel, Prewitt, Kirsch ou une convolution simple avec un kernel
     laplacien.
-
     \\
 
     Pour ces effets nous avons implémenté 3 méthodes de convolution.
@@ -176,6 +175,7 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
 
     Un des points de réflexion sur la convolution c'est que jusqu'à présent on la réalise sur les 3 canaux RGB, ce qui est assez lourd au niveau de calcul,
     cependant on pourrait passer l'image en échelle de gris et la faire seulement sur un des canaux ou passer pour l'espace HSV en utilisant la value ou la saturation.
+    \newpage
 
     \subsubsection{Flou gaussien et moyenneur (Blur) : }
 
@@ -187,9 +187,10 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
             \begin{subfigure}[b]{0.4\textwidth}
                 \includegraphics[width=1\textwidth]{report_src/blur.jpeg}
             \end{subfigure}
-            \caption{Image originale et image avec flou gaussien
-                    Méthode appelante }
         \end{figure} 
+        \emph{Méthode appelante : Convolution.gaussianBlur()}
+
+        \emph{Scripts : convolution.rs} 
 
 
 
