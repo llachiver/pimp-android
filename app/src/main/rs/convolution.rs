@@ -50,7 +50,6 @@ uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
     }
 
     if (normal) temp /= kdiv; //Normalize
-    //temp *= 1.6f;
     temp = fabs(temp);
 
     ret =  rsPackColorTo8888(temp);
@@ -126,7 +125,6 @@ uchar4 RS_KERNEL conv2dY(uchar4 in, uint32_t x, uint32_t y){
         tmp += rsUnpackColor8888(rsGetElementAt_uchar4(pTmp, x, ky)) * kernelY[kIndex];; //Get only one channel cause greyscale image
         kIndex++;
     }
-    //??
     if (normal) tmp /= kdivY; //Normalize
     tmp = fabs(tmp);
 
@@ -244,10 +242,6 @@ static rs_script_call_t convolveOpts2d(){
 void extendPaddingScript(rs_allocation image){
     //Call only in useful index
     rs_script_call_t opts = convolveOpts2d();
-    opts.xStart = kCenterX;
-    opts.xEnd = (width - kCenterX);
-    opts.yStart = kCenterY;
-    opts.yEnd = height - kCenterY;
     rsForEachWithOptions(extendPadding, &opts, image);
 }
 
@@ -263,26 +257,26 @@ void convolutionSeparable(rs_allocation inputImage, rs_allocation outputImage){
     pTmp = rsCreateAllocation_uchar4(width,height);
     rs_script_call_t optsX = convolveOpts1dX();
     rs_script_call_t optsY = convolveOpts1dY();
-    rsForEachWithOptions(conv2dX, &optsX, inputImage, pTmp);
-    rsForEachWithOptions(conv2dY,&optsY , pTmp,  outputImage);
-    rsClearObject(&pTmp);
-    extendPaddingScript(outputImage);
+    rsForEachWithOptions(conv2dX, &optsX, inputImage, pTmp); //Convolve X
+    rsForEachWithOptions(conv2dY,&optsY , pTmp,  outputImage); // Convolve Y
+    rsClearObject(&pTmp); //Free memory
+    extendPaddingScript(outputImage);  //Set padding
 
 }
 
 
 void edgeDetection(rs_allocation inputImage, rs_allocation outputImage){
     setup(); //Init kCenters
-    rs_script_call_t opts = convolveOpts2d();
-    rsForEachWithOptions(conv2dEdges, &opts, inputImage,outputImage);
-    extendPaddingScript(outputImage);
+    rs_script_call_t opts = convolveOpts2d(); //Compute options
+    rsForEachWithOptions(conv2dEdges, &opts, inputImage,outputImage); //Launch kernel
+    extendPaddingScript(outputImage); //Set padding
 }
 
 void convolve2d(rs_allocation inputImage, rs_allocation outputImage){
     setup(); //Init kCenters
     rs_script_call_t opts = convolveOpts2d();
-    rsForEachWithOptions(conv2d, &opts ,inputImage,outputImage);
-    extendPaddingScript(outputImage);
+    rsForEachWithOptions(conv2d, &opts ,inputImage,outputImage); // Launch kernel
+    extendPaddingScript(outputImage); //Set padding
 
 
 }
