@@ -96,7 +96,7 @@ public class Convolution {
         for (float x : kernelX){
             normalizeX += x;
         }
-        for (float y : kernelX) {
+        for (float y : kernelY) {
             normalizeY += y;
         }
 
