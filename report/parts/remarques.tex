@@ -36,3 +36,7 @@ Il pourrait être tout à fait possible de masquer la gestion de cette file, qui
 Il faudrait cependant modifier le comportement de \textbf{quickSave()} et \textbf{discard()} afin de supprimer ou ré-ajouter la tête de file lors de l'aperçu des effets en glissant les curseurs.
 \\
 Cependant la principale problématique de cette fonctionnalité serait de passer d'un système où l'on appel les effets en passant l'Image (ou la Bitmap) en paramètre, à un système avec une méthode \textbf{applyEffect(...)} dans la classe Image. La question se pose alors de savoir comment préciser l'effet en question sans contraindre la classe Image à utiliser une batterie d'effets précise, ce qui romprait la modularité du code en rendant Image dépendant de nos classes d'effets. Ce problème est en réalité déjà réglé avec l'utilisations des \textbf{BitmapRunnable}, en effet il suffira de passer ces derniers à la méthode ce qui mettra une couche d'abstraction entre le terme "effet" et les classes de calculs des effets.
+\\
+
+L'utilisation d'un historique d'effet pourra aussi permettre à l'utilisateur de sauvegarder des séries d'effets pour créer des effets personnalisés.
+\\
