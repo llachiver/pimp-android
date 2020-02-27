@@ -1,5 +1,6 @@
-package fr.ubordeaux.pimp.util;
+package fr.ubordeaux.pimp.task;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
 
@@ -7,17 +8,25 @@ import java.lang.ref.WeakReference;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.image.Image;
 
 /**
- * General Async task any filter function from this project as an async ApplyEffectTask
+ * Load asynchronously a new Image from Uri with async task
  */
-public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
+public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
     private WeakReference<MainActivity> activityWeakReference; //MainActivity reference
-    private Runnable effect;
+    private Image image;
+    private Uri source;
+    private boolean first;
 
-    public ApplyEffectTask(MainActivity activity, Runnable effect) {
+    public LoadImageUriTask(MainActivity activity, Uri source) {
+        this(activity, source, false);
+    }
+
+    public LoadImageUriTask(MainActivity activity, Uri source, boolean first) {
         this.activityWeakReference = new WeakReference<>(activity);
-        this.effect = effect;
+        this.source = source;
+        this.first = first;
     }
 
     //Work to do before heavy task
@@ -27,6 +36,11 @@ public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
         MainActivity activity = activityWeakReference.get();
         if (activity == null || activity.isFinishing()) { //Prevent memory leaks
             return;
+        }
+
+        if (!first) {
+            activity.hideMenu(); //Hide menu
+            activity.hideEffectsList();
         }
         activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE); //Show progressBar
     }
@@ -39,7 +53,7 @@ public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
             if (activity == null || activity.isFinishing()) {
                 return null;
             }
-            effect.run(); //Run runnable object
+            image = new Image(source, activity); //load and create Image
             return null;
         }
 
@@ -56,21 +70,13 @@ public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
             return;
         }
 
+        if (!first) {
+            activity.showMenu();
+            activity.showEffectsList();
+        }
         //***Linked to main activity ***/
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-        //activity.updateIv();
-    }
-
-    //User cancelled effect
-    @Override
-    protected void onCancelled() {
-        super.onCancelled();
-        MainActivity activity = activityWeakReference.get();
-        if (activity == null || activity.isFinishing()) {
-            return;
-        }
-        activity.getImage().discard(); //Reset image
-        activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE); //Hide progressbar
-
+        activity.setImage(image);
+        activity.updateIv();
     }
 }

@@ -23,7 +23,7 @@ import fr.ubordeaux.pimp.fragments.EffectsFragment;
 import fr.ubordeaux.pimp.fragments.InfosFragment;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.util.Effects;
-import fr.ubordeaux.pimp.util.LoadImageUriTask;
+import fr.ubordeaux.pimp.task.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Utils;
 
 public class MainActivity extends AppCompatActivity {
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         if (reqCode == ActivityIO.REQUEST_GET_SINGLE_FILE) { // Intent from gallery, containing Uri of a the picture selected.
             if (resultCode == RESULT_OK) {
                 try {
-                    new LoadImageUriTask(this, data.getData()).execute(); // Load and instantiate Image from Uri, see fr.ubordeaux.pimp.util.LoadImageUriTask
+                    new LoadImageUriTask(this, data.getData()).execute(); // Load and instantiate Image from Uri, see fr.ubordeaux.pimp.task.LoadImageUriTask
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();

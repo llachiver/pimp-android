@@ -31,21 +31,7 @@ public class Kernels {
             -1, -2, -1,
     };
 
-    //-------------------------------------
-    //KIRSCH Filter
-    public static final float[] KIRSCH_X = {
-              5,  5,  5,
-             -3,  0, -3,
-             -3, -3, -3,
-    };
-    public static final float[] KIRSCH_Y = {
-            5, -3, -3,
-            5,  0, -3,
-            5, -3, -3,
-    };
-    //-------------------------------------
-
-
+    //-----------------------------------------
     //Prewitt Filter
     public static final float[] PREWITT_X = {
             1, 0, -1,
@@ -85,6 +71,12 @@ public class Kernels {
         return kernel;
     }
 
+    /**
+     * Generates identity matrix of width and height size.
+     * @param width
+     * @param height
+     * @return
+     */
     public static float[] identity (int width, int height){
         if (width % 2 == 0 || height % 2 == 0) return null;
         float [] kernel = new float[width * height];
@@ -159,7 +151,7 @@ public class Kernels {
 
 
     /**
-     * Generates a 2D kernel of size dimensions using the Laplacian Of Gaussiian formula @Link https://homepages.inf.ed.ac.uk/rbf/HIPR2/log.htm
+     * Generates a 2D kernel of size dimensions using the Laplacian Of Gaussiian formula @Link https://homepages.inf.ed.ac.uk/rbf/HIPR2/log.html
      * @return
      */
     public static float[] laplacianOfGaussian(int size) {
