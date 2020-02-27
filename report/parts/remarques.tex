@@ -1,7 +1,7 @@
 \section{Remarques et améliorations  :}
 
 \subsection{Remarques sur le code}
-TODO Remarques poids mémoire de la copie orginale des Images.
+A propos de la classe \textbf{Image} \ref{classeImage}, nous sauvegardons systématiquement une copie des pixels d'origine de l'Image, de plus si un appel à \textbf{quickSave()} est effectué une 3ème copie de l'Image est chargée en mémoire. Image offre cependant des constructeurs pour charger une image proportionnée à l'écran de l'appareil. Le risque de débordement mémoire est donc largement évité par cette limitation de taille.
 \\
 
 Lors du chargement d'une nouvelle image, nous ré-instancions un objet de la classe Image. Ce qui veut techniquement dire que jusqu'au prochain passage du ramasse miette Android, deux images sont en mémoires, donc deux Bitmap et deux tableaux de pixels (la copie originale des Images, voir \ref{classeImage}). C'est un élément discutable cependant notre application limite la taille des Images chargées. Ce qui évite largement les dépassements mémoire.
@@ -10,11 +10,12 @@ Lors du chargement d'une nouvelle image, nous ré-instancions un objet de la cla
 Dans la partie \ref{navig} nous créons une \textbf{MainActivity} après avoir récupéré une \textbf{Uri}, il aurait été idéal de rester dans \textbf{FirstActivity} jusqu'à chargement complet de la première image. Ce qui éviterait un éventuel aller-retour entre les activités en cas d'erreur. Cependant les limites de \textbf{Parcelable} \ref{parcelable} ainsi que l'utilisation d'une \textbf{AsyncTask} (donc un Thread différent) nous ont contraint à garder ce fonctionnement.
 
 \subsection{Remarques sur les librairies Android}
-TODO Remarques sur l'utilisation obligatoire d'une activité contexte pour charger une Bitmap.
+Lors de la construction des instances d'\textbf{Image}\ref{classeImage}, nous devons passer la référence de l'activité contextuelle à l'Image, bien que pas très intuitif cette référence est nécessaire car utilisée par les méthodes de \textbf{Bitmap} de chargement d'image.
 \\
 
 \label{parcelable}
 Pour manipuler des objets d'une activité à l'autre ou entre fragments, Android utilise des \textbf{Intent} ou des \textbf{Bundle}, passer des objets entiers devient assez lourd dans le code et nécessite l'utilisation de l'interface \textbf{Parcelable}, de plus passer un objet trop gros entraîne une \textbf{RuntimeException}. Finalement au sein d'une même application on peut se demander s'il est bien nécessaire de systématiser leur utilisation ou s'il ne serait pas plus simple de passer une référence ou simplement faire des accès statiques (au risque de perdre un peu la modularité du code).
 
 \subsection{Améliorations à court terme :}
-TODO
+Il pourrait être intéressant de montrer des aperçus des effets en bas de l'écran dans la liste d'effets, pour cela il suffira de créer des instances d'Image générées à partir de l'image éditée mais en dimension inférieure. Les constructeurs sont déjà disponibles.
+\\
