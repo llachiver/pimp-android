@@ -51,7 +51,7 @@ Les effets applicables dans notre application sur des Bitmap sont rangés dans 3
 \textbf{Convolution} contient tout les effets utilisant des méthodes de convolution (flou, détection de contour etc).
 \\
 
-\subsection{Fragment \textbf{EffectSettingsFragment}}
+\subsection{Fragment \textbf{EffectSettingsFragment}} \label{effect_settings}
 Ce fragment un peu particulier joue le rôle le plus important dans l'application des effets sur l'image, en effet selon le bouton d'effet sélectionné il génère les curseurs nécessaires au paramétrage de l'effet.
 \\
 Leur nombre peut varier d'un effet à l'autre mais également leur fourchette de valeurs, ainsi cette classe convertit les méthodes d'effets et leurs arguments en éléments d'interfaces pour l'utilisateur.
@@ -70,3 +70,16 @@ La classe \textbf{ActivityIO} permet de gérer l'ouverture de l'application de g
 \\
 
 Enfin la classe \textbf{Kernels} offre des méthodes de génération de noyau de convolution permettant de créer différents effets.
+\\
+
+\subsection{Modularité du code}
+\begin{center}
+    \includegraphics[width=0.7\textwidth]{report_src/structure.jpg}
+\end{center}
+Notre code a été conçu en 3 grandes parties, la partie principale regroupe toutes les activités, les fragments, les tâches, ... Cette partie utilise des instances de la classe Image, et fait appel à nos méthodes d'effets.
+\\
+
+Cette structure permet une grande modularité du code, notre classe Image tout comme nos effets sont facilement exportables pour être utilisés sur un autre projet, on peut imaginer créer une autre application avec les mêmes effets mais une interface complètement différente.
+\\
+A l'inverse si nous voulions récupérer des effets sur un autre projet il est tout à fait possible de les ajouter au projet, il suffira alors de rajouter en conséquence un bouton dans notre interface et un comportement pour \textbf{EffectSettingsFragment} \ref{effect_settings}
+
