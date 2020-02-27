@@ -18,7 +18,7 @@ import java.io.IOException;
 import fr.ubordeaux.pimp.util.Utils;
 
 /**
- * This class ofer useless methods to allow activities to communicate wicth others activities.
+ * This class offers useful methods to allow activities to communicate with each other.
  */
 public class ActivityIO {
 
@@ -44,7 +44,7 @@ public class ActivityIO {
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 Toast.makeText(activity, "Permission is needed to load image from gallery", Toast.LENGTH_LONG).show();
                 // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
+                // this thread waits for the user's response! After the user
                 // sees the explanation, try again to request the permission.
             }
 
@@ -74,7 +74,7 @@ public class ActivityIO {
                     Manifest.permission.CAMERA)) {
                 Toast.makeText(activity, "Permission is needed to load image from camera", Toast.LENGTH_LONG).show();
                 // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
+                // this thread waits for the user's response! After the user
                 // sees the explanation, try again to request the permission.
             }
 
@@ -124,7 +124,6 @@ public class ActivityIO {
                 Uri photoURI = FileProvider.getUriForFile(activity,
                         "com.example.android.fileprovider",
                         photoFile);
-                //this.grantUriPermission("fr.ubordeaux.pimp", photoURI, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 activity.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
@@ -163,7 +162,7 @@ public class ActivityIO {
      * @return True if permission is granted, otherwise false
      */
     static boolean readPermissionResult(Activity activity, String[] permissions, int[] grantResults) {
-        // If request is cancelled, the result arrays are empty.
+        // If request is cancelled, the result arrays is empty.
         if (grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -187,7 +186,7 @@ public class ActivityIO {
      * @return True if permission is granted, otherwise false
      */
     static boolean writePermissionResult(Activity activity, String[] permissions, int[] grantResults) {
-        // If request is cancelled, the result arrays are empty.
+        // If request is cancelled, the result arrays is empty.
         if (grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 

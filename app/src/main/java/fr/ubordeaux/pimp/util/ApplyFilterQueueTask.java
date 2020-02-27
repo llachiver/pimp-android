@@ -1,7 +1,6 @@
 package fr.ubordeaux.pimp.util;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Toast;

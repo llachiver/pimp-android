@@ -8,7 +8,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -16,10 +15,11 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import androidx.fragment.app.Fragment;
+
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.filters.Color;
 import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.Image;
@@ -27,16 +27,14 @@ import fr.ubordeaux.pimp.util.ApplyEffectTask;
 import fr.ubordeaux.pimp.util.BitmapRunnable;
 import fr.ubordeaux.pimp.util.Effects;
 
-import static fr.ubordeaux.pimp.filters.Retouching.colorize;
-import static fr.ubordeaux.pimp.filters.Retouching.keepColor;
-
 public class EffectSettingsFragment extends Fragment {
 
     //Contains the cancel/confirm buttons + the settings list.
     RelativeLayout settingsLayout;
-    //The settings list only (containing buttons, seekbars etc).
+    //The effect settings list only (containing buttons, seekbars etc).
     LinearLayout settingsList;
 
+    //The context of the main activity.
     MainActivity mainActivity;
     //The image we modify.
     Image image;
@@ -57,7 +55,7 @@ public class EffectSettingsFragment extends Fragment {
 
         settingsLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_effect_settings,null);
 
-        //Those params are used to align the settings widgets to the bottom.
+        //Those params are used to align the settings widgets to the bottom of the screen.
         RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         rlp.bottomMargin = 200;
         rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -95,12 +93,12 @@ public class EffectSettingsFragment extends Fragment {
                 };
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
                 break;
-            case TOGRAY:
+            case TO_GRAY:
                 image.discard();
                 currentEffect = new BitmapRunnable(image.getBitmap()) {
                     @Override
                     public void run() {
-                        Retouching.toGray(this.getBmp(), mainActivity);
+                        Color.toGray(this.getBmp(), mainActivity);
                     }
                 };
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
@@ -110,7 +108,7 @@ public class EffectSettingsFragment extends Fragment {
                 currentEffect = new BitmapRunnable(image.getBitmap()) {
                     @Override
                     public void run() {
-                        Retouching.invert(this.getBmp(), mainActivity);
+                        Color.invert(this.getBmp(), mainActivity);
                     }
                 };
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
@@ -160,7 +158,6 @@ public class EffectSettingsFragment extends Fragment {
     /**
      * Generate a basic layout with the name of the effect and a seekbar.
      * @param effect the name of the effect.
-     * @return the view of the layout
      */
     public void simpleEffectView(final Effects effect){
         //Set the settings layout
@@ -261,7 +258,7 @@ public class EffectSettingsFragment extends Fragment {
                 currentEffect = new BitmapRunnable(image.getBitmap()) {
                     @Override
                     public void run() {
-                        colorize(this.getBmp(), progress, mainActivity, cbUniform.isChecked());
+                        Color.colorize(this.getBmp(), progress, mainActivity, cbUniform.isChecked());
                     }
                 };
                 currentEffect.run();
@@ -317,7 +314,7 @@ public class EffectSettingsFragment extends Fragment {
                 currentEffect = new BitmapRunnable(image.getBitmap()) {
                     @Override
                     public void run() {
-                        keepColor(this.getBmp(), args[0], progress, mainActivity);
+                        Color.keepColor(this.getBmp(), args[0], progress, mainActivity);
                     }
                 };
                 currentEffect.run();
@@ -344,7 +341,7 @@ public class EffectSettingsFragment extends Fragment {
                 currentEffect = new BitmapRunnable(image.getBitmap()) {
                     @Override
                     public void run() {
-                        keepColor(this.getBmp(), progress, args[1], mainActivity);
+                        Color.keepColor(this.getBmp(), progress, args[1], mainActivity);
                     }
                 };
                 currentEffect.run();
@@ -516,7 +513,7 @@ public class EffectSettingsFragment extends Fragment {
 
 
     /**
-     * Change ToolBar for this fragment.
+     * Empty the actionBar when opening an effect.
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

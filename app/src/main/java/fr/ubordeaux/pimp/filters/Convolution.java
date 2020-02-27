@@ -6,20 +6,18 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.util.Log;
 
 import fr.ubordeaux.pimp.ScriptC_convolution;
 import fr.ubordeaux.pimp.util.Kernels;
 
 /**
- * Class refereed to all convolution methods.
+ * All convolution-related effects.
  */
-
 public class Convolution {
 
     /**
-     * Convolve an image with a kernel of width (kWidth) and height (kHeight) odds both exclusively, with a normalization boolean.
-     * @param bmp Image to convolve
+     * Convolve an image with a kernel of width (kWidth) and height (kHeight) with a normalization boolean. The kernel must have odd dimensions.
+     * @param bmp Bitmap to convolve
      * @param kernel Kernel to use
      * @param kWidth Width of Kernel
      * @param kHeight Height of kernel
@@ -27,7 +25,7 @@ public class Convolution {
      * @param context MainActivity context.
      */
     public static void convolve2d(Bitmap bmp, float [] kernel, int kWidth, int kHeight, boolean normalize, Context context){
-        if (kWidth % 2 == 0 || kHeight % 2 == 0) return; //Pair kernels not allowed
+        if (kWidth % 2 == 0 || kHeight % 2 == 0) return; //Only odd kernels are allowed.
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
         ScriptC_convolution sConvolution = new ScriptC_convolution(rs); //Create script
@@ -56,8 +54,10 @@ public class Convolution {
 
         //Launch script
         sConvolution.invoke_convolve2d(input,output);
+
         //Copy to bmp
         output.copyTo(bmp);
+
         //Free memory
         rs.destroy();
         sConvolution.destroy();
@@ -69,11 +69,11 @@ public class Convolution {
     }
 
     /**
-     * Computes a 1D Convolution twice (Once vertically and once horizontally) using a kernelX and a kernelY, this application is more faster than use a classic 2D Convolution.
-     * @param bmp Image to convolve
-     * @param kernelX kernel to convolve horizontally
-     * @param kernelY kernel to convolve vertically
-     * @param normalize normalize output
+     * Convolve an image with 2 separated 1D-kernels (X and Y). This is faster than the convolve2d method. The kernel must have odd dimensions.
+     * @param bmp Bitmap to convolve
+     * @param kernelX 1D horizontal kernel
+     * @param kernelY 1D vertical kernel
+     * @param normalize Normalize or not the output (Most of the cases must be set to true)
      * @param context MainActivity context
      */
     public static void convolve2dSeparable(Bitmap bmp, float[] kernelX, float[] kernelY, boolean normalize, Context context){
@@ -122,9 +122,10 @@ public class Convolution {
 
         //Launch script
         sConvolution.invoke_convolutionSeparable(input,output);
-        //Copy to bmp
 
+        //Copy to bmp
         output.copyTo(bmp);
+
         //Free memory
         rs.destroy();
         sConvolution.destroy();
@@ -136,16 +137,18 @@ public class Convolution {
 
 
     /**
-     * 2D convolution adding the operator X and Y of kernelX and kernelY, used by operators as Sobel, Prewitt, Robertson, etc.
+     * 2D convolution done twice, with kernelX and kernelY, in order to detect edges. Used by convolutions with Sobel, Prewitt, Robertson, etc. The kernel must have odd dimensions.
      * @param bmp Image to convolve
      * @param kernelX kernelX operator
      * @param kernelY kernelY operator
+     * @param size the size of the kernel
      * @param context MainActivity Context
      */
     public static void edgeDetectionConvolution(Bitmap bmp, float[] kernelX, float[] kernelY, int size, Context context){
         //Create context
         int kXsize = kernelX.length; int kYsize = kernelY.length;
         if (kXsize != kYsize) return;
+
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
         Allocation output = Allocation.createTyped(rs, input.getType());
@@ -166,14 +169,11 @@ public class Convolution {
         sConvolution.set_kHeight(size);
         sConvolution.set_pIn(input);
         sConvolution.set_pOut(output);
-        //Allocate output
 
-
-
-
+        //Launch script
         sConvolution.invoke_edgeDetection(input, output);
 
-        output.copyTo(bmp); //Input because it is recycled
+        output.copyTo(bmp);
         //Free memory
         rs.destroy();
         sConvolution.destroy();
@@ -184,12 +184,17 @@ public class Convolution {
 
     }
 
-    public static void intrinsecBlur(Bitmap bmp, int progress, Context context){
+    /**
+     * The intrinsic renderscript blur.
+     * @param bmp the bitmap to modify
+     * @param progress the seekbar position, converted into a blur intensity afterwards
+     * @param context
+     */
+    public static void intrinsicBlur(Bitmap bmp, int progress, Context context){
         progress = progress < 1 ? 1 : (progress > 24 ? 24 : progress);
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
         Allocation output = Allocation.createTyped(rs, input.getType());
-
 
         ScriptIntrinsicBlur sBlur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
 
@@ -201,10 +206,6 @@ public class Convolution {
         sBlur.destroy();
         input.destroy();
         output.destroy();
-
-
-
-
     }
 
     //-------------------------------------
@@ -213,9 +214,11 @@ public class Convolution {
 
     public static void gaussianBlur(Bitmap bmp, int progress, Context context){
         int size = progress /10;
-        //float[] kernel = Kernels.gauss(size);
-        //convolve2dSeparable(bmp, kernel, kernel, true, context);
-        intrinsecBlur(bmp, size, context);
+        float[] kernel = Kernels.gauss(size);
+        convolve2dSeparable(bmp, kernel, kernel, true, context);
+
+        //De-comment this to compare with our blur :
+        //intrinsicBlur(bmp, size, context);
     }
 
     public static void meanBlur(Bitmap bmp, int progress, Context context){

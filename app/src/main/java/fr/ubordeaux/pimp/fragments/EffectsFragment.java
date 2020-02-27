@@ -1,21 +1,15 @@
 package fr.ubordeaux.pimp.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import androidx.fragment.app.Fragment;
+
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
-import fr.ubordeaux.pimp.filters.Convolution;
-import fr.ubordeaux.pimp.filters.Retouching;
-import fr.ubordeaux.pimp.image.Image;
-import fr.ubordeaux.pimp.util.ApplyEffectTask;
 import fr.ubordeaux.pimp.util.Effects;
-import fr.ubordeaux.pimp.util.Kernels;
 
 public class EffectsFragment extends Fragment {
 
@@ -50,7 +44,7 @@ public class EffectsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.TOGRAY);
+                main.inflateEffectSettings(Effects.TO_GRAY);
             }
         });
         bInvert.setOnClickListener(new View.OnClickListener() {

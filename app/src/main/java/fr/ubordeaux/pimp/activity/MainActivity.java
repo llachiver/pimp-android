@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * @param item Item chosen by user.
-     * @return true user click on an item.
+     * @return true if user click on an item.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putParcelable("info", getImage().getInfo()); //send image info to fragment
                 fragment.setArguments(bundle);
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.contentFragment, fragment);
+                ft.replace(R.id.infosFragment, fragment);
                 ft.addToBackStack("info_fragment");
                 ft.commit();
                 return true;
@@ -199,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You did not pick an image", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -213,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             } else {
-                Toast.makeText(this, "You haven't took picture", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You did not take a picture", Toast.LENGTH_LONG).show();
 
             }
         }

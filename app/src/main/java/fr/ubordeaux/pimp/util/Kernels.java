@@ -1,7 +1,5 @@
 package fr.ubordeaux.pimp.util;
 
-import android.util.Log;
-
 /**
  * Class that stores all the predefined Kernels and some methods to generate new kernels
  */

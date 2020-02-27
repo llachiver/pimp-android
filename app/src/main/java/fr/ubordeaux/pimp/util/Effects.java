@@ -8,14 +8,13 @@ public enum Effects {
     CONTRAST("Contrast"),
     SATURATION("Saturation"),
     ENHANCE("Enhance"),
-    TOGRAY("To gray"),
+    TO_GRAY("To gray"),
     INVERT("Invert"),
     CHANGE_HUE("Change hue"),
     KEEP_HUE("Keep hue"),
     BLUR("Blur"),
     SHARPEN("Sharpen"),
-    NEON("Neon"),
-    LAPLACE("Laplace");
+    NEON("Neon");
 
     private String name = "";
 
