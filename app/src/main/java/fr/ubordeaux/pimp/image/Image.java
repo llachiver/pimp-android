@@ -38,11 +38,10 @@ public class Image {
     private int[] imgQuickSave;
 
     //Queue of effects to be applied at save
-    private Queue <BitmapRunnable> effectQueue;
+    private Queue<BitmapRunnable> effectQueue;
 
     //Core of the Image, Bitmap representing its pixels.
     private Bitmap bitmap;
-
 
 
     /**
@@ -141,9 +140,7 @@ public class Image {
         width = bmp.getWidth();
         height = bmp.getHeight();
         imgBase = new int[width * height];
-        imgQuickSave = new int[width * height];
         bitmap.getPixels(imgBase, 0, width, 0, 0, width, height);
-        bitmap.getPixels(imgQuickSave, 0, width, 0, 0, width, height);
         effectQueue = new LinkedList<>();
     }
 
@@ -165,9 +162,7 @@ public class Image {
         width = newBitmap.getWidth();
         height = newBitmap.getHeight();
         imgBase = new int[width * height];
-        imgQuickSave = new int[width * height];
         bitmap.getPixels(imgBase, 0, width, 0, 0, width, height);
-        bitmap.getPixels(imgQuickSave, 0, width, 0, 0, width, height);
         infos = new ImageInfo(null, null);
         infos.setLoadedHeight(height);//set values n info pack
         infos.setLoadedWidth(width);
@@ -209,12 +204,23 @@ public class Image {
         effectQueue.clear();
     }
 
+
+    /**
+     * If used for the first time, initialise a new save of all pixels of the Image.
+     * Then save the current Image. See also {@link #discard()}.
+     */
     public void quickSave() {
+        if (imgQuickSave == null)
+            imgQuickSave = new int[width * height];
         bitmap.getPixels(imgQuickSave, 0, width, 0, 0, width, height);
     }
 
+    /**
+     * Restore the Image to the last quick save, do nothing if {@link #quickSave()} was never called before.
+     */
     public void discard() {
-        bitmap.setPixels(imgQuickSave, 0, width, 0, 0, width, height);
+        if (imgQuickSave != null)
+            bitmap.setPixels(imgQuickSave, 0, width, 0, 0, width, height);
     }
 
 
@@ -253,7 +259,6 @@ public class Image {
     }
 
     /**
-     *
      * @return Get uri from image
      */
     public Uri getUri() {
@@ -273,7 +278,7 @@ public class Image {
                 == PackageManager.PERMISSION_GRANTED) {
             //Load new Bitmap and apply with async task
 
-            new ApplyFilterQueueTask((MainActivity) context,this).execute(); //Apply effectQueue
+            new ApplyFilterQueueTask((MainActivity) context, this).execute(); //Apply effectQueue
 
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(context,
@@ -292,8 +297,6 @@ public class Image {
                     ActivityIO.REQUEST_WRITE_EXTERNAL_STORAGE);
 
         }
-
-
 
 
     }
