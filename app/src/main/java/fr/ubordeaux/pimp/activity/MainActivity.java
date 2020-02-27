@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
         } else if (effectSettingsFragment != null && effectSettingsFragment.isVisible()) {
+            if(currentTask != null) currentTask.cancel(true); //Cancel task if running
             image.discard();
             deflateEffectSettings();
         } else {
