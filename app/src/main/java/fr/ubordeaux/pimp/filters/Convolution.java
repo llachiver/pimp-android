@@ -224,8 +224,12 @@ public class Convolution {
         convolve2dSeparable(bmp, kernel, kernel, true, context);
     }
 
-    public static void sharpen(Bitmap bmp, Context context){
-        convolve2d(bmp, Kernels.laplacianOfGaussian(9,9,1.8f),9,9, true, context);
+    public static void sharpen(Bitmap bmp, int progress,  Context context){
+        int size = progress/20; //Limit size of kernels
+        if (size < 3) size = 3; //3 minimal allowed
+        else if (size % 2 == 0) size++;
+        float[] kernel = Kernels.laplacianOfGaussian(size);
+        convolve2d(bmp, kernel,size,size, true, context);
     }
 
     public static void neonSobel(Bitmap bmp, Context context){

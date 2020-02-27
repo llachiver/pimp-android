@@ -71,6 +71,7 @@ public class EffectSettingsFragment extends Fragment {
         switch(effect){
             case BRIGHTNESS:
             case SATURATION:
+            case SHARPEN:
             case CONTRAST:
                 simpleEffectView(effect);
                 break;
@@ -110,16 +111,6 @@ public class EffectSettingsFragment extends Fragment {
                     @Override
                     public void run() {
                         Retouching.invert(this.getBmp(), mainActivity);
-                    }
-                };
-                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
-                break;
-            case SHARPEN:
-                image.discard();
-                currentEffect = new BitmapRunnable(image.getBitmap()) {
-                    @Override
-                    public void run() {
-                        Convolution.sharpen(this.getBmp(),mainActivity);
                     }
                 };
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
@@ -218,6 +209,17 @@ public class EffectSettingsFragment extends Fragment {
 
                         break;
 
+                    case SHARPEN:
+
+                        image.discard();
+                        currentEffect = new BitmapRunnable(image.getBitmap()) {
+                            @Override
+                            public void run() {
+                                Convolution.sharpen(this.getBmp(),progress,mainActivity);
+                            }
+                        };
+                        currentEffect.run();
+                        break;
                 }
             }
 
