@@ -1,6 +1,6 @@
 #pragma version (1)
 #pragma rs java_package_name ( fr.ubordeaux.pimp)
-#pragma rs_fp_imprecise
+#pragma rs_fp_relaxed
 
 //Accumulator declaration
 #pragma rs reduce(histogram) \
@@ -28,12 +28,12 @@ static void histCombine(Histogram *accum,
     (*accum)[i] += (*addend)[i];
 }
 
-//Reduction kernel to compute the LUT extracted from the cummulative histogram
-#pragma rs reduce(LUTCummulativeHistogram) \
+//Reduction kernel to compute the LUT extracted from the cumulative histogram
+#pragma rs reduce(LUTCumulativeHistogram) \
     accumulator(histAccum) combiner(histCombine) \
     outconverter(modeOutConvert)
 
-//We compute the cummulative histogram and returns the associated LUT.
+//We compute the cumulative histogram and returns the associated LUT.
 static void modeOutConvert(LUTret *result, const Histogram *h) {
     uint64_t acc = 0;
     uint64_t hValue;

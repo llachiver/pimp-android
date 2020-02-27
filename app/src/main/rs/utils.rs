@@ -1,7 +1,6 @@
 #pragma version(1)
 #pragma rs java_package_name(fr.ubordeaux.pimp)
-#pragma rs_fp_imprecise
-
+#pragma rs_fp_relaxed
 
 //Truncates a color value for converting it into an unsigned char (from 0 to 255)
 static char truncate(int value){

@@ -1,6 +1,5 @@
 package fr.ubordeaux.pimp.util;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
 
@@ -8,7 +7,6 @@ import java.lang.ref.WeakReference;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
-import fr.ubordeaux.pimp.image.Image;
 
 /**
  * General Async task any filter function from this project as an async ApplyEffectTask

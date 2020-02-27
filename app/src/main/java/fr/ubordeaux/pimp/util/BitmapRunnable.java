@@ -2,8 +2,6 @@ package fr.ubordeaux.pimp.util;
 
 import android.graphics.Bitmap;
 
-import fr.ubordeaux.pimp.io.BitmapIO;
-
 public abstract class BitmapRunnable implements Runnable {
     private Bitmap bmp;
 

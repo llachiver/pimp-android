@@ -147,22 +147,20 @@ public class Kernels {
 
 
     /**
-     * Generates a kernel of width and height using the Laplacian Of Gaussiian formula @Link https://homepages.inf.ed.ac.uk/rbf/HIPR2/log.htm
-     * @param width
-     * @param height
-     * @param sigma
+     * Generates a 2D kernel of size dimensions using the Laplacian Of Gaussiian formula @Link https://homepages.inf.ed.ac.uk/rbf/HIPR2/log.htm
      * @return
      */
-    public static float[] laplacianOfGaussian(int width, int height, float sigma) {
+    public static float[] laplacianOfGaussian(int size) {
+        if (size%2 == 0) size++;
+        float sigma =  size / 5f;
+        float [] kernel = new float[size * size];
 
-        float [] kernel = new float[width * height];
 
+        for(int y = 0; y < size; y++){
+            for (int x = 0; x < size; x++){
+                int index = x + (y * size);
 
-        for(int y = 0; y < height; y++){
-            for (int x = 0; x < width; x++){
-                int index = x + (y * width);
-
-                float res =  ((((x - (width >> 1)) * (x - (width >> 1)) ) + ((y - (height >> 1)) * (y - (height >> 1)) )) / (2*(sigma*sigma))) ;
+                float res =  ((((x - (size >> 1)) * (x - (size >> 1)) ) + ((y - (size >> 1)) * (y - (size >> 1)) )) / (2*(sigma*sigma))) ;
                 kernel[index] = (float) ( - ( 1/ (Math.PI * Math.pow(sigma, 4))) * (1 - res) * Math.exp((-res)));
             }
         }

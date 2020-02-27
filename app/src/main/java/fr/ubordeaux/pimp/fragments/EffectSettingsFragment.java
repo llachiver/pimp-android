@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -16,12 +15,11 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.filters.Color;
 import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.Image;
@@ -29,16 +27,14 @@ import fr.ubordeaux.pimp.util.ApplyEffectTask;
 import fr.ubordeaux.pimp.util.BitmapRunnable;
 import fr.ubordeaux.pimp.util.Effects;
 
-import static fr.ubordeaux.pimp.filters.Retouching.colorize;
-import static fr.ubordeaux.pimp.filters.Retouching.keepColor;
-
 public class EffectSettingsFragment extends Fragment {
 
     //Contains the cancel/confirm buttons + the settings list.
     RelativeLayout settingsLayout;
-    //The settings list only (containing buttons, seekbars etc).
+    //The effect settings list only (containing buttons, seekbars etc).
     LinearLayout settingsList;
 
+    //The context of the main activity.
     MainActivity mainActivity;
     //The image we modify.
     Image image;
@@ -59,7 +55,7 @@ public class EffectSettingsFragment extends Fragment {
 
         settingsLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_effect_settings,null);
 
-        //Those params are used to align the settings widgets to the bottom.
+        //Those params are used to align the settings widgets to the bottom of the screen.
         RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         rlp.bottomMargin = 200;
         rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -73,6 +69,7 @@ public class EffectSettingsFragment extends Fragment {
         switch(effect){
             case BRIGHTNESS:
             case SATURATION:
+            case SHARPEN:
             case CONTRAST:
                 simpleEffectView(effect);
                 break;
@@ -96,12 +93,12 @@ public class EffectSettingsFragment extends Fragment {
                 };
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
                 break;
-            case TOGRAY:
+            case TO_GRAY:
                 image.discard();
                 currentEffect = new BitmapRunnable(image.getBitmap()) {
                     @Override
                     public void run() {
-                        Retouching.toGray(this.getBmp(), mainActivity);
+                        Color.toGray(this.getBmp(), mainActivity);
                     }
                 };
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
@@ -111,40 +108,13 @@ public class EffectSettingsFragment extends Fragment {
                 currentEffect = new BitmapRunnable(image.getBitmap()) {
                     @Override
                     public void run() {
-                        Retouching.invert(this.getBmp(), mainActivity);
-                    }
-                };
-                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
-                break;
-            case SHARPEN:
-                image.discard();
-                currentEffect = new BitmapRunnable(image.getBitmap()) {
-                    @Override
-                    public void run() {
-                        Convolution.sharpen(this.getBmp(),mainActivity);
+                        Color.invert(this.getBmp(), mainActivity);
                     }
                 };
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
                 break;
             case NEON:
-                image.discard();
-                currentEffect = new BitmapRunnable(image.getBitmap()) {
-                    @Override
-                    public void run() {
-                        Convolution.neon(this.getBmp(),mainActivity);
-                    }
-                };
-                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
-                break;
-            case LAPLACE:
-                image.discard();
-                currentEffect = new BitmapRunnable(image.getBitmap()) {
-                    @Override
-                    public void run() {
-                        Convolution.laplace(this.getBmp(),mainActivity);
-                    }
-                };
-                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
+                neonView();
                 break;
             default :
                 break;
@@ -188,7 +158,6 @@ public class EffectSettingsFragment extends Fragment {
     /**
      * Generate a basic layout with the name of the effect and a seekbar.
      * @param effect the name of the effect.
-     * @return the view of the layout
      */
     public void simpleEffectView(final Effects effect){
         //Set the settings layout
@@ -225,17 +194,6 @@ public class EffectSettingsFragment extends Fragment {
                         currentEffect.run();
 
                         break;
-                    case BLUR:
-                        image.discard();
-                        currentEffect = new BitmapRunnable(image.getBitmap()) {
-                            @Override
-                            public void run() {
-                                Convolution.gaussianBlur(this.getBmp(),progress,mainActivity);
-                            }
-                        };
-                        currentEffect.run();
-
-                        break;
                     case CONTRAST:
                         image.discard();
                         currentEffect = new BitmapRunnable(image.getBitmap()) {
@@ -248,6 +206,17 @@ public class EffectSettingsFragment extends Fragment {
 
                         break;
 
+                    case SHARPEN:
+
+                        image.discard();
+                        currentEffect = new BitmapRunnable(image.getBitmap()) {
+                            @Override
+                            public void run() {
+                                Convolution.sharpen(this.getBmp(),progress,mainActivity);
+                            }
+                        };
+                        currentEffect.run();
+                        break;
                 }
             }
 
@@ -278,8 +247,8 @@ public class EffectSettingsFragment extends Fragment {
         tvHue.setText("Hue");
 
         SeekBar sbChangeHue = new SeekBar(super.getContext());
-        sbChangeHue.setMax(255);
-        sbChangeHue.setProgress(127);
+        sbChangeHue.setMax(360);
+        sbChangeHue.setProgress(0);
 
         sbChangeHue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -289,7 +258,7 @@ public class EffectSettingsFragment extends Fragment {
                 currentEffect = new BitmapRunnable(image.getBitmap()) {
                     @Override
                     public void run() {
-                        colorize(this.getBmp(), progress, mainActivity, cbUniform.isChecked());
+                        Color.colorize(this.getBmp(), progress, mainActivity, cbUniform.isChecked());
                     }
                 };
                 currentEffect.run();
@@ -320,16 +289,16 @@ public class EffectSettingsFragment extends Fragment {
         tvHue.setText("Hue");
 
         SeekBar sbSelectedHue = new SeekBar(super.getContext());
-        sbSelectedHue.setMax(255);
-        sbSelectedHue.setProgress(127);
+        sbSelectedHue.setMax(360);
+        sbSelectedHue.setProgress(0);
 
         TextView tvTolerance = new TextView(super.getContext());
         tvTolerance.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         tvTolerance.setText("Tolerance");
 
         SeekBar sbTolerance = new SeekBar(super.getContext());
-        sbTolerance.setMax(255);
-        sbTolerance.setProgress(127);
+        sbTolerance.setMax(360);
+        sbTolerance.setProgress(180);
         final int[] args = new int[2];
         args[0] = 127;
         args[1] = 127;
@@ -345,7 +314,7 @@ public class EffectSettingsFragment extends Fragment {
                 currentEffect = new BitmapRunnable(image.getBitmap()) {
                     @Override
                     public void run() {
-                        keepColor(this.getBmp(), args[0], progress, mainActivity);
+                        Color.keepColor(this.getBmp(), args[0], progress, mainActivity);
                     }
                 };
                 currentEffect.run();
@@ -372,7 +341,7 @@ public class EffectSettingsFragment extends Fragment {
                 currentEffect = new BitmapRunnable(image.getBitmap()) {
                     @Override
                     public void run() {
-                        keepColor(this.getBmp(), progress, args[1], mainActivity);
+                        Color.keepColor(this.getBmp(), progress, args[1], mainActivity);
                     }
                 };
                 currentEffect.run();
@@ -418,10 +387,10 @@ public class EffectSettingsFragment extends Fragment {
 
         SeekBar sbBlur = new SeekBar(mainActivity);
         sbBlur.setMax(255);
-        sbBlur.setProgress(127);
+        sbBlur.setProgress(0);
 
         sbBlur.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
+                @Override
             public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
                 if(rbGauss.isChecked()) {
                     image.discard();
@@ -463,9 +432,88 @@ public class EffectSettingsFragment extends Fragment {
 
 
 
+    public void neonView(){
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.CENTER_HORIZONTAL;
+
+        RadioGroup rbGroup = new RadioGroup(mainActivity);
+        rbGroup.setOrientation(LinearLayout.HORIZONTAL);
+        rbGroup.setLayoutParams(lp);
+
+        final RadioButton rbSobel = new RadioButton(mainActivity);
+        rbSobel.setText("Sobel");
+
+        final RadioButton rbPrewitt = new RadioButton(mainActivity);
+        rbPrewitt.setText("Prewitt");
+
+        final RadioButton rbKirsch = new RadioButton(mainActivity);
+        rbKirsch.setText("Kirsch");
+
+        final RadioButton rbLaplace = new RadioButton(mainActivity);
+        rbLaplace.setText("Laplace");
+
+        rbGroup.addView(rbSobel);
+        rbGroup.addView(rbPrewitt);
+        rbGroup.addView(rbKirsch);
+        rbGroup.addView(rbLaplace);
+        rbGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(rbSobel.isChecked()){
+                    image.discard();
+                    currentEffect = new BitmapRunnable(image.getBitmap()) {
+                        @Override
+                        public void run() {
+                            Convolution.neonSobel(this.getBmp(),mainActivity);
+                        }
+                    };
+                    mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
+                }
+
+                else if(rbPrewitt.isChecked()){
+                    image.discard();
+                    currentEffect = new BitmapRunnable(image.getBitmap()) {
+                        @Override
+                        public void run() {
+                            Convolution.neonPrewitt(this.getBmp(),mainActivity);
+                        }
+                    };
+                    mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
+                }
+                else if(rbKirsch.isChecked()){
+                    image.discard();
+                    currentEffect = new BitmapRunnable(image.getBitmap()) {
+                        @Override
+                        public void run() {
+                            Convolution.neonKirsch(this.getBmp(),mainActivity);
+                        }
+                    };
+                    mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
+
+                }
+
+                else if(rbLaplace.isChecked()){
+                    image.discard();
+                    currentEffect = new BitmapRunnable(image.getBitmap()) {
+                        @Override
+                        public void run() {
+                            Convolution.laplace(this.getBmp(),mainActivity);
+                        }
+                    };
+                    mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
+
+                }
+            }
+        });
+
+        settingsList.addView(rbGroup);
+    }
+
+
+
 
     /**
-     * Change ToolBar for this fragment.
+     * Empty the actionBar when opening an effect.
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

@@ -1,6 +1,7 @@
 #pragma version (1)
 #pragma rs java_package_name ( fr.ubordeaux.pimp)
-#pragma rs_fp_imprecise
+#pragma rs_fp_relaxed
+
 #include "utils.rs"
 
 int selectedHue;
