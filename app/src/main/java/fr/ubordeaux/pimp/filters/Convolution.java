@@ -214,7 +214,7 @@ public class Convolution {
 
     /**
      * Applies gaussian blur with progress strength (Clamped to 0 - 25 range)
-     * @param Bitmap to apply filter
+     * @param bmp to apply filter
      * @param progress Blur strength
      * @param context Main activity context
      */
@@ -229,7 +229,7 @@ public class Convolution {
 
     /**
      * Applies mean filter with progress strength (Clamped to 0 - 25 range)
-     * @param Bitmap to apply filter
+     * @param bmp to apply filter
      * @param progress Blur strength
      * @param context Main activity context
      */

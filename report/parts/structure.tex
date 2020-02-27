@@ -21,9 +21,24 @@ La classe Image \ref{classeImage} génère et garde une instance de la classe \t
 \\
 L'idée de cette classe était d'empaqueter toutes ces informations afin de faciliter le passage de ces informations à travers des Fragments ou des Activités (voir \ref{navig}). On notera que tous les accesseurs appliquent des opérations de formatage sur ces données, certaines opérations pourraient être déplacées dans les constructeurs si elles venaient à être utilisées régulièrement.
 
-\subsection{Package \textbf{util} :}
-Ce package contient de nombreuses classes contenant des méthodes statiques permettant une meilleur factorisation du code.
+\subsection{AsyncTasks}
+Les 3 classes du package \textbf{fr.ubordeaux.pimp.task} héritent de la classe Android \textbf{AsyncTask} et permettent d'exécuter certaines opérations en arrière plan, donc sans bloquer l'interface utilisateur.
 \\
-La classe \textbf{Utils} offre par exemple des méthodes pour récupérer la taille de l'écran ou pour calculer un ratio de redimensionnement.
+Ainsi \textbf{LoadImageUriTask} et \textbf{ApplyFilterQueueTask} permettent respectivement de charger une image et de l'exporter, elles s'occupent d'afficher un petit logo de chargement et de lancer les calculs.
 \\
+\textbf{ApplyEffectTask} est un peu différente, elle permet de mettre en arrière plan le calcul d'application d'un effet. Elle fonctionne pour n'importe quel effet, pour ce faire elle a besoin d'un paramètre, le type d'effet sous la forme d'un \textbf{Runnable}.
+
+\subsection{Packages utilitaires :}
+De nombreuses classes du code permettent une factorisation et une clarification du code en offrant des méthodes pratiques, généralement statiques. Parmi ces classes on pourra retrouver:
+\\
+
+La classe \textbf{Utils} qui offre des méthodes pour récupérer la taille de l'écran, pour calculer un ratio de redimensionnement, pour manipuler des chemins d'image ou régler des problèmes d'orientation d'image.
+\\
+
 La classe \textbf{BitmapIO} permet d'effectuer le chargement d'une Bitmap de plusieurs manières, depuis les resources ou un autre emplacement du téléphone, et avec la taille voulue.
+\\
+
+La classe \textbf{ActivityIO} permet de gérer l'ouverture de l'application de galerie ou de caméra et d'en récupérer le retour, le tout en gérant les permissions de l'application.
+\\
+
+Enfin la classe \textbf{Kernels} offre des méthodes de génération de noyau de convolution permettant afin de créer différents effets.
