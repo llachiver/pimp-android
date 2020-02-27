@@ -1,6 +1,6 @@
 \section{Structure du projet :}
 
-\subsection{Structure graphique Android et navigation :}
+\subsection{Structure graphique Android et navigation :}\label{navig}
 \includegraphics[width=1\textwidth]{report_src/app_flowchart_fragments.PNG}
 
 Pour afficher certains éléments d'interface comme par exemple les informations de l'image (bouton \faInfoCircle) nous utilisons des \textbf{Fragment}. En effet une activité supplémentaire n'est pas nécessaire car cette petite partie de l'application ne correspond pas à un point d'entrée de l'application. Par ailleurs changer de fragment (plutôt que de changer directement de layout) pourrait faciliter l'implémentation d'une interface différente, pour tablette par exemple.
@@ -24,6 +24,15 @@ On notera la nécessité pour Image d'avoir la référence d'une Activité de l'
 La classe Image \ref{classeImage} génère et garde une instance de la classe \textbf{ImageInfo}, cette classe contient un grand nombre de valeurs à propos de l'Image (dimensions, coordonnées GPS, date de prise de vue, ...).
 \\
 L'idée de cette classe était d'empaqueter toutes ces informations afin de faciliter le passage de ces informations à travers des Fragments ou des Activités (voir \ref{navig}). On notera que tous les accesseurs appliquent des opérations de formatage sur ces données, certaines opérations pourraient être déplacées dans les constructeurs si elles venaient à être utilisées régulièrement.
+
+
+\subsubsection{File d'effets :} \label{file_effets}
+Pour pouvoir exporter l'image éditée, il est nécessaire de ré appliquer sur l'image d'origine tout les effets appliqués à l'image affichée dans l'application.
+\\
+C'est pourquoi la classe Image permet d'empaqueter une Queue de \textbf{BitmapRunnable}. Les BitmapRunnable permettent de transporter des méthodes d'effets, en effet en définissant la méthode \textbf{run()} à l'instanciation de ces objets on peut empaqueter un effet applicable à un objet \textbf{Bitmap}. Ce qui permet de passer n'importe quel effet venant de n'importe quel auteur, ce qui renforce la modularité des effets et de la classe Image.
+\\
+Dans la version actuelle cette Queue d'effets n'est qu'une liste "bloc-note" que l'utilisateur de Image peut utiliser, dans cette application les effets appliqués sont notés au fur et à mesure et cette liste est ensuite récupérée à l'export de l'image.
+
 
 \subsection{AsyncTasks}
 Les 3 classes du package \textbf{fr.ubordeaux.pimp.task} héritent de la classe Android \textbf{AsyncTask} et permettent d'exécuter certaines opérations en arrière plan, donc sans bloquer l'interface utilisateur.

@@ -254,6 +254,12 @@ public class Image {
         return infos;
     }
 
+    /**
+     * In particular to export an Image, the user needs to apply all effects applied on the sample loaded in the app. To do that the user need to note these effects somewherre.
+     * It's why Image class offer a Queue of effects, use it to take notes about effects applied on your Image.
+     *
+     * @return A Queue of {@link fr.ubordeaux.pimp.util.BitmapRunnable}, each Runnable correspond to a Thread allowed to run an effect method.
+     */
     public Queue<BitmapRunnable> getEffectQueue() {
         return effectQueue;
     }
