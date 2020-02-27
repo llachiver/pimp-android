@@ -18,7 +18,7 @@ import fr.ubordeaux.pimp.util.BitmapRunnable;
 /**
  * Apply queue of filters
  */
-public class ApplyFilterQueueTask extends AsyncTask<Void, Void, Void> {
+public class ApplyFilterQueueTask extends AsyncTask<Void, Integer, Void> {
     private WeakReference<MainActivity> activityWeakReference; //MainActivity reference
     private Image image;
     private Bitmap bmp;
@@ -36,9 +36,11 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Void, Void> {
         if (activity == null || activity.isFinishing()) { //Prevent memory leaks
             return;
         }
+        Toast.makeText(activity,"Preparing picture for treatment...",Toast.LENGTH_SHORT).show();
         activity.hideMenu();
         activity.hideEffectsList();
         activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE); //Show progressBar
+
     }
 
     //Heavy task to do
@@ -49,12 +51,14 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Void, Void> {
             if (activity == null || activity.isFinishing()) {
                 return null;
             }
-            bmp = BitmapIO.decodeAndScaleBitmapFromUri(image.getUri(), 5000,5000, activity); 
+            bmp = BitmapIO.decodeAndScaleBitmapFromUri(image.getUri(), 5000,5000, activity);
             Queue<BitmapRunnable> effectQueue = new LinkedList<>(image.getEffectQueue()); //Get copy of queue
             BitmapRunnable effect;
-
+            int totalEffects = effectQueue.size();
+            int currentEffect = 1;
             effect = effectQueue.poll(); // Get first effect
             while(effect != null){
+                publishProgress(currentEffect++, totalEffects);
                 effect.setBmp(bmp); //Set new bitmap to run
                 effect.run();
                 effect = effectQueue.poll();
@@ -65,6 +69,16 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
+    @Override
+    protected void onProgressUpdate(Integer... values){
+        super.onProgressUpdate(values);
+        MainActivity activity = activityWeakReference.get();
+        if (activity == null || activity.isFinishing()) {
+            return;
+        }
+        Toast.makeText(activity,"Applying effect " + values[0] + " of " + values[1],Toast.LENGTH_SHORT).show();
+
+    }
     //Save big bitmap
     @Override
     protected void onPostExecute(Void voids) {
