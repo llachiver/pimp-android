@@ -446,15 +446,11 @@ public class EffectSettingsFragment extends Fragment {
         final RadioButton rbPrewitt = new RadioButton(mainActivity);
         rbPrewitt.setText("Prewitt");
 
-        final RadioButton rbKirsch = new RadioButton(mainActivity);
-        rbKirsch.setText("Kirsch");
-
         final RadioButton rbLaplace = new RadioButton(mainActivity);
         rbLaplace.setText("Laplace");
 
         rbGroup.addView(rbSobel);
         rbGroup.addView(rbPrewitt);
-        rbGroup.addView(rbKirsch);
         rbGroup.addView(rbLaplace);
         rbGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -479,17 +475,6 @@ public class EffectSettingsFragment extends Fragment {
                         }
                     };
                     mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
-                }
-                else if(rbKirsch.isChecked()){
-                    image.discard();
-                    currentEffect = new BitmapRunnable(image.getBitmap()) {
-                        @Override
-                        public void run() {
-                            Convolution.neonKirsch(this.getBmp(),mainActivity);
-                        }
-                    };
-                    mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
-
                 }
 
                 else if(rbLaplace.isChecked()){

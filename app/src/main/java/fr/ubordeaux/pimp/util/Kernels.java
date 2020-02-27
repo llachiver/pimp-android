@@ -31,21 +31,7 @@ public class Kernels {
             -1, -2, -1,
     };
 
-    //-------------------------------------
-    //KIRSCH Filter
-    public static final float[] KIRSCH_X = {
-              5,  5,  5,
-             -3,  0, -3,
-             -3, -3, -3,
-    };
-    public static final float[] KIRSCH_Y = {
-            5, -3, -3,
-            5,  0, -3,
-            5, -3, -3,
-    };
-    //-------------------------------------
-
-
+    //-----------------------------------------
     //Prewitt Filter
     public static final float[] PREWITT_X = {
             1, 0, -1,

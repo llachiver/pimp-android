@@ -212,6 +212,12 @@ public class Convolution {
     // Called effects
     //-------------------------------------
 
+    /**
+     * Applies gaussian blur with progress strength (Clamped to 0 - 25 range)
+     * @param Bitmap to apply filter
+     * @param progress Blur strength
+     * @param context Main activity context
+     */
     public static void gaussianBlur(Bitmap bmp, int progress, Context context){
         int size = progress /10;
         float[] kernel = Kernels.gauss(size);
@@ -221,12 +227,24 @@ public class Convolution {
         //intrinsicBlur(bmp, size, context);
     }
 
+    /**
+     * Applies mean filter with progress strength (Clamped to 0 - 25 range)
+     * @param Bitmap to apply filter
+     * @param progress Blur strength
+     * @param context Main activity context
+     */
     public static void meanBlur(Bitmap bmp, int progress, Context context){
         int size = progress/10;
         float[] kernel = Kernels.mean(size);
         convolve2dSeparable(bmp, kernel, kernel, true, context);
     }
 
+    /**
+     * Applies sharpen filter with progress value (Clamped to 0 - 13 range)
+     * @param bmp Bitmap to apply effect
+     * @param progress sharpen strength
+     * @param context MainActivity Context
+     */
     public static void sharpen(Bitmap bmp, int progress,  Context context){
         int size = progress/20; //Limit size of kernels
         if (size < 3) size = 3; //3 minimal allowed
@@ -235,16 +253,28 @@ public class Convolution {
         convolve2d(bmp, kernel,size,size, true, context);
     }
 
+    /**
+     * Computes edge detection using Prewitt operator
+     * @param bmp
+     * @param context
+     */
     public static void neonSobel(Bitmap bmp, Context context){
         edgeDetectionConvolution(bmp, Kernels.SOBEL_X, Kernels.SOBEL_Y,3, context);
     }
+    /**
+     * Computes edge detection using Prewitt operator
+     * @param bmp
+     * @param context
+     */
     public static void neonPrewitt(Bitmap bmp, Context context){
         edgeDetectionConvolution(bmp, Kernels.PREWITT_X, Kernels.PREWITT_Y,3, context);
     }
-    public static void neonKirsch(Bitmap bmp, Context context){
-        edgeDetectionConvolution(bmp, Kernels.KIRSCH_X, Kernels.KIRSCH_Y,3, context);
-    }
 
+    /**
+     * Computes edge detection using laplace operator
+     * @param bmp
+     * @param context
+     */
     public static void laplace(Bitmap bmp, Context context){
         convolve2d(bmp, Kernels.LAPLACIAN3x3,3,3, true, context);
     }
