@@ -96,10 +96,8 @@ public class Retouching {
         sDynExtension.set_factor(factor);
         sDynExtension.invoke_dynamicExtensionRGB(input, output);
         output.copyTo(bmp);
-
-        input.destroy();
-        sMinMax.destroy();
         sDynExtension.destroy();
+        input.destroy();
         output.destroy();
         rs.destroy();
     }
@@ -130,7 +128,6 @@ public class Retouching {
         output.copyTo(bmp);
 
         input.destroy();
-        histoScript.destroy();
         output.destroy();
         lut.destroy();
         rs.destroy();
