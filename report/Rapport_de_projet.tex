@@ -132,89 +132,127 @@ Nous allons nous concentrer sur l'optimisation des effets actuels et le peaufina
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Annexes}
 
-\textbf{Librairies utilisées :}
-\\
-\url{https://github.com/chrisbanes/PhotoView}
-\\
+\subsection{Sources}
 
-\textbf{Cahier des charges :}
-\\
-\url{https://dept-info.labri.fr/~vialard/ANDROID/cahierDesCharges.pdf}
-\\
+  \textbf{Librairies utilisées :}
+  \\
+  \url{https://github.com/chrisbanes/PhotoView}
+  \\
 
-\textbf{Représentation de la couleur :}
-\\
-Système de couleur RGB:
-\\
-\url{https://fr.wikipedia.org/wiki/Rouge_vert_bleu}
-\\
-Système de couleur HSV ou HSB:
-\\
-\url{https://fr.wikipedia.org/wiki/Teinte_Saturation_Valeur}
-\\
+  \textbf{Cahier des charges :}
+  \\
+  \url{https://dept-info.labri.fr/~vialard/ANDROID/cahierDesCharges.pdf}
+  \\
 
-\textbf{Convolution :}
-\\
-Convolution séparable \label{separable_source}
-\\
-\url{http://www.songho.ca/dsp/convolution/convolution2d_separable.html}
-\\
-Filtre gaussien \label{gauss_source}
-\\
-\url{https://en.wikipedia.org/wiki/Gaussian_filter}
-\\
-Laplacian of gaussian \label{LoG}
-\\
-\url{https://homepages.inf.ed.ac.uk/rbf/HIPR2/log.htm}
-\\
-Noyaux \label{kernel_source}
-\\
-\url{https://fr.wikipedia.org/wiki/Noyau_(traitement_d%27image)}
-\\
-Détection de contours \label{edge_source}
-\\
-\url{https://en.wikipedia.org/wiki/Edge_detection}
-\\
-Amélioration de netteté \label{sharpen_source}
-\\
-\url{https://fr.wikipedia.org/wiki/Masque_flou}
-\\
-Échantillonnage linéaire \label{linear_sampling}
-\\
-\url{http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/}
-\\
+  \textbf{Représentation de la couleur :}
+  \\
+  Système de couleur RGB:
+  \\
+  \url{https://fr.wikipedia.org/wiki/Rouge_vert_bleu}
+  \\
+  Système de couleur HSV ou HSB:
+  \\
+  \url{https://fr.wikipedia.org/wiki/Teinte_Saturation_Valeur}
+  \\
 
-\textbf{Documentation Android :}
-\\
-Activity:
-\\
-\url{https://developer.android.com/reference/android/app/Activity}
-\\
-Bitmap:
-\\
-\url{https://developer.android.com/reference/android/graphics/Bitmap}
-\url{https://developer.android.com/topic/performance/graphics}
-\\
-Gestion des dimensions des Bitmap:
-\\
-\url{https://developer.android.com/topic/performance/graphics/load-bitmap}
-\\
-RenderScript:
-\\
-\url{https://developer.android.com/guide/topics/renderscript/compute}
-\\
-Utilisations des API:
-\\
-\url{https://developer.android.com/about/dashboards}
-\\
+  \textbf{Convolution :}
+  \\
+  Convolution séparable \label{separable_source}
+  \\
+  \url{http://www.songho.ca/dsp/convolution/convolution2d_separable.html}
+  \\
+  Filtre gaussien \label{gauss_source}
+  \\
+  \url{https://en.wikipedia.org/wiki/Gaussian_filter}
+  \\
+  Laplacian of gaussian \label{LoG}
+  \\
+  \url{https://homepages.inf.ed.ac.uk/rbf/HIPR2/log.htm}
+  \\
+  Noyaux \label{kernel_source}
+  \\
+  \url{https://fr.wikipedia.org/wiki/Noyau_(traitement_d%27image)}
+  \\
+  Détection de contours \label{edge_source}
+  \\
+  \url{https://en.wikipedia.org/wiki/Edge_detection}
+  \\
+  Amélioration de netteté \label{sharpen_source}
+  \\
+  \url{https://fr.wikipedia.org/wiki/Masque_flou}
+  \\
+  Échantillonnage linéaire \label{linear_sampling}
+  \\
+  \url{http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/}
+  \\
+  \newline
+  \newline
+
+  \textbf{Documentation Android :}
+  \\
+  Activity:
+  \\
+  \url{https://developer.android.com/reference/android/app/Activity}
+  \\
+  Bitmap:
+  \\
+  \url{https://developer.android.com/reference/android/graphics/Bitmap}
+  \url{https://developer.android.com/topic/performance/graphics}
+  \\
+  Gestion des dimensions des Bitmap:
+  \\
+  \url{https://developer.android.com/topic/performance/graphics/load-bitmap}
+  \\
+  RenderScript:
+  \\
+  \url{https://developer.android.com/guide/topics/renderscript/compute}
+  \\
+  Utilisations des API:
+  \\
+  \url{https://developer.android.com/about/dashboards}
+  \\
 
 
-\textbf{Divers :}
-\\
-Fichiers images et tags EXIF:
-\\
-\url{https://fr.wikipedia.org/wiki/Exchangeable_image_file_format}
-\\
+  \textbf{Divers :}
+  \\
+  Fichiers images et tags EXIF:
+  \\
+  \url{https://fr.wikipedia.org/wiki/Exchangeable_image_file_format}
+
+  \subsection{Gallerie d'images faites avec notre application}
+    \begin{figure}[!h]
+      \centering 
+      \begin{subfigure}[b]{0.3\textwidth}
+          \includegraphics[width=1\textwidth]{report_src/art/depressing_sunset.jpeg}
+      \end{subfigure}
+      \begin{subfigure}[b]{0.3\textwidth}
+          \includegraphics[width=1\textwidth]{report_src/art/green_ray.jpeg}
+      \end{subfigure}
+      \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/art/monet.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+      \includegraphics[width=1\textwidth]{report_src/art/on_the_edge.jpeg}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\textwidth}
+    \includegraphics[width=1\textwidth]{report_src/art/vintage_night_club.jpeg}
+\end{subfigure}
+\begin{subfigure}[b]{0.3\textwidth}
+  \includegraphics[width=1\textwidth]{report_src/art/binary.jpeg}
+\end{subfigure}
+\end{figure}
+\begin{figure}[!h]
+\begin{subfigure}[b]{0.3\textwidth}
+  \includegraphics[width=1\textwidth]{report_src/art/fredBlack.jpeg}
+\end{subfigure}
+\begin{subfigure}[b]{0.3\textwidth}
+  \includegraphics[width=1\textwidth]{report_src/art/fredWhite.jpeg}
+\end{subfigure}
+\begin{subfigure}[b]{0.3\textwidth}
+  \includegraphics[width=1\textwidth]{report_src/art/ricMay.jpeg}
+\end{subfigure}
+  \end{figure} 
+
 
 
 \end{document}
