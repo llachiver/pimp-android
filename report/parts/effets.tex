@@ -16,7 +16,7 @@ Les valeurs sont tronquées entre 0 et 255, par conséquent on perd de l'informa
 Cet effet n'utilise pas la luminosité existante de l'image, ainsi on peut obtenir des résultats qui sont parfois discutables, par exemple
 le noir qui s'éclaircit et inversement pour le blanc. Pour pallier à ce problème, on pourrait introduire une multiplication afin de modifier
 la luminosité proportionnellement à celle existante. Cependant, cette solution modifie aussi le contraste, nous avons donc choisi
-de laisser l'algorithme tel quel.
+de laisser l'algorithme tel quel. 
 
 
 \subsection{Contraste (Contrast) :}
@@ -249,7 +249,7 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
         Cet effet s'applique en temps réel sur l'image et pourtant doit être assez rapide pour son utilisation, il restent encore quelques optimisations à faire
         pour améliorer la fluidité de ce dernier. Voir \ref{limits_conv}.
         \\
-        \newpage
+        
 
 
     \subsubsection{Amélioration de la netteté / Masque flou (Sharpen) : } \label{sharpen}
