@@ -3,7 +3,7 @@
 
 \subsection{Luminosité (Brightness) :}
 \includegraphics[width=0.5\textwidth]{report_src/brightness_low.jpeg}
-\includegraphics[width=0.5\textwidth]{report_src/brightness_high.jpeg}
+\includegraphics[width=0.5\textwidth]{report_src/brightness_high.jpeg} 
 
 \emph{Méthode appelante : Retouching.setBrightness()}
 
@@ -24,7 +24,7 @@ de laisser l'algorithme tel quel.
 \emph{Méthode appelante : Retouching.dynamicExtensionRGB()}
 
 \emph{Script : dynamicExtension.rs}
-\\
+\\ 
 
 Ce réglage effectue une extension linéaire de dynamique. Les nouveaux extremum de l'histogramme sont définis à partir de la position de la seekbar.
 La dynamique est ainsi étendue autour d'une valeur se situant au milieu des deux anciens extremum de l'histogramme*. On a donc une image uniforme lorsque
@@ -64,15 +64,13 @@ Par conséquent, en augmentant la saturation, chaque pixel tend vers sa saturati
     \\
 
     \subsubsection{Teint uniforme:}
-    \\
         En cochant la case "uniforme" l'effet remplace le teint de tout les pixels de l'image en changeant le champ hue de chaque pixel par celui choisis par l'utilisateur grace à la seekbar.
-        \\
+        
 
     \subsubsection{Teint non uniforme:}
-    \\
         En décochant la case "uniforme" ajoute le teint sélectionné par l'utilisateur grace à la seekbar au chanp hue déjà contenu dans chaque pixel donnant un nouveau 
         teint a chaque couleur de l'image.
-        \\
+        
 
 
 \subsection{Keep hue:}
@@ -277,7 +275,7 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
             \end{subfigure}
             \caption*{Application de filtre LoG, kernel de taille 9x9, $\sigma$ = 1.8 et image de 1024x724px}
         \end{figure} 
-
+ 
 
 
         \emph{Méthode appelante : Convolution.sharpen()}
