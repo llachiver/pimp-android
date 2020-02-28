@@ -11,6 +11,8 @@ import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.util.Effects;
 
+import static fr.ubordeaux.pimp.util.Effects.*;
+
 public class EffectsFragment extends Fragment {
 
     @Override
@@ -44,20 +46,36 @@ public class EffectsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.TO_GRAY);
+                main.inflateEffectSettings(TO_GRAY);
             }
         });
         bInvert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.INVERT);
+                main.inflateEffectSettings(INVERT);
             }
         });
         bBrightness.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                main.timeBenchmark();
+                main.timeBenchmark(BRIGHTNESS);
+                main.timeBenchmark(CONTRAST);
+                main.timeBenchmark(SATURATION);
+                main.timeBenchmark(ENHANCE);
+                main.timeBenchmark(TO_GRAY);
+                main.timeBenchmark(INVERT);
+                main.timeBenchmark(CHANGE_HUE);
+                main.timeBenchmark(KEEP_HUE);
+                main.timeBenchmark(GAUSS_MIN);
+                main.timeBenchmark(GAUSS_MAX);
+                main.timeBenchmark(MEAN_MIN);
+                main.timeBenchmark(MEAN_MAX);
+                main.timeBenchmark(SHARPEN_MIN);
+                main.timeBenchmark(SHARPEN_MAX);
+                main.timeBenchmark(NEON_SOBEL);
+                main.timeBenchmark(NEON_PREWITT);
+                main.timeBenchmark(LAPLACE);
                 /*main.getImage().quickSave();
                 main.inflateEffectSettings(Effects.BRIGHTNESS);*/
             }
@@ -66,7 +84,7 @@ public class EffectsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.SATURATION);
+                main.inflateEffectSettings(SATURATION);
             }
         });
 
@@ -74,49 +92,49 @@ public class EffectsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.CONTRAST);
+                main.inflateEffectSettings(CONTRAST);
             }
         });
         bEnhance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.ENHANCE);
+                main.inflateEffectSettings(ENHANCE);
             }
         });
         bChangeHue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.CHANGE_HUE);
+                main.inflateEffectSettings(CHANGE_HUE);
             }
         });
         bKeepHue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.KEEP_HUE);
+                main.inflateEffectSettings(KEEP_HUE);
             }
         });
         bBlur.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.BLUR);
+                main.inflateEffectSettings(BLUR);
             }
         });
         bSharpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.SHARPEN);
+                main.inflateEffectSettings(SHARPEN);
             }
         });
         bNeon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.NEON);
+                main.inflateEffectSettings(NEON);
             }
         });
     }

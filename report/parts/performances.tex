@@ -1,44 +1,107 @@
 \section{Performances :}
+Tous les tests de performance présentés dans cette section ont été effectués sur un Nokia 3.1.
+Voici un résumé de ses caractéristiques :
+\begin{itemize} [label=\textbullet]
+  \item \textbf{Version} : Android 9
+  \item \textbf{Résolution}	: 1440 x 720 pixels
+  \item \textbf{Cadence processeur} : 1.5 GHz
+  \item \textbf{RAM} : 2 Go
+\end{itemize}
 
 \subsection{Temps d'exécution :}
+
+Les temps d'exécution présentés ne tiennent pas compte du premier temps de chargement du script renderscript.
+\\
+
+Voici les temps d'exécution \textbf{sur 10 appels} de chaque effet pour une image de dimension \textbf{425x265px}.
+\\
 
 \begin{tabular}{||l||c|c||c|c||}
     \hline
     \hline
-    & \multicolumn{2}{c||}{Nokia 3.1}\\
-    \hline
-    Effets & 1024px & 3072px\\
+    \textbf{Effet} & \textbf{Temps d'exécution en ms} (min | max | moyenne | écart-type)\\
     \hline
     \hline
-    Brightness & 0 & 0  \\
+    Brightness & 12.0 | 46.0 | 16.9 | 9.73\\
     \hline
-    Contrast (extension linéaire de dynamique) & 0 & 0  \\
+    Contrast & 16.0 | 28.0 | 20.5 | 3.80\\
     \hline
-    Saturation & 0 & 0  \\
+    Saturation & 13.0 | 23.0 | 15.2 | 2.929\\
     \hline
-    Enhance (égalisation d'histogramme) & 0 & 0 \\
+    Enhance & 22.0 | 32.0 | 26.4 | 3.00\\
     \hline
-    Niveaux de gris & 0 & 0 \\
+    To gray & 9.0 | 11.0 | 10.0 | 0.63\\
     \hline
-    Invert & 0 & 0  \\
+    Invert & 8.0 | 10.0 | 8.4 | 0.66\\
     \hline
-    Hue & 0 & 0 \\
+    Change hue & 11.0 | 18.0 | 13.4 | 1.90\\
     \hline
-    Keep hue & 0 & 0 \\
+    Keep hue & 10.0 | 11.0 | 10.6 | 0.48\\
     \hline
-    Gaussian blur & 0 & 0\\
+    Gaussian blur 3x3 & 17.0 | 21.0 | 18.8 | 1.24\\
     \hline
-    Mean blur & 0 & 0\\
+    Gaussian blur 25x25 & 47.0 | 51.0 | 48.5 | 1.36\\
     \hline
-    Sharpen & 0 & 0\\
+    Mean blur 3x3 & 16.0 | 19.0 | 18.2 | 1.07\\
     \hline
-    Neon - Sobel & 0 & 0\\
+    Mean blur 25x25 & 54.0 | 60.0 | 55.8 | 1.72\\
     \hline
-    Neon - Prewitt & 0 & 0\\
+    Sharpen 3x3 & 21.0 | 25.0 | 23.6 | 1.11\\
     \hline
-    Neon - Laplace & 0 & 0\\
+    Sharpen 13x13 & 136.0 | 165.0 | 146.3 | 8.97\\
     \hline
-    Restore & 0 & 0\\
+    Sobel filter & 21.0 | 31.0 | 24.7 | 2.53\\
+    \hline
+    Prewitt filter & 24.0 | 27.0 | 25.3 | 1.09\\
+    \hline
+    Laplacian filter & 22.0 | 26.0 | 23.6 | 1.11\\
+    \hline
+    \hline
+  \end{tabular}
+\\
+\newpage
+Voici les temps d'exécution \textbf{sur 10 appels} de chaque effet pour une image de dimension \textbf{3400x2118px}.
+\\
+
+\begin{tabular}{||l||c|c||c|c||}
+    \hline
+    \hline
+    \textbf{Effet} & \textbf{Temps d'exécution en ms} (min | max | moyenne | écart-type)\\
+    \hline
+    \hline
+    Brightness & 105.0 | 311.0 | 145.8 | 56.95\\
+    \hline
+    Contrast & 163.0 | 202.0 | 176.9 | 12.73\\
+    \hline
+    Saturation & 209.0 | 236.0 | 221.4 | 8.34\\
+    \hline
+    Enhance & 256.0 | 268.0 | 261.3 | 3.74\\
+    \hline
+    To gray & 125.0 | 138.0 | 129.6 | 3.35\\
+    \hline
+    Invert & 84.0 | 105.0 | 94.7 | 8.69\\
+    \hline
+    Change hue & 218.0 | 319.0 | 231.7 | 29.48\\
+    \hline
+    Keep hue & 162.0 | 181.0 | 168.4 | 5.06\\
+    \hline
+    Gaussian blur 3x3 & 245.0 | 265.0 | 256.4 | 6.63\\
+    \hline
+    Gaussian blur 25x25 & 1453.0 | 1484.0 | 1462.2 | 9.08\\
+    \hline
+    Mean blur 3x3 & 245.0 | 652.0 | 358.5 | 146.25\\
+    \hline
+    Mean blur 25x25 & 1461.0 | 2447.0 | 1716.6 | 318.34\\
+    \hline
+    Sharpen 3x3 & 433.0 | 524.0 | 471.7 | 25.25\\
+    \hline
+    Sharpen 13x13 & 5112.0 | 8974.0 | 5679.2 | 1119.49\\
+    \hline
+    Sobel filter & 450.0 | 497.0 | 469.4 | 14.47\\
+    \hline
+    Prewitt filter & 452.0 | 490.0 | 472.5 | 10.39\\
+    \hline
+    Laplacian filter & 411.0 | 533.0 | 460.4 | 40.08\\
     \hline
     \hline
   \end{tabular}
