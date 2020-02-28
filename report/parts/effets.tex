@@ -2,8 +2,18 @@
 \textbf{NB:} Tous les effets nécessitant un histogramme utilise celui de la "\emph{valeur}", soit le maximum entre les trois canaux de l'espace de couleur Rouge Vert Bleu.
 
 \subsection{Luminosité (Brightness) :}
-\includegraphics[width=0.5\textwidth]{report_src/brightness_low.jpeg}
-\includegraphics[width=0.5\textwidth]{report_src/brightness_high.jpeg} 
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/original1.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/brightness_high.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/brightness_low.jpeg}
+    \end{subfigure}
+\end{figure} 
 
 \emph{Méthode appelante : Retouching.setBrightness()}
 
@@ -21,6 +31,19 @@ de laisser l'algorithme tel quel.
 
 \subsection{Contraste (Contrast) :}
 
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/original1.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/contrast_high.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/contrast_low.jpeg}
+    \end{subfigure}
+\end{figure} 
+
 \emph{Méthode appelante : Retouching.dynamicExtensionRGB()}
 
 \emph{Script : dynamicExtension.rs}
@@ -36,6 +59,19 @@ l'on règle le contraste au minimum. En augmentant le contraste, les extremum pe
 
 \subsection{Saturation (Saturation) :}
 
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/original1.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/saturation_high.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/saturation_low.jpeg}
+    \end{subfigure}
+\end{figure} 
+
 \emph{Méthode appelante : Retouching.setSaturation()}
 
 \emph{Script : saturation.rs}
@@ -49,46 +85,17 @@ On observe que la nouvelle saturation est proportionnelle à deux facteurs : l'e
 Par conséquent, en augmentant la saturation, chaque pixel tend vers sa saturation maximale, tout en garantissant une saturation proportionnelle à celle existante, évitant ainsi de saturer le gris.
 
 
-\subsection{Hue:}
-
-    \includegraphics[width=0.25\textwidth]{report_src/non-uniform-hue.png}
-    \includegraphics[width=0.25\textwidth]{report_src/uniform-hue.png}
-    \newline
-    \emph{Méthode appelante : Color.colorize()}
-
-    \emph{Scripts : colorize.rs, utils.rs} 
-    \newline
-    Ce reglage efectue une conversion des couleurs de chaque pixel du format RGB au HSV puis change le champ Hue du pixel ce qui permet de 
-    changer le teint de image.
-    Le teint en question est sélectionné par l'utilisateur grâce a la seekbar qui lui est fournie ainsi qu'une option a cocher qui lui propose deux choix:
-    \\
-
-    \subsubsection{Teint uniforme:}
-        En cochant la case "uniforme" l'effet remplace le teint de tout les pixels de l'image en changeant le champ hue de chaque pixel par celui choisis par l'utilisateur grace à la seekbar.
-        
-
-    \subsubsection{Teint non uniforme:}
-        En décochant la case "uniforme" ajoute le teint sélectionné par l'utilisateur grace à la seekbar au chanp hue déjà contenu dans chaque pixel donnant un nouveau 
-        teint a chaque couleur de l'image.
-        
-
-
-\subsection{Keep hue:}
-
-\includegraphics[width=0.25\textwidth]{report_src/keepColor.png}
-\newline
-\emph{Méthode appelante : Color.keepColor()}
-
-\emph{Scripts : keepColor.rs, utils.rs} 
-\newline
-Garde qu'un seul teint avec un degré de tolérance sélectionnés par l'utilisateur grâce aux deux seekbars "hue"  et "tolerance" qui lui sont fournies et garde 
-le reste des pixels en échelle de gris en convertissant les couleurs de chaque pixel du format RGB au HSV puis gardant que les pixel contenant le hue choisi dans le bon intervalle.
-\\
-
-
-
-
 \subsection{Egalisation d'histogramme (Enhance) :}
+
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/original1.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/equalization.jpeg}
+    \end{subfigure}
+\end{figure} 
 
 \emph{Méthode appelante : Retouching.histogramEqualization()}
 
@@ -101,6 +108,95 @@ On calcule d'abord l'histogramme cumulé et on en déduit la LUT (Look Up Table)
 
 Cependant, afin d'égaliser l'histogramme, l'algorithme éclaircit les zones sombres, ce qui donne un résultat peu convaincant sur les images de faible luminosité.
 Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE), mais nous n'avons pas eu le temps de l'implémenter pour ce rendu.
+\\
+
+\subsection{Niveaux de gris (To gray) :}
+
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/original1.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/to_gray.jpeg}
+    \end{subfigure}
+\end{figure} 
+
+\emph{Méthode appelante : Color.toGray()}
+
+\emph{Scripts : utils.rs (méthode gray)} 
+\\
+
+Cet effet convertit une image en niveaux de gris. Pour chaque pixel, soit V la valeur du niveau de gris, R, G et B les trois canaux Rouge Vert Bleu de l'image, on applique :
+\[            
+    V =  R*0.299 + G*0.587 + B*0.114
+\]
+
+\subsection{Inverser (Invert) :}
+
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/original1.jpeg}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/invert.jpeg}
+    \end{subfigure}
+\end{figure} 
+
+\emph{Méthode appelante : Color.invert()}
+
+\emph{Scripts : utils.rs (méthode invert)} 
+\\
+
+Cet effet inverse les couleurs d'une image. Pour chaque pixel, soit R, G et B les canaux Rouge Vert Bleu de l'image et R' G' B' les nouvelles couleurs, on a :
+
+\[            
+    R' =  255 - R
+\] 
+\[            
+    G' =  255 - G
+\]  
+\[            
+    B' =  255 - B
+\] 
+
+
+\subsection{Hue:}
+
+    \includegraphics[width=0.25\textwidth]{report_src/effects/non-uniform-hue.png}
+    \includegraphics[width=0.25\textwidth]{report_src/effects/uniform-hue.png}
+    \newline
+    \emph{Méthode appelante : Color.colorize()}
+    \emph{Scripts : colorize.rs, utils.rs} 
+    \newline
+
+    Ce reglage efectue une conversion des couleurs de chaque pixel du format RGB au HSV puis change le champ Hue du pixel ce qui permet de 
+    changer la teinte de image.
+    La teinte en question est sélectionné par l'utilisateur grâce a la seekbar qui lui est fournie ainsi qu'une option a cocher qui lui propose deux choix:
+    \\
+
+    \emph{Teinte uniforme:}
+        En cochant la case "uniforme" l'effet remplace le teinte de tout les pixels de l'image en changeant le champ hue de chaque pixel par celui choisis par l'utilisateur grâce à la seekbar.
+        
+
+    \emph{Teinte non uniforme:}
+        En décochant la case "uniforme" ajoute le teinte sélectionné par l'utilisateur grâce à la seekbar au chanp hue déjà contenu dans chaque pixel donnant un nouveau 
+        teinte a chaque couleur de l'image.
+        
+
+
+\subsection{Keep hue:}
+
+\includegraphics[width=0.25\textwidth]{report_src/effects/keepColor.png}
+\newline
+\emph{Méthode appelante : Color.keepColor()}
+\emph{Scripts : keepColor.rs, utils.rs} 
+\newline
+
+Garde qu'une seul teinte avec un degré de tolérance sélectionné par l'utilisateur grâce aux deux seekbars "hue"  et "tolerance" qui lui sont fournies et garde 
+le reste des pixels en échelle de gris en convertissant les couleurs de chaque pixel du format RGB au HSV puis gardant que les pixel contenant le hue choisi dans le bon intervalle.
+\\
 
 \subsection{Convolution (Blur, Sharpen, Neon) :} \label{convolution}
 
@@ -123,7 +219,7 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
     \subsubsection*{Convolution classique} \label{conv_classique}
     
         Cette méthode de convolution suit le même algorithme vu en cours, on peut l'appliquer avec des noyaux asymétriques de dimensions impaires uniquement,
-        cette opération a été parallélisée grâce à l'outil "renderscript" qui parallélise le calcul par CPU multithreading/GPU. En plus dans cette méthode (et dans toutes les autres) nous avons rajouté
+        cette opération a été parallélisée grâce à \textbf{renderscript} qui parallélise le calcul par CPU multithreading/GPU. En plus, dans cette méthode (et dans toutes les autres) nous avons rajouté
         des optimisations pour parcourir seulement les index nécessaires de l'image lors de la convolution. En calculant les index des centres des deux dimensions du kernel
         on peut anticiper et éviter les appels de fonction inutiles sur les bords de l'image par exemple.
         
@@ -149,7 +245,7 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
         \]
 
         En définissant les index du début et de fin de parcours pour les deux dimensions de l'image sur le script de lancement renderscript
-        comme ci-dessus on peut s'en passer de quelques appels de fonctions sur les bords de l'image et ainsi gagner du temps de calcul.
+        comme ci-dessus on peut se passer de quelques appels de fonctions sur les bords de l'image et ainsi gagner du temps de calcul.
 
     \subsubsection*{Convolution séparable} \label{conv_separable}
 
@@ -157,7 +253,7 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
         cependant si le kernel est séparable on peut passer à $N+M$ opérations. Voir \ref{separable_source}.
         \\
 
-        Or afin d'optimiser le calcul de la convolution sur des filtres séparables comme le filtre gaussien et moyenneur nous avons implémenté une
+        Or, afin d'optimiser le calcul de la convolution sur des filtres séparables comme le filtre gaussien et moyenneur, nous avons implémenté une
         méthode de convolution séparable.
         
         \begin{figure}[!h]
@@ -230,17 +326,18 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
         \emph{Méthodes appelantes : Convolution.gaussianBlur(), Convolution.meanBlur()}
 
         \emph{Scripts : convolution.rs} 
+        \\
 
         Dans la section blur, on réalise des convolutions avec un filtre gaussien ou moyenneur selon le choix de l'utilisateur,
         ces filtres sont réalisés avec une méthode de convolution séparable voir \ref{conv_separable}. Ces kernels sont générés en fonction du progrès de la seekbar qui
-        définit une taille de vecteurs allant de l'intervalle [3 - 25]. Pour le filtre gaussien l'écart type noté $\sigma$ est généré en fonction de la taille du kernel en suivant
+        définit une taille de vecteurs sur l'intervalle [3;25]. Pour le filtre gaussien l'écart type noté $\sigma$ est généré en fonction de la taille du kernel en suivant
         cette relation.
         \[
             \sigma  =  \frac{taille_{kernel}}{2}            
         \]
 
         Cette relation a été définie arbitrairement car il y n'y a pas moyen de calculer avec certitude l'écart type de la fonction gaussienne et en fonction des résultats
-        obtenus après une série des tests on a décidé de laisser la relation de ci-dessus.
+        obtenus après une série des tests, nous avons décidé de laisser la relation ci-dessus.
 
         Pour le filtre moyenneur tout comme le filtre gaussien on génère un vecteur de taille dans l'intervalle [3 - 25] et on les applique verticalement et ensuite horizontalement
         avec la méthode de convolution séparable.
@@ -343,7 +440,7 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
         \\
 
         Cet effet consiste à créer un effet "Neon" sur une image en utilisant des opérateurs de détection de contours (voir \ref{edge_source}) comme Sobel, Prewitt et aussi d'un filtre Laplacien qui est également détecteur de contours.
-        On a mis 3 boutons de type \textbf{RadioButton} pour sélectionner le type de kernel à utiliser et ainsi voir les différences de chacun sur l'image.
+        Nous avons mis 3 boutons de type \textbf{RadioButton} pour sélectionner le type de kernel à utiliser et ainsi voir les différences de chacun sur l'image.
         \\
         
         Les valeurs résultantes de la convolution en "Neon" ne sont pas normalisées par extension linéaire, elles sont justes tronquées entre [0 - 255] à cause de ce troncage on risque de perdre des données sur l'image,
