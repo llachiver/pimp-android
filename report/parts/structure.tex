@@ -1,5 +1,8 @@
 \section{Structure du projet}
 
+\textbf{NB:}
+La grande majorité de notre application a été réalisée à partir des librairies officielles Android. Nous avons nous mêmes implémenté nos effets. Nous avons sinon utilisé les composants graphiques fournis avec AndroidStudio (dont certains à installer, notamment \textbf{RecyclerView}). Enfin nous avons importé le composant \textbf{PhotoView} en plus des composants Android.
+
 \subsection{Structure graphique Android et navigation :}\label{navig}
 \includegraphics[width=1\textwidth]{report_src/app_flowchart_fragments.PNG}
 
@@ -50,6 +53,7 @@ Les effets applicables dans notre application sur des Bitmap sont rangés dans 3
 \\
 \textbf{Convolution} contient tout les effets utilisant des méthodes de convolution (flou, détection de contour etc).
 \\
+\textbf{NB:} Tous nos effets ne sont pas implémentés directement en Java comme le reste du code mais font appel à des scripts RenderScript en C, ce qui accélèrent considérablement l'application des effets.
 
 \subsection{Fragment \textbf{EffectSettingsFragment}} \label{effect_settings}
 Ce fragment un peu particulier joue le rôle le plus important dans l'application des effets sur l'image, en effet selon le bouton d'effet sélectionné il génère les curseurs nécessaires au paramétrage de l'effet.
@@ -82,4 +86,3 @@ Notre code a été conçu en 3 grandes parties, la partie principale regroupe to
 Cette structure permet une grande modularité du code, notre classe Image tout comme nos effets sont facilement exportables pour être utilisés sur un autre projet, on peut imaginer créer une autre application avec les mêmes effets mais une interface complètement différente.
 \\
 A l'inverse si nous voulions récupérer des effets sur un autre projet il est tout à fait possible de les ajouter au projet, il suffira alors de rajouter en conséquence un bouton dans notre interface et un comportement pour \textbf{EffectSettingsFragment} \ref{effect_settings}
-
