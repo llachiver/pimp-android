@@ -62,7 +62,7 @@ On calcule d'abord l'histogramme cumulé et on en déduit la LUT (Look Up Table)
 Cependant, afin d'égaliser l'histogramme, l'algorithme éclaircit les zones sombres, ce qui donne un résultat peu convaincant sur les images de faible luminosité.
 Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE), mais nous n'avons pas eu le temps de l'implémenter pour ce rendu.
 
-\subsection{Convolution (Blur, Sharpen, Neon) :}
+\subsection{Convolution (Blur, Sharpen, Neon) :} \label{convolution}
 
     Dans cette sous-section on retrouve des effets réalisés avec des convolutions pour flouter une image en passant par deux types différents de kernel : Gaussien et moyenneur
     (bouton "Blur"), des effets pour améliorer la netteté d'une image avec la fonction "Laplacian of gaussian" (bouton Sharpen) et des effets de 
@@ -80,7 +80,7 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
     \end{itemize}
     
 
-    \subsubsection*{Convolution classique}
+    \subsubsection*{Convolution classique} \label{conv_classique}
     
         Cette méthode de convolution suit le même algorithme vu en cours, on peut l'appliquer avec des noyaux asymétriques de dimensions impaires uniquement,
         cette opération a été parallélisée grâce à l'outil "renderscript" qui parallélise le calcul par CPU multithreading/GPU. En plus dans cette méthode (et dans toutes les autres) nous avons rajouté
@@ -111,10 +111,10 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
         En définissant les index du début et de fin de parcours pour les deux dimensions de l'image sur le script de lancement renderscript
         comme ci-dessus on peut s'en passer de quelques appels de fonctions sur les bords de l'image et ainsi gagner du temps de calcul.
 
-    \subsubsection*{Convolution séparable}
+    \subsubsection*{Convolution séparable} \label{conv_separable}
 
         Pour la convolution classique avec un kernel de taille $N*M$ on doit faire $N*M$ multiplications pour chaque échantillon,
-        cependant si le kernel est séparable on peut passer à $N+M$ opérations.
+        cependant si le kernel est séparable on peut passer à $N+M$ opérations. Voir \ref{separable_source}.
         \\
 
         Or afin d'optimiser le calcul de la convolution sur des filtres séparables comme le filtre gaussien et moyenneur nous avons implémenté une
@@ -143,39 +143,104 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
 
 
 
-    \subsubsection*{Convolution détection de contours}
+    \subsubsection*{Convolution détection de contours} \label{conv_edges}
 
         Cette méthode prend en paramètre deux kernels de même taille et réalise deux convolutions avec chaque kernel et ensuite calcule le produit des deux.
         Vu que ces deux convolutions sont indépendantes l'une de l'autre on peut se permettre de les réaliser au même temps dans le script et de faire l'addition
         des valeurs absolues résultantes des deux accumulateurs. Comme son nom l'indique cette méthode est utilisée notamment pour faire des convolutions pour la détection de contours
         avec des opérateurs comme Sobel, Kirsch, Prewitt, etc.
     \\
+        
 
-    Un des points de réflexion sur la convolution c'est que jusqu'à présent on la réalise sur les 3 canaux RGB, ce qui est assez lourd au niveau de calcul,
-    cependant on pourrait passer l'image en échelle de gris et la faire seulement sur un des canaux ou passer pour l'espace HSV en utilisant la value ou la saturation.
-    \newpage
+
+
 
     \subsubsection*{Les kernels} \label{kernels}
 
-    Tous les kernels sont définis dans la classe fr.ubordeaux.pimp.util.Kernels. Les kernels de détection de contour (Sobel, Kirsch, Laplace, Prewitt) sont définis
-    en variable statique et finale, car leur taille est fixe, les autres sont générés par une méthode. Si on prend le cas du kernel de Gauss, la méthode gauss permet 
-    de générer la version séparée du kernel, c'est-à-dire une seule ligne. Les méthodes génératrices de kernel prennent en argument la taille de celui-ci, ce qui sert
-    aux effets paramétrables tels que blur et sharpen.
+        Tous les kernels sont définis dans la classe fr.ubordeaux.pimp.util.Kernels. Les kernels de détection de contour (Sobel, Kirsch, Laplace, Prewitt) sont définis
+        en variable statique et finale, car leur taille est fixe, les autres sont générés par une méthode. Si on prend le cas du kernel de Gauss, la méthode gauss permet 
+        de générer la version séparée du kernel, c'est-à-dire une seule ligne. Les méthodes génératrices de kernel prennent en argument la taille de celui-ci, ce qui sert
+        aux effets paramétrables tels que blur et sharpen.
 
-    \subsubsection{Flou gaussien et moyenneur (Blur) : }
+    \subsubsection{Flou gaussien et moyenneur (Blur) : } \label{blur}
 
         \begin{figure}[!h]
             \centering
             \begin{subfigure}[b]{0.4\textwidth}
-                \includegraphics[width=1\textwidth]{report_src/picOrg.jpeg}
+                \includegraphics[width=1\textwidth]{report_src/effects/original.jpeg}
             \end{subfigure}
             \begin{subfigure}[b]{0.4\textwidth}
-                \includegraphics[width=1\textwidth]{report_src/blur.jpeg}
+                \includegraphics[width=1\textwidth]{report_src/effects/blur.jpeg}
             \end{subfigure}
         \end{figure} 
         \emph{Méthode appelante : Convolution.gaussianBlur()}
 
         \emph{Scripts : convolution.rs} 
+
+        Dans la section blur, on réalise des convolutions avec un filtre gaussien ou moyenneur selon le choix de l'utilisateur,
+        ces filtres sont réalisés avec une méthode de convolution séparable voir \ref{conv_separable}. Ces kernels sont générés en fonction du progrès de la seekbar qui
+        définit une taille de vecteurs allant de l'intervalle [3 - 25]. Pour le filtre gaussien l'écart type noté $\sigma$ est généré en fonction de la taille du kernel en suivant
+        cette relation.
+        \[
+            \sigma  =  \frac{taille_{kernel}}{2}            
+        \]
+
+        Cette relation a été définie arbitrairement car il y n'y a pas moyen de calculer avec certitude l'écart type de la fonction gaussienne et en fonction des résultats
+        obtenus après une série des tests on a décidé de laisser la relation de ci-dessus.
+
+        Pour le filtre moyenneur tout comme le filtre gaussien on génère un vecteur de taille dans l'intervalle [3 - 25] et on les applique verticalement et ensuite horizontalement
+        avec la méthode de convolution séparable.
+        \\
+        
+        Cet effet s'applique en temps réel sur l'image et pourtant doit être assez rapide pour son utilisation, il restent encore quelques optimisations à faire
+        pour améliorer la fluidité de ce dernier. Voir \ref{limits_conv}.
+
+
+
+
+    \subsubsection{Amélioration de la netteté (Sharpen) : } \label{sharpen}
+
+        \begin{figure}[!h]
+            \centering
+            \begin{subfigure}[b]{0.4\textwidth}
+                \includegraphics[width=1\textwidth]{report_src/effects/original.jpeg}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.4\textwidth}
+                \includegraphics[width=1\textwidth]{report_src/effects/sharpen.jpeg}
+            \end{subfigure}
+        \end{figure} 
+        \emph{Méthode appelante : Convolution.sharpen()}
+
+        \emph{Scripts : convolution.rs} 
+
+
+    \subsubsection{Détection des contours (Néon) : } \label{neon}
+
+        \begin{figure}[!h]
+            \centering
+            \begin{subfigure}[b]{0.4\textwidth}
+                \includegraphics[width=1\textwidth]{report_src/effects/original.jpeg}
+            \end{subfigure}
+            \begin{subfigure}[b]{0.4\textwidth}
+                \includegraphics[width=1\textwidth]{report_src/effects/sobel.jpeg}
+            \end{subfigure}
+        \end{figure} 
+        \emph{Méthode appelante : Convolution.neonSobel()}
+
+        \emph{Scripts : convolution.rs} 
+
+
+
+
+    \subsubsection{Remarques et limites} \label{limits_conv}
+    \begin{itemize}
+        \item {Un des points de réflexion sur la convolution c'est que jusqu'à présent elle est réalisée sur les 3 canaux RGB, ce qui est assez lourd au niveau de calcul,
+        cependant on pourrait passer l'image en échelle de gris et la faire seulement sur un des canaux ou passer pour l'espace HSV en utilisant la value ou la saturation.}
+        \item {Tous les calculs de convolution sont uniquement réalisées avec des nombres "flottants", ceci est un choix d'implémentation car renderscript, possède plus de support
+        pour des opérations flottantes que pour des opérations sur des entiers qui en plus sont codés en 8 bits dans une image. Pour éviter donc les erreurs de débordement et pour garder une bonne qualité de l'image
+        on a décidé de travailler exclusivement avec des flottants, même si ceci peut être pénalisant au niveau de performance, cependant des tests sont à prévoir pour le prochain rendu pour essayer
+        d'améliorer la performance sur des filtres comme "Blur" et l'amélioration de netteté.}
+    \end{itemize} 
 
 
 
