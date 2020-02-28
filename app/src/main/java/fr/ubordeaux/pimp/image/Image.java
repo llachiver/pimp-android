@@ -145,8 +145,8 @@ public class Image {
     }
 
     /**
-     * See {@link Image(Image, int, int)}
-     * Differs from {@link Image(Bitmap)} because this does not pack the bitmap in the Image, but create another Bitmap.
+     * See {@link #Image(Image, int, int)}
+     * Differs from {@link #Image(Bitmap)} because this does not pack the bitmap in the Image, but create another Bitmap.
      *
      * @param bmp               Source Bitmap
      * @param newRequiredWidth  The desired width for the image. (must be less than or equal to the original)
