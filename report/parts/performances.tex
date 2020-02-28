@@ -106,7 +106,37 @@ Voici les temps d'exécution \textbf{sur 10 appels} de chaque effet pour une ima
     \hline
   \end{tabular}
 
-\subsection{Mémoire :}
-TODO montrer l'ancienne instance d'image se faire garbage collecter ? voir remarques
+\subsubsection*{Conclusion sur les temps d'exécution}
 
-TODO
+Mesurer les temps d'exécution nous a permis de nous rendre compte du gain de temps de la convolution séparable. Le flou gaussien (implémenté en séprable) 25x25 prend 1462.2 ms, tandis que le sharpen 13x13 (non séparable) prend 5679.2 ms.  
+
+Sharpen 3x3, Sobel, Prewitt et Laplacian ont le même temps d'exécution car elles correspondent toutes à des convolutions classique avec un kernel 3x3.
+
+De plus, on remarque que l'effet "Invert" est le plus rapide. Cela s'explique par le fait que c'est le seul effet qui manipule directement des entiers. Peut-être pourrions-nous appliquer cette méthode à d'autres effets tels que la convolution, afin d'optimiser les temps d'exécution.
+
+\subsection{Mémoire :}
+
+Voici l'utilisation de la mémoire vive du téléphone au cours de l'utilisation de l'application. On démarre le benchmarking à partir du chargement de l'image (après fistActivity), puis on applique tous les effets disponibles en annulant à chaque fois.
+\subsubsection*{Image de 425x265px}
+\includegraphics[width=1\textwidth]{report_src/memory/425x265.PNG}
+
+\subsubsection*{Image de 3400x2118px}
+\includegraphics[width=1\textwidth]{report_src/memory/3400x2118.PNG}
+
+\subsubsection*{Conclusion sur l'utilisation de la mémoire}
+On observe que la mémoire est plutôt bien gérée et qu'elle reste constante tout au long de l'utilisation. De plus, le garbage collector vient régulièrement libérer la mémoire allouée.
+
+En analysant le tas de l'application ("app heap" sur le profiler), on se rend compte que la sauvegarde de l'image (effectuée avec la méthode quicksave()) y occupe la plus grande place. La sauvegarde est stockée sous forme de tableau d'entiers, on peut donc difficilement le rendre moins lourd en mémoire. En revanche, la file d'effets (\textbf{\ref{file_effets}}) pourrait nous permettre d'annuler les modifications sans avoir à stocker une sauvegarde. En effet, si l'utilisateur a appliqué n effets et qu'il souhaite annuler la dernière modification, on peut ré-appliquer tous les effets jusqu'à n-1 sur l'image d'origine. Cependant, on perdrait évidemment en temps.
+
+\newpage
+
+\subsubsection*{Bug détecté}
+
+Le profiling de la mémoire nous a permis de détecter un problème que l'on a résolu. En effet, on remarquait une augmentation constante de la mémoire lorsque l'on appliquait un flou :
+\\
+
+\includegraphics[width=1\textwidth]{report_src/memory/3400x2118_with_bug.PNG}
+\\
+
+C'était du à notre méthode convolve2dSeparable. La convolution séparée nécessite une allocation temporaire pour stocker le résultat de la première convolution (horizontale). 
+Elle était créée puis libérée directement depuis notre script convolution.rs (méthode convolutionSeparable). Cependant, la libération ne fonctionnait apparemment pas, nous avons donc géré l'allocation de ce bitmap temporaire depuis java, ce qui a réglé le problème.

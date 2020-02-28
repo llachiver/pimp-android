@@ -59,7 +59,7 @@ public class EffectsFragment extends Fragment {
         bBrightness.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                main.timeBenchmark(BRIGHTNESS);
+                /*main.timeBenchmark(BRIGHTNESS);
                 main.timeBenchmark(CONTRAST);
                 main.timeBenchmark(SATURATION);
                 main.timeBenchmark(ENHANCE);
@@ -75,9 +75,9 @@ public class EffectsFragment extends Fragment {
                 main.timeBenchmark(SHARPEN_MAX);
                 main.timeBenchmark(NEON_SOBEL);
                 main.timeBenchmark(NEON_PREWITT);
-                main.timeBenchmark(LAPLACE);
-                /*main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.BRIGHTNESS);*/
+                main.timeBenchmark(LAPLACE);*/
+                main.getImage().quickSave();
+                main.inflateEffectSettings(Effects.BRIGHTNESS);
             }
         });
         bSaturation.setOnClickListener(new View.OnClickListener() {
