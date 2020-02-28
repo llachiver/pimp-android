@@ -49,7 +49,7 @@ public class Image {
      * Load an image from resources, size is automatically limited depending the screen size.
      *
      * @param id      int value of the resource
-     * @param context An Activity launched in the device where you want to adapt your Image.
+     * @param context Execution context
      */
     public Image(int id, Activity context) {
         this(id, Utils.getScreenSize(context), context);
@@ -60,7 +60,7 @@ public class Image {
      *
      * @param id      int value of the resource
      * @param size    Point where x is width and y is height.
-     * @param context An Activity launched in the device where you want to adapt your Image.
+     * @param context Execution context
      */
     public Image(int id, Point size, Activity context) {
         this(id, size.x, size.y, context);
@@ -74,7 +74,7 @@ public class Image {
      * @param id             int value of the resource
      * @param requiredWidth  The desired width for the image.
      * @param requiredHeight The desired height for the image.
-     * @param context        An Activity launched in the device where you want to adapt your Image.
+     * @param context        Execution context
      */
     public Image(int id, int requiredWidth, int requiredHeight, Activity context) {
         this(BitmapIO.decodeAndScaleBitmapFromResource(id, requiredWidth, requiredHeight, context));
@@ -94,7 +94,7 @@ public class Image {
      * Load an image from folders, size is automatically limited depending the screen size.
      *
      * @param uri     Path of the picture to laod.
-     * @param context An Activity launched in the device where you want to adapt your Image.
+     * @param context Execution context
      */
     public Image(Uri uri, Activity context) {
         this(uri, Utils.getScreenSize(context), context);
@@ -105,7 +105,7 @@ public class Image {
      *
      * @param uri     Path of the picture to load.
      * @param size    Point where x is width and y is height.
-     * @param context An Activity launched in the device where you want to adapt your Image.
+     * @param context Execution context
      */
     public Image(Uri uri, Point size, Activity context) {
         this(uri, size.x, size.y, context);
@@ -118,7 +118,7 @@ public class Image {
      * @param uri            Path of the picture to laod.
      * @param requiredWidth  The desired width for the image.
      * @param requiredHeight The desired height for the image.
-     * @param context        An Activity launched in the device where you want to adapt your Image.
+     * @param context        Execution context
      */
     public Image(Uri uri, int requiredWidth, int requiredHeight, Activity context) {
         this(BitmapIO.decodeAndScaleBitmapFromUri(uri, requiredWidth, requiredHeight, context));
@@ -265,7 +265,7 @@ public class Image {
      * Ask for the user's permission if not yet given to store the current
      * image in the gallery before calling the function that saves it to the gallery.
      *
-     * @param context n Activity launched in the device where you want to save your Image.
+     * @param context Execution context
      */
     public void exportToGallery(Activity context) {
         if (ContextCompat.checkSelfPermission(context,

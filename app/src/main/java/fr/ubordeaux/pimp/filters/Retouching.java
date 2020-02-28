@@ -22,7 +22,7 @@ public class Retouching {
      * Sets the brightness of an image by adding a factor to the existing brightness.
      * @param bmp the bitmap to modify
      * @param factor the brightness factor between 0 and 255.
-     * @param context
+     * @param context Execution context
      */
     public static void setBrightness(Bitmap bmp, int factor, Context context){
         int newFactor = factor - 127;
@@ -47,7 +47,7 @@ public class Retouching {
      * Sets the saturation of an image by multiplying a factor to the existing saturation.
      * @param bmp the bitmap to modify
      * @param factor the saturation factor between 0 and 255.
-     * @param context
+     * @param context Execution context
      */
     public static void setSaturation(Bitmap bmp, int factor, Context context){
 
@@ -74,7 +74,7 @@ public class Retouching {
      * Extends the dynamic (histogram) of a coloured image in order to set up the contrast.
      * @param bmp the bitmap to modify
      * @param factor the contrast factor between 0 and 255.
-     * @param context
+     * @param context Execution context
      */
     public static void dynamicExtensionRGB(Bitmap bmp, int factor, Context context){
         RenderScript rs = RenderScript.create(context);
@@ -105,7 +105,7 @@ public class Retouching {
     /**
      * Equalizes the histogram of the image.
      * @param bmp the bitmap to modify
-     * @param context
+     * @param context Execution context
      */
     public static void histogramEqualization(Bitmap bmp, Context context){
         RenderScript rs = RenderScript.create(context); //Create base renderscript

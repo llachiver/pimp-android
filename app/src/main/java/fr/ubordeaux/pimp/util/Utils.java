@@ -53,7 +53,7 @@ public class Utils {
     /**
      * Get size of the screen where your activity is running.
      *
-     * @param context An Activity launched in the device whose screen size you want to know.
+     * @param context Execution context
      * @return Point object , where size.x = screen width and size.y = screen height
      */
     public static Point getScreenSize(Activity context) {
@@ -74,7 +74,7 @@ public class Utils {
      * This method create and return a .jpg file, its name will be the date and hour of the capture.
      * Also set the String {@link #CAMERA_LAST_BITMAP_PATH} }
      *
-     * @param context Activity which requested the creation of the file.
+     * @param context Execution context
      * @return File object.
      * @throws IOException IOException can appear because of File creation.
      */
@@ -126,7 +126,7 @@ public class Utils {
      * Checks if a bitmap with uri must be rotated checking context orientation, if it must to be rotated, return a new rotated bitmap.
      *
      * @param selectedImage image to check and rotate
-     * @param context       current mainActivity context
+     * @param context       Execution context
      * @param imageUri      uri from image
      * @return a new bitmap rotated
      * @throws IOException

@@ -22,7 +22,7 @@ public class Convolution {
      * @param kWidth Width of Kernel
      * @param kHeight Height of kernel
      * @param normalize Normalize or not the output (Most of the cases must be set to true)
-     * @param context MainActivity context.
+     * @param context Execution context
      */
     public static void convolve2d(Bitmap bmp, float [] kernel, int kWidth, int kHeight, boolean normalize, Context context){
         if (kWidth % 2 == 0 || kHeight % 2 == 0) return; //Only odd kernels are allowed.
@@ -74,7 +74,7 @@ public class Convolution {
      * @param kernelX 1D horizontal kernel
      * @param kernelY 1D vertical kernel
      * @param normalize Normalize or not the output (Most of the cases must be set to true)
-     * @param context MainActivity context
+     * @param context Execution context
      */
     public static void convolve2dSeparable(Bitmap bmp, float[] kernelX, float[] kernelY, boolean normalize, Context context){
         int kXsize = kernelX.length; int kYsize = kernelY.length;
@@ -142,7 +142,7 @@ public class Convolution {
      * @param kernelX kernelX operator
      * @param kernelY kernelY operator
      * @param size the size of the kernel
-     * @param context MainActivity Context
+     * @param context Execution context
      */
     public static void edgeDetectionConvolution(Bitmap bmp, float[] kernelX, float[] kernelY, int size, Context context){
         //Create context
@@ -188,7 +188,7 @@ public class Convolution {
      * The intrinsic renderscript blur.
      * @param bmp the bitmap to modify
      * @param progress the seekbar position, converted into a blur intensity afterwards
-     * @param context
+     * @param context Execution context
      */
     public static void intrinsicBlur(Bitmap bmp, int progress, Context context){
         progress = progress < 1 ? 1 : (progress > 24 ? 24 : progress);
@@ -216,7 +216,7 @@ public class Convolution {
      * Applies gaussian blur with progress strength (Clamped to 0 - 25 range)
      * @param Bitmap to apply filter
      * @param progress Blur strength
-     * @param context Main activity context
+     * @param context Execution context
      */
     public static void gaussianBlur(Bitmap bmp, int progress, Context context){
         int size = progress /10;
@@ -231,7 +231,7 @@ public class Convolution {
      * Applies mean filter with progress strength (Clamped to 0 - 25 range)
      * @param Bitmap to apply filter
      * @param progress Blur strength
-     * @param context Main activity context
+     * @param context Execution context
      */
     public static void meanBlur(Bitmap bmp, int progress, Context context){
         int size = progress/10;
@@ -243,7 +243,7 @@ public class Convolution {
      * Applies sharpen filter with progress value (Clamped to 0 - 13 range)
      * @param bmp Bitmap to apply effect
      * @param progress sharpen strength
-     * @param context MainActivity Context
+     * @param context Execution context
      */
     public static void sharpen(Bitmap bmp, int progress,  Context context){
         int size = progress/20; //Limit size of kernels
@@ -255,16 +255,16 @@ public class Convolution {
 
     /**
      * Computes edge detection using Prewitt operator
-     * @param bmp
-     * @param context
+     * @param bmp Bmp to modify
+     * @param context Execution context
      */
     public static void neonSobel(Bitmap bmp, Context context){
         edgeDetectionConvolution(bmp, Kernels.SOBEL_X, Kernels.SOBEL_Y,3, context);
     }
     /**
      * Computes edge detection using Prewitt operator
-     * @param bmp
-     * @param context
+     * @param bmp Bmp to modify
+     * @param context Execution context
      */
     public static void neonPrewitt(Bitmap bmp, Context context){
         edgeDetectionConvolution(bmp, Kernels.PREWITT_X, Kernels.PREWITT_Y,3, context);
@@ -272,8 +272,8 @@ public class Convolution {
 
     /**
      * Computes edge detection using laplace operator
-     * @param bmp
-     * @param context
+     * @param bmp Bmp to modify
+     * @param context Execution context
      */
     public static void laplace(Bitmap bmp, Context context){
         convolve2d(bmp, Kernels.LAPLACIAN3x3,3,3, true, context);

@@ -17,7 +17,7 @@ public abstract class BitmapRunnable implements Runnable {
 
     /**
      * Change bitmap reference in BitmapRunnable object
-     * @param bmp
+     * @param bmp Bmp to modify
      */
     public void setBmp(Bitmap bmp) {
         this.bmp = bmp;

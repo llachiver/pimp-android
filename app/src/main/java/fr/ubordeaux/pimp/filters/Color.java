@@ -16,7 +16,7 @@ public class Color {
     /**
      * Set an image to gray scale.
      * @param bmp Bmp to modify
-     * @param context MainActivity Context
+     * @param context Execution context
      */
     public static void toGray(Bitmap bmp, Context context){
         RenderScript rs = RenderScript.create(context);
@@ -40,7 +40,7 @@ public class Color {
     /**
      * Set invert to an image computing the difference of each 255 - pixel.
      * @param bmp Bmp to modify
-     * @param context MainActivity Context
+     * @param context Execution context
      */
     public static void invert(Bitmap bmp, Context context){
         RenderScript rs = RenderScript.create(context);
@@ -64,7 +64,7 @@ public class Color {
     /**
      * Change the image's hue to the one chosen by the user
      * @param bmp Bmp to modify
-     * @param context MainActivity Context
+     * @param context Execution context
      * @param hue hue that is selected by the user
      */
     public static void colorize ( Bitmap bmp , int hue, Context context, boolean uniform) {
@@ -89,7 +89,7 @@ public class Color {
      * @param bmp Bmp to modify
      * @param hue hue that is selected by the user
      * @param tolerance the degree of tolerance chosen by the user
-     * @param context MainActivity Context
+     * @param context Execution context
      */
     public static void keepColor ( Bitmap bmp , int hue, int tolerance, Context context) {
 
