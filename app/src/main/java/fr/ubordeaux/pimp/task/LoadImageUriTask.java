@@ -3,6 +3,7 @@ package fr.ubordeaux.pimp.task;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
@@ -53,7 +54,13 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
             if (activity == null || activity.isFinishing()) {
                 return null;
             }
-            image = new Image(source, activity); //load and create Image
+            try {
+                image = new Image(source, activity); //load and create Image
+            }catch (Exception e){
+                this.cancel(true);
+                return null;
+            }
+
             return null;
         }
 
@@ -78,5 +85,11 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
         activity.setImage(image);
         activity.updateIv();
+    }
+
+    @Override
+    protected void onCancelled(Void voids){ //Something wrong happenend return to firstActivity
+        Toast.makeText(activityWeakReference.get(), "Something went wrong, file may be corrupted",Toast.LENGTH_LONG).show();
+        activityWeakReference.get().finish();
     }
 }

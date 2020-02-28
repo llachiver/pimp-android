@@ -146,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         iv = findViewById(R.id.photoView);
+
+        
         //Allow more zooming
         iv.setMaximumScale(10);
 

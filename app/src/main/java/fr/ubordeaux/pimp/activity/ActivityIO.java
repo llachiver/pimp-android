@@ -114,10 +114,11 @@ public class ActivityIO {
             File photoFile = null;
             try {
                 photoFile = Utils.createJPGFile(activity);
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 // Error occurred while creating the File
                 ex.printStackTrace();
                 Toast.makeText(activity, "Something went wrong loading from camera", Toast.LENGTH_LONG).show();
+                return;
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {

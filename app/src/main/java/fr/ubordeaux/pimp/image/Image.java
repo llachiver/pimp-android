@@ -272,8 +272,13 @@ public class Image {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
             //Load new Bitmap and apply with async task
+            try {
+                new ApplyFilterQueueTask((MainActivity) context,this).execute(); //Apply effectQueue
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(context, "Save cannot be performed",Toast.LENGTH_LONG).show();
+            }
 
-            new ApplyFilterQueueTask((MainActivity) context,this).execute(); //Apply effectQueue
 
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(context,

@@ -101,7 +101,7 @@ public class BitmapIO {
 
 
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return selectedImage;
         }
@@ -111,6 +111,7 @@ public class BitmapIO {
     /**** SAVE METHODS ******/
 
     public static boolean saveBitmap(Bitmap imgBitmap, String fileNameOpening, Context context){
+        assert imgBitmap != null : "Bitmap is null";
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
         Date now = new Date();
@@ -118,36 +119,33 @@ public class BitmapIO {
 
         FileOutputStream outStream;
 
-            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
-            File saveDir =  new File(path + "/PimpImages/");
+        File saveDir =  new File(path + "/PimpImages/");
 
-            if(!saveDir.exists()) {
-                saveDir.mkdirs();
-            }
-            File fileDir =  new File(saveDir, fileName);
+        if(!saveDir.exists()) {
+            saveDir.mkdirs();
+        }
+        File fileDir =  new File(saveDir, fileName);
 
         try {
             outStream = new FileOutputStream(fileDir);
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        if (imgBitmap == null)
-                Toast.makeText(context, "Null pointer exception", Toast.LENGTH_LONG).show();
-            assert imgBitmap != null;
-            imgBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+        imgBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
 
-            MediaScannerConnection.scanFile(context.getApplicationContext(),
-                    new String[] { fileDir.toString() }, null,
-                    new MediaScannerConnection.OnScanCompletedListener() {
-                        public void onScanCompleted(String path, Uri uri) {
-                        }
-                    });
+        MediaScannerConnection.scanFile(context.getApplicationContext(),
+                new String[] { fileDir.toString() }, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                    }
+                });
         try {
             outStream.flush();
             outStream.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

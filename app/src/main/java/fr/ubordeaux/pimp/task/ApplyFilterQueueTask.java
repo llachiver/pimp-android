@@ -1,6 +1,7 @@
 package fr.ubordeaux.pimp.task;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Toast;
@@ -51,7 +52,12 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Integer, Void> {
             if (activity == null || activity.isFinishing()) {
                 return null;
             }
-            bmp = BitmapIO.decodeAndScaleBitmapFromUri(image.getUri(), 5000,5000, activity);
+            try {
+                bmp = BitmapIO.decodeAndScaleBitmapFromUri(image.getUri(), 5000, 5000, activity);
+            }catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
             Queue<BitmapRunnable> effectQueue = new LinkedList<>(image.getEffectQueue()); //Get copy of queue
             BitmapRunnable effect;
             int totalEffects = effectQueue.size();
@@ -92,10 +98,16 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Integer, Void> {
         activity.showMenu();
         activity.showEffectsList();
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-        BitmapIO.saveBitmap(bmp, "pimp", activity); // Save edited bitmap
-        //BitmapIO.saveBitmap(image.getBitmap(),"pimpDownscaled", activity); //For debugging, save downscaled image too
+        try {
+            BitmapIO.saveBitmap(bmp, "pimp", activity);  // Save edited bitmap if saveBitmap returned false then get bitmap from image View
+        }catch (Exception e){
+            e.printStackTrace();
+            if (!BitmapIO.saveBitmap(image.getBitmap(), "pimp", activity)) { //Save downscaled bitmap instead | should not happen If this call returns false then we finish activity
+                Toast.makeText(activity, "Save cannot be performed", Toast.LENGTH_LONG).show();
+                activity.finish();
+            }
+        }
         Toast.makeText(activity, "Save success", Toast.LENGTH_SHORT).show();
-        //activity.updateIv();
     }
 
     @Override

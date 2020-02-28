@@ -51,9 +51,15 @@ public class FirstActivity extends AppCompatActivity {
 
         if (reqCode == ActivityIO.REQUEST_GET_SINGLE_FILE) { // Intent from gallery, containing Uri of a the picture selected.
             if (resultCode == RESULT_OK) {
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.setData(data.getData());
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.setData(data.getData());
+                    startActivity(intent);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(this, "Something went wrong loading from gallery", Toast.LENGTH_LONG).show();
+                    return;
+                }
             } else {
                 Toast.makeText(this, "You haven't picked Image", Toast.LENGTH_LONG).show();
             }
