@@ -48,6 +48,48 @@ On a S' = S + F * (1 - S) * S.
 On observe que la nouvelle saturation est proportionnelle à deux facteurs : l'espace restant avant une saturation totale (1-S) et la saturation existante S.
 Par conséquent, en augmentant la saturation, chaque pixel tend vers sa saturation maximale, tout en garantissant une saturation proportionnelle à celle existante, évitant ainsi de saturer le gris.
 
+
+\subsection{Hue:}
+
+    \includegraphics[width=0.25\textwidth]{report_src/non-uniform-hue.png}
+    \includegraphics[width=0.25\textwidth]{report_src/uniform-hue.png}
+    \newline
+    \emph{Méthode appelante : Color.colorize()}
+
+    \emph{Scripts : colorize.rs, utils.rs} 
+    \newline
+    Ce reglage efectue une conversion des couleurs de chaque pixel du format RGB au HSV puis change le champ Hue du pixel ce qui permet de 
+    changer le teint de image.
+    Le teint en question est sélectionné par l'utilisateur grâce a la seekbar qui lui est fournie ainsi qu'une option a cocher qui lui propose deux choix:
+    \\
+
+    \subsubsection{Teint uniforme:}
+    \\
+        En cochant la case "uniforme" l'effet remplace le teint de tout les pixels de l'image en changeant le champ hue de chaque pixel par celui choisis par l'utilisateur grace à la seekbar.
+        \\
+
+    \subsubsection{Teint non uniforme:}
+    \\
+        En décochant la case "uniforme" ajoute le teint sélectionné par l'utilisateur grace à la seekbar au chanp hue déjà contenu dans chaque pixel donnant un nouveau 
+        teint a chaque couleur de l'image.
+        \\
+
+
+\subsection{Keep hue:}
+
+\includegraphics[width=0.25\textwidth]{report_src/keepColor.png}
+\newline
+\emph{Méthode appelante : Color.keepColor()}
+
+\emph{Scripts : keepColor.rs, utils.rs} 
+\newline
+Garde qu'un seul teint avec un degré de tolérance sélectionnés par l'utilisateur grâce aux deux seekbars "hue"  et "tolerance" qui lui sont fournies et garde 
+le reste des pixels en échelle de gris en convertissant les couleurs de chaque pixel du format RGB au HSV puis gardant que les pixel contenant le hue choisi dans le bon intervalle.
+\\
+
+
+
+
 \subsection{Egalisation d'histogramme (Enhance) :}
 
 \emph{Méthode appelante : Retouching.histogramEqualization()}
