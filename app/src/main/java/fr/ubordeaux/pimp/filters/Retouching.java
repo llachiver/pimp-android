@@ -131,7 +131,6 @@ public class Retouching {
 
         input.destroy();
         histoScript.destroy();
-        lut.destroy();
         output.destroy();
         lut.destroy();
         rs.destroy();
