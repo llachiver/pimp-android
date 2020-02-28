@@ -43,4 +43,9 @@ Cependant la principale problématique de cette fonctionnalité serait de passer
 \\
 
 L'utilisation d'un historique d'effet pourra aussi permettre à l'utilisateur de sauvegarder des séries d'effets pour créer des effets personnalisés.
+
+\subsection{Bugs repérés :}
+Pour l'instant le seul bug repéré se trouve dans la section d'effets \textbf{"Neon"} \ref{neon} quand on appuie sur deux boutons ou plus au même temps (Sobel et Prewitt par exemple), les deux effets sont appliqués au même temps sur l'image affichée, nous sommes en train de réfléchir comment le régler.
 \\
+Des nombreux tests ont été faits pour assurer la stabilité de l'application, comme charger une image, supprimer l'image d'origine et puis sauvegarder l'image chargé dans l'application, essayer de charger un fichier corrompu, etc. Ces tests nous ont permis de repérer et régler plusieurs bugs d'entrée et sortie de fichiers.
+
