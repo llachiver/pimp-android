@@ -222,8 +222,7 @@ public class Convolution {
      * @param context Execution context
      */
     public static void gaussianBlur(Bitmap bmp, int progress, Context context){
-        int size = progress /10;
-        float[] kernel = Kernels.gauss(size);
+        float[] kernel = Kernels.gauss(progress);
         convolve2dSeparable(bmp, kernel, kernel, true, context);
 
         //De-comment this to compare with our blur :
@@ -237,8 +236,7 @@ public class Convolution {
      * @param context Execution context
      */
     public static void meanBlur(Bitmap bmp, int progress, Context context){
-        int size = progress/10;
-        float[] kernel = Kernels.mean(size);
+        float[] kernel = Kernels.mean(progress);
         convolve2dSeparable(bmp, kernel, kernel, true, context);
     }
 

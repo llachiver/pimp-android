@@ -74,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
         this.currentTask = currentTask;
     }
 
+    public void cancelCurrentTask(){
+        if(this.currentTask != null)
+            this.currentTask.cancel(true);
+    }
+
     /**
      * @param item Item chosen by user.
      * @return true if user click on an item.

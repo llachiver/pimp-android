@@ -137,7 +137,7 @@ public class EffectSettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mainActivity.onBackPressed();
-                if (mainActivity.getCurrentTask() != null) mainActivity.getCurrentTask().cancel(true); //Interrupt async task if it exists.
+                mainActivity.cancelCurrentTask();
                 image.discard();
             }
         });
@@ -386,7 +386,7 @@ public class EffectSettingsFragment extends Fragment {
         rbGroup.check(rbGauss.getId());
 
         SeekBar sbBlur = new SeekBar(mainActivity);
-        sbBlur.setMax(255);
+        sbBlur.setMax(25);
         sbBlur.setProgress(0);
 
         sbBlur.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -456,6 +456,7 @@ public class EffectSettingsFragment extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(rbSobel.isChecked()){
+                    mainActivity.cancelCurrentTask();
                     image.discard();
                     currentEffect = new BitmapRunnable(image.getBitmap()) {
                         @Override
@@ -467,6 +468,7 @@ public class EffectSettingsFragment extends Fragment {
                 }
 
                 else if(rbPrewitt.isChecked()){
+                    mainActivity.cancelCurrentTask();
                     image.discard();
                     currentEffect = new BitmapRunnable(image.getBitmap()) {
                         @Override
@@ -478,6 +480,7 @@ public class EffectSettingsFragment extends Fragment {
                 }
 
                 else if(rbLaplace.isChecked()){
+                    mainActivity.cancelCurrentTask();
                     image.discard();
                     currentEffect = new BitmapRunnable(image.getBitmap()) {
                         @Override
