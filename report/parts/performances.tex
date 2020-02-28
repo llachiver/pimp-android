@@ -108,7 +108,7 @@ Voici les temps d'exécution \textbf{sur 10 appels} de chaque effet pour une ima
 
 \subsubsection*{Conclusion sur les temps d'exécution}
 
-Mesurer les temps d'exécution nous a permis de nous rendre compte du gain de temps de la convolution séparable. Le flou gaussien (implémenté en séprable) 25x25 prend 1462.2 ms, tandis que le sharpen 13x13 (non séparable) prend 5679.2 ms.  
+Mesurer les temps d'exécution nous a permis de nous rendre compte du gain de temps de la convolution séparable. Le flou gaussien (implémenté en séparable) 25x25 prend 1462.2 ms, tandis que le sharpen 13x13 (non séparable) prend 5679.2 ms.  
 
 Sharpen 3x3, Sobel, Prewitt et Laplacian ont le même temps d'exécution car elles correspondent toutes à des convolutions classique avec un kernel 3x3.
 
