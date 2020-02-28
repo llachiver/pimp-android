@@ -6,6 +6,10 @@
 \usepackage{graphicx}
 \usepackage{fontawesome}
 \usepackage{hyperref}
+\usepackage{fullpage}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
 
 \usepackage{helvet}
 \renewcommand{\familydefault}{\sfdefault}
@@ -53,7 +57,25 @@
 % Introduction :
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction :} \label{intro}
-TODO
+Ce rapport synthétise notre travail de développement d'une application de retouche d'image exécutable sur la plateforme mobile Android.
+\\
+Réalisé dans le cadre de l'UE \textit{Projet technologique} lors du 2ème semestre de Licence 3 informatique à l'Université de Bordeaux, les objectifs de ce rendu de groupe étaient les suivant:
+\begin{itemize} [label=\textbullet]
+  \item Réaliser une application graphique Android
+  \item Permettre de charger, éditer et sauvegarder facilement une image
+  \item Proposer des effets par simple modification de pixels
+  \item Proposer des effets manipulant des histogrammes
+  \item Proposer des effets de convolution
+  \item Utiliser la technologie d'accélération RenderScript
+  \item Gérer le développement d'un projet de groupe
+\end{itemize}
+
+\vspace{1cm}
+\faArrowRight Lien GitHub du projet :
+\href{https://github.com/picachoc/pimp-android}{https://github.com/picachoc/pimp-android}
+\vspace{0.5cm}
+
+\textbf{NB: } Pour des informations plus détaillées sur le code, générez la JavaDoc de ce dernier.
 
 \clearpage
 
@@ -88,20 +110,111 @@ TODO
 \clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Gestion du projet :
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{parts/gestion}
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Conclusion :
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusion :}
-TODO
+\section{Conclusion}
+Bien que nécessitant une bonne rigueur de travail, travailler à plusieurs sur ce projet a donné un résultat très complet et très fonctionnel, notre application rivalise avec les autres applications du même type sur nos appareils personnels.
+\\
+En plus d'offrir déjà de nombreux effets, notre application repose sur une base claire et modulaire, cela facilitera l'ajout d'effets supplémentaires d'ici le prochain rendu. 
+\\
+Nous allons nous concentrer sur l'optimisation des effets actuels et le peaufinage de la structure. Notre défi principal sera ensuite d'implémenter des effets très différents comme l'incrustation d'objets ou la possibilité de manipuler un masque sur l'image.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Annexes :
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Annexes :}
-TODO
+\section{Annexes}
+
+\textbf{Librairies utilisées :}
+\\
+\url{https://github.com/chrisbanes/PhotoView}
+\\
+
+\textbf{Cahier des charges :}
+\\
+\url{https://dept-info.labri.fr/~vialard/ANDROID/cahierDesCharges.pdf}
+\\
+
+\textbf{Représentation de la couleur :}
+\\
+Système de couleur RGB:
+\\
+\url{https://fr.wikipedia.org/wiki/Rouge_vert_bleu}
+\\
+Système de couleur HSV ou HSB:
+\\
+\url{https://fr.wikipedia.org/wiki/Teinte_Saturation_Valeur}
+\\
+
+\textbf{Convolution :}
+\\
+Convolution séparable \label{separable_source}
+\\
+\url{http://www.songho.ca/dsp/convolution/convolution2d_separable.html}
+\\
+Filtre gaussien \label{gauss_source}
+\\
+\url{https://en.wikipedia.org/wiki/Gaussian_filter}
+\\
+Laplacian of gaussian \label{LoG}
+\\
+\url{https://homepages.inf.ed.ac.uk/rbf/HIPR2/log.htm}
+\\
+Noyaux \label{kernel_source}
+\\
+\url{https://fr.wikipedia.org/wiki/Noyau_(traitement_d%27image)}
+\\
+Détection de contours \label{edge_source}
+\\
+\url{https://en.wikipedia.org/wiki/Edge_detection}
+\\
+Amélioration de netteté \label{sharpen_source}
+\\
+\url{https://fr.wikipedia.org/wiki/Masque_flou}
+\\
+Échantillonnage linéaire \label{linear_sampling}
+\\
+\url{http://rastergrid.com/blog/2010/09/efficient-gaussian-blur-with-linear-sampling/}
+\\
+
+\textbf{Documentation Android :}
+\\
+Activity:
+\\
+\url{https://developer.android.com/reference/android/app/Activity}
+\\
+Bitmap:
+\\
+\url{https://developer.android.com/reference/android/graphics/Bitmap}
+\url{https://developer.android.com/topic/performance/graphics}
+\\
+Gestion des dimensions des Bitmap:
+\\
+\url{https://developer.android.com/topic/performance/graphics/load-bitmap}
+\\
+RenderScript:
+\\
+\url{https://developer.android.com/guide/topics/renderscript/compute}
+\\
+Utilisations des API:
+\\
+\url{https://developer.android.com/about/dashboards}
+\\
 
 
+\textbf{Divers :}
+\\
+Fichiers images et tags EXIF:
+\\
+\url{https://fr.wikipedia.org/wiki/Exchangeable_image_file_format}
+\\
 
 
 \end{document}
