@@ -1,9 +1,8 @@
 # PIMP : Android image editing application
 
-### This git is structured as an Android Studio project.
+### This git is structured as an Android Studio project
 
 Just import it.
-
 
 ### Android API required : 26 (Oreo 8.0)
 <TODO change it if min version change>
@@ -21,5 +20,11 @@ Just import it.
 * Sharpness
 * Neon effect
 
+### About structure
+In addition to a full image editing application, this project can provide to you the following things :
+* An example of fully operational Android user interface
+* A library to easily handle Bitmap : package [fr.ubordeaux.pimp.image](app/src/main/java/fr/ubordeaux/pimp/image)
+* A library to apply advanced effects on Bitmap : package [fr.ubordeaux.pimp.filters](app/src/main/java/fr/ubordeaux/pimp/filters)
 
-## For more informations read this report (french): [Report.pdf](report/Rapport_de_projet.pdf)
+
+## For more information read this report (french): [Report.pdf](report/Rapport_de_projet.pdf)
