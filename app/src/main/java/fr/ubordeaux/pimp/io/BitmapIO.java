@@ -110,6 +110,14 @@ public class BitmapIO {
 
     /**** SAVE METHODS ******/
 
+    /**
+     *
+     * @param imgBitmap Bitmap of the image to save
+     * @param fileNameOpening  name of the saved image
+     * @param context MainActivity context
+     * @return boolean whether save was successful or not
+     */
+
     public static boolean saveBitmap(Bitmap imgBitmap, String fileNameOpening, Context context){
         assert imgBitmap != null : "Bitmap is null";
 
