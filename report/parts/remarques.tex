@@ -1,6 +1,6 @@
 \section{Remarques et améliorations  :}
 
-\subsection{Remarques sur le code}
+\subsection{Remarques sur le code} \label{remarques_code}
 A propos de la classe \textbf{Image} \ref{classeImage}, nous sauvegardons systématiquement une copie des pixels d'origine de l'Image, de plus si un appel à \textbf{quickSave()} est effectué une 3ème copie de l'Image est chargée en mémoire. Image offre cependant des constructeurs pour charger une image proportionnée à l'écran de l'appareil. Le risque de débordement mémoire est donc largement évité par cette limitation de taille.
 \\
 
@@ -10,7 +10,11 @@ Lors du chargement d'une nouvelle image, nous ré-instancions un objet de la cla
 Dans la partie \ref{navig} nous créons une \textbf{MainActivity} après avoir récupéré une \textbf{Uri}, il aurait été idéal de rester dans \textbf{FirstActivity} jusqu'à chargement complet de la première image. Ce qui éviterait un éventuel aller-retour entre les activités en cas d'erreur. Cependant les limites de \textbf{Parcelable} \ref{parcelable} ainsi que l'utilisation d'une \textbf{AsyncTask} (donc un Thread différent) nous ont contraint à garder ce fonctionnement.
 \\
 
-Comme dit précedemment nous chargeons une image plus petite que l'originale afin d'optimiser la fluidité de l'application, à l'export en revanche le fichier image d'origine est chargé pour subir la même suite d'effets. Cette méthode ne permet pas d'empêcher un crash mémoire si l'image est immense (image d'appareil photo par exemple). On pourrait à l'avenir complexifier l'export pour charger et sauvegarder par morceaux le fichier image. Cependant ce n'est pas une priorité, la majorité des utilisateurs de l'application vont éditer des images venant d'appareils mobiles qui dépassent rarement les 20Mpx.
+Comme dit précédemment nous chargeons une image plus petite que l'originale afin d'optimiser la fluidité de l'application, à l'export en revanche le fichier image d'origine est chargé pour subir la même suite d'effets. Cette méthode ne permet pas d'empêcher un crash mémoire si l'image est immense (image d'appareil photo par exemple). On pourrait à l'avenir complexifier l'export pour charger et sauvegarder par morceaux le fichier image. Cependant ce n'est pas une priorité, la majorité des utilisateurs de l'application vont éditer des images venant d'appareils mobiles qui dépassent rarement les 20Mpx.
+Nous avons défini une limite de 5000x5000px comme taille d'image en entrée, les images au dessus de cette taille seront redimensionnées en facteur $x^2$ à la sauvegarde pour assurer la fluidité de l'application.
+\\
+
+Le fait de charger l'image d'origine pour refaire les effets a comme conséquence que certains effets, notamment ceux de convolution aient une différence entre l'aperçu et l'image sauvegardée\ref{limits_conv}. Une possible solution à ce problème pourrait être d'afficher ou travailler avec un "crop" de l'image d'origine pour ces effets là.
 \\
 
 \subsection{Remarques sur les librairies Android}
@@ -35,7 +39,7 @@ Il pourrait être tout à fait possible de masquer la gestion de cette file, qui
 \\
 Il faudrait cependant modifier le comportement de \textbf{quickSave()} et \textbf{discard()} afin de supprimer ou ré-ajouter la tête de file lors de l'aperçu des effets en glissant les curseurs.
 \\
-Cependant la principale problématique de cette fonctionnalité serait de passer d'un système où l'on appel les effets en passant l'Image (ou la Bitmap) en paramètre, à un système avec une méthode \textbf{applyEffect(...)} dans la classe Image. La question se pose alors de savoir comment préciser l'effet en question sans contraindre la classe Image à utiliser une batterie d'effets précise, ce qui romprait la modularité du code en rendant Image dépendant de nos classes d'effets. Ce problème est en réalité déjà réglé avec l'utilisations des \textbf{BitmapRunnable}, en effet il suffira de passer ces derniers à la méthode ce qui mettra une couche d'abstraction entre le terme "effet" et les classes de calculs des effets.
+Cependant la principale problématique de cette fonctionnalité serait de passer d'un système où l'on appel les effets en passant l'Image (ou la Bitmap) en paramètre, à un système avec une méthode \textbf{applyEffect(...)} dans la classe Image. La question se pose alors de savoir comment préciser l'effet en question sans contraindre la classe Image à utiliser une batterie d'effets précise, ce qui romprait la modularité du code en rendant Image dépendant de nos classes d'effets. Ce problème est en réalité déjà réglé avec l'utilisation des \textbf{BitmapRunnable}, en effet il suffira de passer ces derniers à la méthode ce qui mettra une couche d'abstraction entre le terme "effet" et les classes de calculs des effets.
 \\
 
 L'utilisation d'un historique d'effet pourra aussi permettre à l'utilisateur de sauvegarder des séries d'effets pour créer des effets personnalisés.
