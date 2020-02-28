@@ -254,12 +254,10 @@ void convolutionSeparable(rs_allocation inputImage, rs_allocation outputImage){
     setup(); //Init kCenters
 
     //the result of the first convolution (the horizontal one)
-    pTmp = rsCreateAllocation_uchar4(width,height);
     rs_script_call_t optsX = convolveOpts1dX();
     rs_script_call_t optsY = convolveOpts1dY();
     rsForEachWithOptions(conv2dX, &optsX, inputImage, pTmp); //Convolve X
     rsForEachWithOptions(conv2dY,&optsY , pTmp,  outputImage); // Convolve Y
-    rsClearObject(&pTmp); //Free memory
     extendPaddingScript(outputImage);  //Set padding
 
 }

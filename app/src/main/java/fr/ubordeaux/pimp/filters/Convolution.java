@@ -81,11 +81,12 @@ public class Convolution {
         if(kXsize != kYsize) return;
         RenderScript rs = RenderScript.create(context); //Create rs context
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Getting input
+        Allocation tmp = Allocation.createFromBitmap(rs, bmp); //The tmp allocation used to store the result of the first convolution
+        Allocation kAllocX = Allocation.createSized(rs, Element.F32(rs),kXsize); //Allocate memory for kernel
+        Allocation kAllocY = Allocation.createSized(rs, Element.F32(rs),kYsize); //Allocate memory for kernel
         ScriptC_convolution sConvolution = new ScriptC_convolution(rs); //Create script
 
-        Allocation kAllocX = Allocation.createSized(rs, Element.F32(rs),kXsize); //Allocate memory for kernel
         kAllocX.copyFrom(kernelX); //Copy data from kernel
-        Allocation kAllocY = Allocation.createSized(rs, Element.F32(rs),kYsize); //Allocate memory for kernel
         kAllocY.copyFrom(kernelY); //Copy data from kernel
 
         sConvolution.bind_kernelX(kAllocX);
@@ -105,6 +106,7 @@ public class Convolution {
 
 
         //Initialize global variables
+        sConvolution.set_pTmp(tmp);
         sConvolution.set_kdivX(normalizeX);
         sConvolution.set_kdivY(normalizeY);
         sConvolution.set_normal(normalize);
@@ -133,6 +135,7 @@ public class Convolution {
         output.destroy();
         kAllocX.destroy();
         kAllocY.destroy();
+        tmp.destroy();
     }
 
 
