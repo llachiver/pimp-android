@@ -325,7 +325,7 @@ Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE)
             divisé par la somme des poids des éléments du kernel. Ceci marche assez bien sauf pour les kernels avec des valeurs négatives notamment ceux de détection de contours comme Laplace, Sobel, Prewitt, etc (Voir \ref{conv_edges}).
             }
 
-            \item {Il y a quelques améliorations de performances à faire pour les convolutions réalisées en temps réel comme pour les effets Blur et Sharpen, une optimisation par échantillonnage linéaire
+            \item {Il y a quelques améliorations de performances à faire pour les convolutions réalisées en temps réel comme pour les effets Blur et Sharpen, une optimisation par échantillonnage linéaire\ref{linear_sampling}
             est à tester ainsi que le calcul par des entiers au lieu de flottants.}
 
             \item {Une des plus grandes limites des effets de convolution c'est que dû à notre implémentation de sauvegarde\ref{file_effets}, on ne peut malheureusement pas garantir le même résultat sur l'image sauvegardée que sur l'aperçu.
