@@ -133,9 +133,10 @@ public class Convolution {
         sConvolution.destroy();
         input.destroy();
         output.destroy();
+        tmp.destroy();
         kAllocX.destroy();
         kAllocY.destroy();
-        tmp.destroy();
+
     }
 
 
@@ -189,7 +190,7 @@ public class Convolution {
 
     /**
      * The intrinsic renderscript blur.
-     * @param bmp the bitmap to modify
+     * @param bmp Bitmap to modify
      * @param progress the seekbar position, converted into a blur intensity afterwards
      * @param context Execution context
      */
@@ -256,7 +257,7 @@ public class Convolution {
 
     /**
      * Computes edge detection using Prewitt operator
-     * @param bmp Bmp to modify
+     * @param bmp Bitmap to modify
      * @param context Execution context
      */
     public static void neonSobel(Bitmap bmp, Context context){
@@ -264,7 +265,7 @@ public class Convolution {
     }
     /**
      * Computes edge detection using Prewitt operator
-     * @param bmp Bmp to modify
+     * @param bmp Bitmap to modify
      * @param context Execution context
      */
     public static void neonPrewitt(Bitmap bmp, Context context){
@@ -273,7 +274,7 @@ public class Convolution {
 
     /**
      * Computes edge detection using laplace operator
-     * @param bmp Bmp to modify
+     * @param bmp Bitmap to modify
      * @param context Execution context
      */
     public static void laplace(Bitmap bmp, Context context){

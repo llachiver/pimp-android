@@ -27,6 +27,9 @@ import fr.ubordeaux.pimp.task.ApplyEffectTask;
 import fr.ubordeaux.pimp.util.BitmapRunnable;
 import fr.ubordeaux.pimp.util.Effects;
 
+/**
+ * Effect settings class handle the execution and generation of fragments seekbars
+ */
 public class EffectSettingsFragment extends Fragment {
 
     //Contains the cancel/confirm buttons + the settings list.
@@ -127,6 +130,9 @@ public class EffectSettingsFragment extends Fragment {
         return settingsLayout;
     }
 
+    /**
+     * Button cancel changes and confirm Listeners
+     */
     public void cancelConfirmListeners(){
 
 
@@ -236,7 +242,9 @@ public class EffectSettingsFragment extends Fragment {
     }
 
 
-
+    /**
+     * View generator for hue effects
+     */
     public void hueView(){
         TextView tvUniform = new TextView(super.getContext());
         tvUniform.setText("Uniform hue");
@@ -282,7 +290,9 @@ public class EffectSettingsFragment extends Fragment {
     }
 
 
-
+    /**
+     * View generator for keep color effects
+     */
     public void keepHueView(){
         TextView tvHue = new TextView(super.getContext());
         tvHue.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -365,7 +375,9 @@ public class EffectSettingsFragment extends Fragment {
     }
 
 
-
+    /**
+     * View generator for blur effects
+     */
     public void blurView(){
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER_HORIZONTAL;
@@ -431,7 +443,9 @@ public class EffectSettingsFragment extends Fragment {
     }
 
 
-
+    /**
+     * View generator for neon effects
+     */
     public void neonView(){
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER_HORIZONTAL;
@@ -456,7 +470,7 @@ public class EffectSettingsFragment extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(rbSobel.isChecked()){
-                    mainActivity.cancelCurrentTask();
+                    mainActivity.cancelCurrentTask(); //Avoid multiple checks
                     image.discard();
                     currentEffect = new BitmapRunnable(image.getBitmap()) {
                         @Override
@@ -468,7 +482,7 @@ public class EffectSettingsFragment extends Fragment {
                 }
 
                 else if(rbPrewitt.isChecked()){
-                    mainActivity.cancelCurrentTask();
+                    mainActivity.cancelCurrentTask(); //Avoid multiple checks
                     image.discard();
                     currentEffect = new BitmapRunnable(image.getBitmap()) {
                         @Override
@@ -480,7 +494,7 @@ public class EffectSettingsFragment extends Fragment {
                 }
 
                 else if(rbLaplace.isChecked()){
-                    mainActivity.cancelCurrentTask();
+                    mainActivity.cancelCurrentTask(); //Avoid multiple checks
                     image.discard();
                     currentEffect = new BitmapRunnable(image.getBitmap()) {
                         @Override

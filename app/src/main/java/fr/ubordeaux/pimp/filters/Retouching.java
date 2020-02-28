@@ -98,6 +98,8 @@ public class Retouching {
         output.copyTo(bmp);
 
         input.destroy();
+        sMinMax.destroy();
+        sDynExtension.destroy();
         output.destroy();
         rs.destroy();
     }
@@ -128,6 +130,8 @@ public class Retouching {
         output.copyTo(bmp);
 
         input.destroy();
+        histoScript.destroy();
+        lut.destroy();
         output.destroy();
         lut.destroy();
         rs.destroy();
