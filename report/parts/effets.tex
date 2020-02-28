@@ -26,7 +26,7 @@ Les valeurs sont tronquées entre 0 et 255, par conséquent on perd de l'informa
 Cet effet n'utilise pas la luminosité existante de l'image, ainsi on peut obtenir des résultats qui sont parfois discutables, par exemple
 le noir qui s'éclaircit et inversement pour le blanc. Pour pallier à ce problème, on pourrait introduire une multiplication afin de modifier
 la luminosité proportionnellement à celle existante. Cependant, cette solution modifie aussi le contraste, nous avons donc choisi
-de laisser l'algorithme tel quel.
+de laisser l'algorithme tel quel. 
 
 
 \subsection{Contraste (Contrast) :}
@@ -346,7 +346,7 @@ le reste des pixels en échelle de gris en convertissant les couleurs de chaque 
         Cet effet s'applique en temps réel sur l'image et pourtant doit être assez rapide pour son utilisation, il restent encore quelques optimisations à faire
         pour améliorer la fluidité de ce dernier. Voir \ref{limits_conv}.
         \\
-        \newpage
+        
 
 
     \subsubsection{Amélioration de la netteté / Masque flou (Sharpen) : } \label{sharpen}
@@ -443,8 +443,9 @@ le reste des pixels en échelle de gris en convertissant les couleurs de chaque 
         Nous avons mis 3 boutons de type \textbf{RadioButton} pour sélectionner le type de kernel à utiliser et ainsi voir les différences de chacun sur l'image.
         \\
         
-        Les valeurs résultantes de la convolution en "Neon" ne sont pas normalisées par extension linéaire, elles sont justes tronquées entre [0 - 255], pour avoir un résultat plus fidèle, il faudrait passer par une image intermédiaire, calculer 
-        leur respective minimum et maximum pour ensuite normaliser l'image précédente cette solution est discutable puisque on devrait réallouer une image de plus en mémoire. Cependant
+        Les valeurs résultantes de la convolution en "Neon" ne sont pas normalisées par extension linéaire, elles sont justes tronquées entre [0 - 255] à cause de ce troncage on risque de perdre des données sur l'image,
+         surtout avec des images avec beaucoup des contours, pour avoir donc un résultat plus fidèle, faudrait passer par une image intermédiaire, calculer 
+        leurs respectifs minimum et maximum pour ensuite normaliser l'image précédente cette solution est discutable puisque on devrait réallouer une image de plus en mémoire et rajouter quelques parcours en plus sur l'image. Cependant
         nous avons essayé de \textbf{calculer la valeur maximale théorique} pour normaliser mais ceci donne des résultats très sombres par rapport à l'image originale, nous avons décidé donc de garder l'ancienne normalisation et considérer le fait de normaliser par extension linéaire.
         \\
 
@@ -458,7 +459,7 @@ le reste des pixels en échelle de gris en convertissant les couleurs de chaque 
             pour réaliser des opérations flottantes que pour des opérations sur des entiers qui en plus sont codés en 8 bits dans une image. Pour éviter donc les erreurs de débordement et pour garder une bonne qualité de l'image
             on a décidé de travailler exclusivement avec des flottants, même si ceci peut être pénalisant au niveau de performance, cependant des tests sont à prévoir pour le prochain rendu pour essayer
             d'améliorer la performance sur des filtres comme "Blur"\ref{blur} et "Sharpen"\ref{sharpen}.}
-            \item {Pour la convolution classique et séparable les valeurs sont normalisées en divisant le résultat d'opération de voisinage pour un pixel donné
+            \item {Pour la convolution classique et séparable les valeurs sont normalisées en prennant le résultat d'opération de voisinage pour un pixel donné
             divisé par la somme des poids des éléments du kernel. Ceci marche assez bien sauf pour les kernels avec des valeurs négatives notamment ceux de détection de contours comme Laplace, Sobel, Prewitt, etc (Voir \ref{conv_edges}).
             }
 
