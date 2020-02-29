@@ -7,8 +7,6 @@
 //image input and output (used for kernel mapping)
 rs_allocation pIn;
 rs_allocation pOut;
-//intermediate image after horizontal convolution
-rs_allocation pTmp;
 
 //**Filter parameters **/
 uint32_t width, height;
@@ -122,7 +120,7 @@ uchar4 RS_KERNEL conv2dY(uchar4 in, uint32_t x, uint32_t y){
 
     for(ky = y - kCenterY; ky <= y + kCenterY ;ky++)
     {
-        tmp += rsUnpackColor8888(rsGetElementAt_uchar4(pTmp, x, ky)) * kernelY[kIndex];; //Get only one channel cause greyscale image
+        tmp += rsUnpackColor8888(rsGetElementAt_uchar4(pOut, x, ky)) * kernelY[kIndex];; //Get only one channel cause greyscale image
         kIndex++;
     }
     if (normal) tmp /= kdivY; //Normalize
@@ -256,9 +254,10 @@ void convolutionSeparable(rs_allocation inputImage, rs_allocation outputImage){
     //the result of the first convolution (the horizontal one)
     rs_script_call_t optsX = convolveOpts1dX();
     rs_script_call_t optsY = convolveOpts1dY();
-    rsForEachWithOptions(conv2dX, &optsX, inputImage, pTmp); //Convolve X
-    rsForEachWithOptions(conv2dY,&optsY , pTmp,  outputImage); // Convolve Y
-    extendPaddingScript(outputImage);  //Set padding
+    rsForEachWithOptions(conv2dX, &optsX, inputImage, outputImage); //Convolve X
+    rsForEachWithOptions(conv2dY,&optsY , outputImage,  inputImage); // Convolve Y
+    pOut = pIn;                                                     //Recycle allocation
+    extendPaddingScript(inputImage);  //Set padding
 
 }
 
