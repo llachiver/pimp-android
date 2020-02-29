@@ -144,6 +144,7 @@ public class EffectSettingsFragment extends Fragment {
             public void onClick(View v) {
                 mainActivity.onBackPressed();
                 mainActivity.cancelCurrentTask();
+                currentEffect = null;
                 image.discard();
             }
         });
@@ -154,6 +155,7 @@ public class EffectSettingsFragment extends Fragment {
                 //TODO save applied effect into the queue
                 if(image.getEffectQueue() != null && currentEffect != null)  //Temporaly
                     image.getEffectQueue().add(currentEffect);
+                currentEffect = null;
                 mainActivity.deflateEffectSettings();
 
             }

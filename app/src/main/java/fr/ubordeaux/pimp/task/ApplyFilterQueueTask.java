@@ -67,6 +67,7 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Integer, Void> {
                 publishProgress(currentEffect++, totalEffects);
                 effect.setBmp(bmp); //Set new bitmap to run
                 effect.run();
+                effect.setBmp(image.getBitmap());
                 effect = effectQueue.poll();
             }
             return null;
@@ -107,6 +108,7 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Integer, Void> {
                 activity.finish();
             }
         }
+        bmp = null;
         Toast.makeText(activity, "Save success", Toast.LENGTH_SHORT).show();
     }
 

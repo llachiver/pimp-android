@@ -302,6 +302,8 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(effectSettingsFragment);
         fragmentTransaction.commit();
+        currentTask = null;
+        effectSettingsFragment = null;
         showEffectsList();
     }
 
