@@ -222,8 +222,8 @@ public class Convolution {
      * @param progress Blur strength
      * @param context Execution context
      */
-    public static void gaussianBlur(Bitmap bmp, int progress, Context context){
-        float[] kernel = Kernels.gauss(progress);
+    public static void gaussianBlur(Bitmap bmp, int progress, float sigma, Context context){
+        float[] kernel = Kernels.gauss(progress,sigma);
         convolve2dSeparable(bmp, kernel, kernel, true, context);
 
         //De-comment this to compare with our blur :
