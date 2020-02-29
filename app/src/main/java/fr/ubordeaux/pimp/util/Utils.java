@@ -10,6 +10,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Display;
 
 import java.io.File;
@@ -18,6 +19,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+
+import fr.ubordeaux.pimp.filters.Color;
+import fr.ubordeaux.pimp.filters.Convolution;
+import fr.ubordeaux.pimp.filters.Retouching;
+import fr.ubordeaux.pimp.image.Image;
 
 
 /**
@@ -169,6 +175,101 @@ public class Utils {
             }
         }
     }
+
+    /**
+     * Used to benchmark an effect
+     */
+    public void timeBenchmark(Effects effect, Image image, Context context){
+        float times[] = new float[10];
+
+        long startTime = 0;
+        long elapsedTime = 0;
+
+        float min = Float.MAX_VALUE, max = 0;
+        float sum = 0;
+        float stdDeviation;
+
+        float mean;
+
+        for(int i = 0 ; i < 10 ; i++){
+            startTime = System.currentTimeMillis();
+
+            //HERE, effect call :
+            image.reset();
+
+            switch(effect){
+                case BRIGHTNESS:
+                    Retouching.setBrightness(image.getBitmap(),255, context);
+                    break;
+                case CONTRAST:
+                    Retouching.dynamicExtensionRGB(image.getBitmap(), 255, context);
+                    break;
+                case SATURATION:
+                    Retouching.setSaturation(image.getBitmap(), 255, context);
+                    break;
+                case ENHANCE:
+                    Retouching.histogramEqualization(image.getBitmap(), context);
+                    break;
+                case TO_GRAY:
+                    Color.toGray(image.getBitmap(), context);
+                    break;
+                case INVERT:
+                    Color.invert(image.getBitmap(), context);
+                    break;
+                case CHANGE_HUE:
+                    Color.colorize(image.getBitmap(), 255, context, false);
+                    break;
+                case KEEP_HUE:
+                    Color.keepColor(image.getBitmap(), 255, 20, context);
+                    break;
+                case GAUSS_MIN:
+                    Convolution.gaussianBlur(image.getBitmap(), 0, context);
+                    break;
+                case GAUSS_MAX:
+                    Convolution.gaussianBlur(image.getBitmap(), 255, context);
+                    break;
+                case MEAN_MIN:
+                    Convolution.meanBlur(image.getBitmap(), 0, context);
+                    break;
+                case MEAN_MAX:
+                    Convolution.meanBlur(image.getBitmap(), 255, context);
+                    break;
+                case SHARPEN_MIN:
+                    Convolution.sharpen(image.getBitmap(), 0, context);
+                    break;
+                case SHARPEN_MAX:
+                    Convolution.sharpen(image.getBitmap(), 255, context);
+                    break;
+                case NEON_SOBEL:
+                    Convolution.neonSobel(image.getBitmap(),context);
+                    break;
+                case NEON_PREWITT:
+                    Convolution.neonPrewitt(image.getBitmap(),context);
+                    break;
+                case LAPLACE:
+                    Convolution.laplace(image.getBitmap(),context);
+                    break;
+
+            }
+            elapsedTime = System.currentTimeMillis() - startTime;
+            if(elapsedTime < min) min = elapsedTime;
+            if(elapsedTime > max) max = elapsedTime;
+            times[i] = elapsedTime;
+            sum += elapsedTime;
+        }
+        mean = sum/10;
+
+        sum = 0;
+        for(int i = 0 ; i < 10 ; i++){
+            sum += (times[i] - mean)*(times[i] - mean);
+        }
+        stdDeviation = (float) Math.sqrt(sum / 10f);
+
+        Log.i("benchmark",effect.getName() + " & " + min + " | " + max + " | " + mean + " | " + stdDeviation + "\\\\");
+        Log.i("benchmark","\\hline");
+    }
+
+
 
 
     // And to convert the image URI to the direct file system path of the image file
