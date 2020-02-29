@@ -374,11 +374,7 @@ public class EffectSettingsFragment extends Fragment {
         settingsList.addView(sbTolerance);
     }
 
-    public float getConvertedValue(int intVal){
-        float floatVal = 0.0f;
-        floatVal = .5f * intVal;
-        return floatVal;
-    }
+
     /**
      * View generator for blur effects
      */
@@ -401,38 +397,9 @@ public class EffectSettingsFragment extends Fragment {
 
         rbGroup.check(rbGauss.getId());
 
-        final SeekBar sbBlur = new SeekBar(mainActivity);
+        SeekBar sbBlur = new SeekBar(mainActivity);
         sbBlur.setMax(25);
         sbBlur.setProgress(0);
-        final SeekBar sigma = new SeekBar(mainActivity);
-        sigma.setMax(10);
-        sigma.setProgress(0);
-
-        sigma.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
-                if(rbGauss.isChecked()) {
-                    image.discard();
-                    currentEffect = new BitmapRunnable(image.getBitmap()) {
-                        @Override
-                        public void run() {
-                            Convolution.gaussianBlur(this.getBmp(), sbBlur.getProgress(), getConvertedValue(progress) ,mainActivity);
-                        }
-                    };
-                    currentEffect.run();
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
 
         sbBlur.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -442,7 +409,7 @@ public class EffectSettingsFragment extends Fragment {
                     currentEffect = new BitmapRunnable(image.getBitmap()) {
                         @Override
                         public void run() {
-                            Convolution.gaussianBlur(this.getBmp(), progress, getConvertedValue(sigma.getProgress()) ,mainActivity);
+                            Convolution.gaussianBlur(this.getBmp(), progress, mainActivity);
                         }
                     };
                     currentEffect.run();
@@ -471,7 +438,6 @@ public class EffectSettingsFragment extends Fragment {
             }
         });
         settingsList.addView(sbBlur);
-        settingsList.addView(sigma);
         settingsList.addView(rbGroup);
 
     }

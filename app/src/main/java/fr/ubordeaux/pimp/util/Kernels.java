@@ -47,10 +47,10 @@ public class Kernels {
 
 
     //Separated kernel (to use for both x and y kernels)
-    public static float[] gauss(int size, float sigma) {
+    public static float[] gauss(int size) {
         //Test if size is even
         if (size % 2 == 0) size++;
-        //float sigma = size / 2f;
+        float sigma = size / 2f;
         float[] kernel = new float[size];
         for (int x = 0; x < size; ++x) {
             kernel[x] = (float) ((1 / (Math.sqrt(2 * (Math.PI) * sigma * sigma))) * Math.exp(-((x - (size >> 1)) * (x - (size >> 1)) / (2 * sigma * sigma))));
