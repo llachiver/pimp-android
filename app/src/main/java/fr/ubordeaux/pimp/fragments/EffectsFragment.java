@@ -59,23 +59,6 @@ public class EffectsFragment extends Fragment {
         bBrightness.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*main.timeBenchmark(BRIGHTNESS);
-                main.timeBenchmark(CONTRAST);
-                main.timeBenchmark(SATURATION);
-                main.timeBenchmark(ENHANCE);
-                main.timeBenchmark(TO_GRAY);
-                main.timeBenchmark(INVERT);
-                main.timeBenchmark(CHANGE_HUE);
-                main.timeBenchmark(KEEP_HUE);
-                main.timeBenchmark(GAUSS_MIN);
-                main.timeBenchmark(GAUSS_MAX);
-                main.timeBenchmark(MEAN_MIN);
-                main.timeBenchmark(MEAN_MAX);
-                main.timeBenchmark(SHARPEN_MIN);
-                main.timeBenchmark(SHARPEN_MAX);
-                main.timeBenchmark(NEON_SOBEL);
-                main.timeBenchmark(NEON_PREWITT);
-                main.timeBenchmark(LAPLACE);*/
                 main.getImage().quickSave();
                 main.inflateEffectSettings(Effects.BRIGHTNESS);
             }
