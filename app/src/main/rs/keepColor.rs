@@ -16,7 +16,6 @@ uchar4 RS_KERNEL keepColor (uchar4 in){
         return rsPackColorTo8888 (pixel);
     }
     else{
-        const float gray = dot(pixelf , weight);
-        return rsPackColorTo8888 (gray, gray, gray, pixelf.a) ;
+        return pixelToGray(in);
     }
 }

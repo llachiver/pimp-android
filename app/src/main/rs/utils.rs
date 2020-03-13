@@ -111,20 +111,28 @@ static float4 HSVtoRGB ( float4 hsv ) {
 }
 
 //Gray constants
-static const float4 weight = {0.299f, 0.587f, 0.114f, 0.0f};
+static const uint4 weight = {299, 587, 114, 0};
 
-uchar4 RS_KERNEL grey ( uchar4 in  ) {
+static uchar4 pixelToGray(uchar4 in) {
 
-    const float4 pixelf = rsUnpackColor8888 ( in ) ;
+    uint4 tmp = convert_uint4(in);
+    uint gray = (tmp.r * weight.r) + (tmp.g * weight.g) + (tmp.b * weight.b);
+    gray *= 0.001;
+    tmp = gray;
+    uchar4 out = convert_uchar4(tmp);
 
-    const float gray = dot(pixelf , weight);
-
-
-    uchar4 out = rsPackColorTo8888 ( gray , gray , gray , pixelf.a ) ;
+    out.a = in.a;
 
 
 
     return out;
+}
+
+uchar4 RS_KERNEL grey ( uchar4 in  ) {
+
+    return pixelToGray(in);
+
+
 }
 
 uchar4 RS_KERNEL invert (uchar4 in ) {

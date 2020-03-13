@@ -14,9 +14,9 @@ uint32_t kWidth, kHeight;
 static uint32_t kCenterX, kCenterY;
 
 ///////////////////////////////////////////////
-float kdivX; //For normalize pixel with total value of kernel
-float kdivY; //For normalize pixel with total value of kernel
-float kdiv; //For normalize pixel with total value of kernel
+float inv_kdivX; //For normalize pixel with total value of kernel
+float inv_kdivY; //For normalize pixel with total value of kernel
+float inv_kdiv; //For normalize pixel with total value of kernel
 //For classic convoltion-------
 const float* kernel;
 //--------------
@@ -35,9 +35,9 @@ uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
     float4 temp = 0;
 
     uint32_t kIndex = 0;
-    for(ky = y - kCenterY; ky <= y + kCenterY ;ky++) //Columns
+    for(ky = y - kCenterY; ky <= y + kCenterY ;ky++) //Rows
     {
-        for(kx = x - kCenterX; kx <= x + kCenterX ;kx++) //Rows
+        for(kx = x - kCenterX; kx <= x + kCenterX ;kx++) //Columns
         {
 
             temp += rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, ky)) * kernel[kIndex];
@@ -47,7 +47,7 @@ uchar4 RS_KERNEL conv2d(uchar4 in, uint32_t x, uint32_t y)
         }
     }
 
-    if (normal) temp /= kdiv; //Normalize
+    if (normal) temp *= inv_kdiv; //Normalize
     temp = fabs(temp);
 
     ret =  rsPackColorTo8888(temp);
@@ -66,9 +66,9 @@ uchar4 RS_KERNEL conv2dEdges(uchar4 in, uint32_t x, uint32_t y)
     float4 tempY = 0;
     float4 pixelf;
     uint32_t kIndex = 0;
-    for(ky = y - kCenterY; ky <= y + kCenterY ;ky++) //Columns
+    for(ky = y - kCenterY; ky <= y + kCenterY ;ky++) //Rows
     {
-        for(kx = x - kCenterX; kx <= x + kCenterX ;kx++) //Rows
+        for(kx = x - kCenterX; kx <= x + kCenterX ;kx++) //Columns
         {
 
             pixelf = rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, ky));
@@ -102,7 +102,7 @@ uchar4 RS_KERNEL conv2dX(uchar4 in, uint32_t x, uint32_t y){
         tmp += rsUnpackColor8888( rsGetElementAt_uchar4(pIn, kx, y))* kernelX[kIndex];
         kIndex++;
     }
-    if (normal) tmp /= kdivX; //Normalize
+    if (normal) tmp *= inv_kdivX; //Normalize
 
     tmp = fabs(tmp);
 
@@ -120,10 +120,10 @@ uchar4 RS_KERNEL conv2dY(uchar4 in, uint32_t x, uint32_t y){
 
     for(ky = y - kCenterY; ky <= y + kCenterY ;ky++)
     {
-        tmp += rsUnpackColor8888(rsGetElementAt_uchar4(pOut, x, ky)) * kernelY[kIndex];; //Get only one channel cause greyscale image
+        tmp += rsUnpackColor8888(rsGetElementAt_uchar4(pOut, x, ky)) * kernelY[kIndex];
         kIndex++;
     }
-    if (normal) tmp /= kdivY; //Normalize
+    if (normal) tmp *= inv_kdivY; //Normalize
     tmp = fabs(tmp);
 
 

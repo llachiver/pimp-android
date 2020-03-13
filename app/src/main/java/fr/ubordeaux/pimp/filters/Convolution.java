@@ -38,9 +38,10 @@ public class Convolution {
         float totalNormalize = 0;
         for (float f : kernel) totalNormalize += f; //Compute normalizing coefficient
         if (totalNormalize == 0) normalize = false; //Do not normalize if totalNormalize equals to zero
+        totalNormalize = 1/totalNormalize;
 
         //Initialize global variables
-        sConvolution.set_kdiv(totalNormalize);
+        sConvolution.set_inv_kdiv(totalNormalize);
         sConvolution.set_normal(normalize);
         sConvolution.set_height(bmp.getHeight());
         sConvolution.set_width(bmp.getWidth());
@@ -102,12 +103,13 @@ public class Convolution {
 
         if (normalizeX == 0 || normalizeY == 0) normalize = false; //Do not normalize if totalNormalize equals to zero
 
-
+        normalizeX = 1/normalizeX; //Calculate inv_kdivX;
+        normalizeY = 1/normalizeY; //Calculate inv_kdivY;
 
         //Initialize global variables
 
-        sConvolution.set_kdivX(normalizeX);
-        sConvolution.set_kdivY(normalizeY);
+        sConvolution.set_inv_kdivX(normalizeX);
+        sConvolution.set_inv_kdivY(normalizeY);
         sConvolution.set_normal(normalize);
         sConvolution.set_height(bmp.getHeight());
         sConvolution.set_width(bmp.getWidth());
