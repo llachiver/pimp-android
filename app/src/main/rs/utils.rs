@@ -117,7 +117,7 @@ static uchar4 pixelToGray(uchar4 in) {
 
     uint4 tmp = convert_uint4(in);
     uint gray = (tmp.r * weight.r) + (tmp.g * weight.g) + (tmp.b * weight.b);
-    gray *= 0.001;
+    gray /= 1000;
     tmp = gray;
     uchar4 out = convert_uchar4(tmp);
 
