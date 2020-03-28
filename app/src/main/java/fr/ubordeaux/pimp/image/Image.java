@@ -1,25 +1,18 @@
 package fr.ubordeaux.pimp.image;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-import fr.ubordeaux.pimp.activity.ActivityIO;
-import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.io.BitmapIO;
-import fr.ubordeaux.pimp.task.ApplyFilterQueueTask;
 import fr.ubordeaux.pimp.util.Utils;
 
 /**
@@ -278,41 +271,57 @@ public class Image {
     }
 
     /**
-     * Export the current image to the devices gallery
-     * Ask for the user's permission if not yet given to store the current
-     * image in the gallery before calling the function that saves it to the gallery.
+     * Export to the device gallery the original picture file with all effects applied on the current Image
+     * This method needs permission to acces device storage, please allow it before call this method.
      *
      * @param context Execution context
+     * @return True if export ends correclty
      */
-    public void exportToGallery(Activity context) {
-        if (ContextCompat.checkSelfPermission(context,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-            //Load new Bitmap and apply with async task
-            try {
-                new ApplyFilterQueueTask((MainActivity) context, this).execute(); //Apply effectQueue //TODO !!!!!!!!!!!
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(context, "Save cannot be performed", Toast.LENGTH_LONG).show();
-            }
+    public boolean exportOriginalToGallery(Activity context) {
+        return exportOriginalToGallery(context, false);
+    }
 
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(context,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(context, "Permission is needed to save image", Toast.LENGTH_LONG).show();
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            }
-
-            // No explanation needed, we can request the permission.
-            ActivityCompat.requestPermissions(context,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    ActivityIO.REQUEST_WRITE_EXTERNAL_STORAGE);
-
+    /**
+     * Same as {@link  #exportOriginalToGallery(Activity)} but you can specified to using {@link Toast} to show effects advancement.
+     *
+     * @param context Execution context
+     * @param toasted true if you want show Toasts
+     * @return True if export ends correclty
+     */
+    public boolean exportOriginalToGallery(Activity context, boolean toasted) {
+        Log.v("LOG", "ok entre exportoriginalmachin");
+        if (context == null || context.isFinishing())
+            return false;
+        if (getUri() == null) return false;
+        Bitmap result;
+        try {
+            result = BitmapIO.decodeAndScaleBitmapFromUri(getUri(), 5000, 5000, context); //TODO choose correct size, and warn user that exported image will be smaller if original size even too large
+            Log.v("LOG", "ok decode");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
 
+        Queue<ImageEffectRunnable> effectQueue = new LinkedList<>(getEffectsHistory()); //Get copy of queue:
+        Log.v("LOG", "ok copie queue");
+
+        applyQueueEffects(effectQueue, result, toasted, context);
+        Log.v("LOG", "ok aplliquage");
+
+        return BitmapIO.saveBitmap(result, "pimp_image", context);
     }
+
+    /**
+     * Export to the device gallery the current Image with the same size and all applied effects
+     * This method needs permission to acces device storage, please allow it before call this method.
+     *
+     * @param context Execution context
+     * @return True if export ends correclty
+     */
+    public boolean exportToGallery(Activity context) {
+        return BitmapIO.saveBitmap(getBitmap(), "pimp_image", context);
+    }
+
 
     /**
      * Will return the history of all effects applyed to the Image.
@@ -343,6 +352,29 @@ public class Image {
             confirmedEffectsHistory.add(effect);
         else
             tempEffectsHistory.add(effect);
+    }
+
+    /**
+     * Apply severals effects on a Bitmap.
+     *
+     * @param queue   A FIFO of effects to apply
+     * @param bitmap  the target Bitmap
+     * @param toasted true if you want to show advancement, with {@link Toast}.
+     * @param context Must be define if toasted is set to true
+     */
+    private static void applyQueueEffects(Queue<ImageEffectRunnable> queue, Bitmap bitmap, boolean toasted, Activity context) {
+        ImageEffectRunnable effect;
+        int totalEffects = queue.size();
+        int currentEffect = 1;
+        effect = queue.poll(); // Get first effect
+        while (effect != null) {
+            if (toasted) //TODO !!!!!! Fix it and use handlers !!!!!
+                Toast.makeText(context, "Applying effect " + currentEffect + " of " + totalEffects, Toast.LENGTH_SHORT).show();
+            effect.setBmp(bitmap); //Apply the effect on the right bitmap
+            effect.run();
+            effect = queue.poll();
+            currentEffect++;
+        }
     }
 
 }

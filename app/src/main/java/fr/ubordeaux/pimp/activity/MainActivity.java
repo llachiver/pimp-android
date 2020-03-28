@@ -1,16 +1,19 @@
 package fr.ubordeaux.pimp.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -19,15 +22,13 @@ import com.github.chrisbanes.photoview.PhotoView;
 import java.io.File;
 
 import fr.ubordeaux.pimp.R;
-import fr.ubordeaux.pimp.filters.Color;
-import fr.ubordeaux.pimp.filters.Convolution;
-import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.fragments.EffectSettingsFragment;
 import fr.ubordeaux.pimp.fragments.EffectsFragment;
 import fr.ubordeaux.pimp.fragments.InfosFragment;
 import fr.ubordeaux.pimp.image.Image;
-import fr.ubordeaux.pimp.util.Effects;
+import fr.ubordeaux.pimp.task.ExportImageTask;
 import fr.ubordeaux.pimp.task.LoadImageUriTask;
+import fr.ubordeaux.pimp.util.Effects;
 import fr.ubordeaux.pimp.util.Utils;
 
 public class MainActivity extends AppCompatActivity {
@@ -74,8 +75,8 @@ public class MainActivity extends AppCompatActivity {
         this.currentTask = currentTask;
     }
 
-    public void cancelCurrentTask(){
-        if(this.currentTask != null)
+    public void cancelCurrentTask() {
+        if (this.currentTask != null)
             this.currentTask.cancel(true);
     }
 
@@ -97,8 +98,29 @@ public class MainActivity extends AppCompatActivity {
                 image.reset();
                 updateIv(); //Update imageview
                 return true;
-            case R.id.exportToGallery:
-                image.exportToGallery(this);
+            case R.id.exportToGallery: //this operation need a permission :
+                if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    exportImage();
+
+                } else {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        Toast.makeText(this, "Permission is needed to save image", Toast.LENGTH_LONG).show();
+                        // Show an explanation to the user *asynchronously* -- don't block
+                        // this thread waiting for the user's response! After the user
+                        // sees the explanation, try again to request the permission.
+                    }
+
+                    // No explanation needed, we can request the permission.
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            ActivityIO.REQUEST_WRITE_EXTERNAL_STORAGE);
+
+                }
+
+
                 return true;
 
             case R.id.imageInfo:
@@ -156,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
         iv = findViewById(R.id.photoView);
 
-        
+
         //Allow more zooming
         iv.setMaximumScale(10);
 
@@ -179,14 +201,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     public void onBackPressed() {
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
         } else if (effectSettingsFragment != null && effectSettingsFragment.isVisible()) {
-            if(currentTask != null) currentTask.cancel(true); //Cancel task if running
+            if (currentTask != null) currentTask.cancel(true); //Cancel task if running
             image.discard();
             deflateEffectSettings();
         } else {
@@ -239,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case ActivityIO.REQUEST_WRITE_EXTERNAL_STORAGE: {
                 if (ActivityIO.writePermissionResult(this, permissions, grantResults)) {
-                    image.exportToGallery(this);
+                    exportImage();
                 }
                 return;
             }
@@ -307,7 +327,13 @@ public class MainActivity extends AppCompatActivity {
         showEffectsList();
     }
 
-
-
+    private void exportImage() {
+        try {
+            new ExportImageTask(this, image).execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Save cannot be performed", Toast.LENGTH_LONG).show();
+        }
+    }
 
 }

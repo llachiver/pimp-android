@@ -2,8 +2,10 @@ package fr.ubordeaux.pimp.image;
 
 import android.graphics.Bitmap;
 
+import fr.ubordeaux.pimp.task.ExportImageTask;
+
 /**
- * This class stores a runnable call and a bitmap reference to be changed in {@link fr.ubordeaux.pimp.task.ApplyFilterQueueTask (Image, Context)}
+ * This class stores a runnable call and a bitmap reference to be changed in {@link ExportImageTask (Image, Context)}
  * This is essentially used to "store" a particular effect method and its arguments, the {@link Runnable#run()} function must be defined to call an effect method.
  */
 
