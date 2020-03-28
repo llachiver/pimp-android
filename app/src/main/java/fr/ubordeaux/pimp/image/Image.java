@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -20,9 +21,11 @@ import fr.ubordeaux.pimp.activity.ActivityIO;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.io.BitmapIO;
 import fr.ubordeaux.pimp.task.ApplyFilterQueueTask;
-import fr.ubordeaux.pimp.util.BitmapRunnable;
 import fr.ubordeaux.pimp.util.Utils;
 
+/**
+ * This class is used to manipulate a Picture, this class mainly contain an Android {@link Bitmap} but offers in additions some methods and utilities to help to create and manage Images with effects applyed.
+ */
 public class Image {
 
     private int width;
@@ -37,8 +40,9 @@ public class Image {
     //Quick save of the image done when opening an effect, in order to discard its modifications later
     private int[] imgQuickSave;
 
-    //Queue of effects to be applied at save
-    private Queue<BitmapRunnable> effectQueue;
+    //Hitory of effects applyed.
+    private Queue<BitmapRunnable> confirmedEffectsHistory;
+    private Queue<BitmapRunnable> tempEffectsHistory;
 
     //Core of the Image, Bitmap representing its pixels.
     private Bitmap bitmap;
@@ -141,7 +145,7 @@ public class Image {
         height = bmp.getHeight();
         imgBase = new int[width * height];
         bitmap.getPixels(imgBase, 0, width, 0, 0, width, height);
-        effectQueue = new LinkedList<>();
+        confirmedEffectsHistory = new LinkedList<>();
     }
 
     /**
@@ -166,7 +170,8 @@ public class Image {
         infos = new ImageInfo(null, null);
         infos.setLoadedHeight(height);//set values n info pack
         infos.setLoadedWidth(width);
-        effectQueue = new LinkedList<>();
+        confirmedEffectsHistory = new LinkedList<>();
+
     }
 
     /**
@@ -201,7 +206,8 @@ public class Image {
      */
     public void reset() {
         bitmap.setPixels(imgBase, 0, width, 0, 0, width, height);
-        effectQueue.clear();
+        confirmedEffectsHistory.clear();
+        tempEffectsHistory.clear();
     }
 
 
@@ -210,17 +216,27 @@ public class Image {
      * Then save the current Image. See also {@link #discard()}.
      */
     public void quickSave() {
-        if (imgQuickSave == null)
+        if (imgQuickSave == null) {
             imgQuickSave = new int[width * height];
+            tempEffectsHistory = new LinkedList<>();
+        }
         bitmap.getPixels(imgQuickSave, 0, width, 0, 0, width, height);
+
+        // Confirm all unconfirmedEffects :
+        while (tempEffectsHistory.peek() != null) {
+            confirmedEffectsHistory.add(tempEffectsHistory.remove());
+        }
     }
 
     /**
      * Restore the Image to the last quick save, do nothing if {@link #quickSave()} was never called before.
+     * Will also remove from the effects history all effects applied since the quicksave.
      */
     public void discard() {
-        if (imgQuickSave != null)
+        if (imgQuickSave != null) {
             bitmap.setPixels(imgQuickSave, 0, width, 0, 0, width, height);
+            tempEffectsHistory.clear(); // clear last unconfirmed effects.
+        }
     }
 
 
@@ -254,15 +270,6 @@ public class Image {
         return infos;
     }
 
-    /**
-     * In particular to export an Image, the user needs to apply all effects applied on the sample loaded in the app. To do that the user need to note these effects somewherre.
-     * It's why Image class offer a Queue of effects, use it to take notes about effects applied on your Image.
-     *
-     * @return A Queue of {@link fr.ubordeaux.pimp.util.BitmapRunnable}, each Runnable correspond to a Thread allowed to run an effect method.
-     */
-    public Queue<BitmapRunnable> getEffectQueue() {
-        return effectQueue;
-    }
 
     /**
      * @return Get uri from image
@@ -284,10 +291,10 @@ public class Image {
                 == PackageManager.PERMISSION_GRANTED) {
             //Load new Bitmap and apply with async task
             try {
-                new ApplyFilterQueueTask((MainActivity) context,this).execute(); //Apply effectQueue
-            }catch (Exception e){
+                new ApplyFilterQueueTask((MainActivity) context, this).execute(); //Apply effectQueue //TODO !!!!!!!!!!!
+            } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(context, "Save cannot be performed",Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Save cannot be performed", Toast.LENGTH_LONG).show();
             }
 
         } else {
@@ -299,15 +306,44 @@ public class Image {
                 // sees the explanation, try again to request the permission.
             }
 
-
             // No explanation needed, we can request the permission.
-
             ActivityCompat.requestPermissions(context,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     ActivityIO.REQUEST_WRITE_EXTERNAL_STORAGE);
 
         }
 
-
     }
+
+    /**
+     * Will return the history of all effects applyed to the Image.
+     * Note that the returned List is created when calling this method, please store as quick as possible the returned value.
+     *
+     * @return FIFO of effects applyed to the Image.
+     */
+    public Queue<BitmapRunnable> getEffectsHistory() {
+        Queue<BitmapRunnable> effects = new LinkedList<>(confirmedEffectsHistory); //Merge confirmed effects and temp effects.
+
+        if (tempEffectsHistory != null) {
+            effects.addAll(tempEffectsHistory);
+        }
+        return effects;
+    }
+
+    /**
+     * Apply an effect to the Image, it is still possible to apply an effect to the Bitmap of this Image, however using this method will assure that the hisotry of effects will be correct.
+     *
+     * @param effect The runnable of the effect function with correct args, see the class {@link BitmapRunnable} for more information.
+     */
+    public void applyEffect(BitmapRunnable effect) {
+        effect.setBmp(this.getBitmap()); // to be sure that it will be applied on the Image
+        effect.run(); //apply effect
+
+        //add effect to history:
+        if (tempEffectsHistory == null) //there is no quickSave
+            confirmedEffectsHistory.add(effect);
+        else
+            tempEffectsHistory.add(effect);
+    }
+
 }

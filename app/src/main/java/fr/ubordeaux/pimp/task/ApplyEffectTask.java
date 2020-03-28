@@ -7,17 +7,21 @@ import java.lang.ref.WeakReference;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.image.BitmapRunnable;
+import fr.ubordeaux.pimp.image.Image;
 
 /**
  * General Async task any filter function from this project as an async ApplyEffectTask
  */
 public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
     private WeakReference<MainActivity> activityWeakReference; //MainActivity reference
-    private Runnable effect;
+    private BitmapRunnable effect;
+    private Image image;
 
-    public ApplyEffectTask(MainActivity activity, Runnable effect) {
+    public ApplyEffectTask(MainActivity activity, BitmapRunnable effect, Image image) {
         this.activityWeakReference = new WeakReference<>(activity);
         this.effect = effect;
+        this.image = image;
     }
 
     //Work to do before heavy task
@@ -39,7 +43,7 @@ public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
             if (activity == null || activity.isFinishing()) {
                 return null;
             }
-            effect.run(); //Run runnable object
+            image.applyEffect(effect);//Apply effect
             return null;
         }
 

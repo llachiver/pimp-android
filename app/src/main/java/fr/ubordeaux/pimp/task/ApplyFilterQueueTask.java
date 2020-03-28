@@ -1,8 +1,8 @@
 package fr.ubordeaux.pimp.task;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,7 +14,7 @@ import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.io.BitmapIO;
-import fr.ubordeaux.pimp.util.BitmapRunnable;
+import fr.ubordeaux.pimp.image.BitmapRunnable;
 
 /**
  * Apply queue of filters
@@ -37,7 +37,7 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Integer, Void> {
         if (activity == null || activity.isFinishing()) { //Prevent memory leaks
             return;
         }
-        Toast.makeText(activity,"Preparing picture for treatment...",Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Preparing picture for treatment...", Toast.LENGTH_SHORT).show();
         activity.hideMenu();
         activity.hideEffectsList();
         activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE); //Show progressBar
@@ -53,17 +53,17 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Integer, Void> {
                 return null;
             }
             try {
-                bmp = BitmapIO.decodeAndScaleBitmapFromUri(image.getUri(), 5000, 5000, activity);
-            }catch (Exception e){
+                bmp = BitmapIO.decodeAndScaleBitmapFromUri(image.getUri(), 5000, 5000, activity); //TODO choose correct size, and warn user that exported image will be smaller if original size even too large
+            } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
-            Queue<BitmapRunnable> effectQueue = new LinkedList<>(image.getEffectQueue()); //Get copy of queue
+            Queue<BitmapRunnable> effectQueue = new LinkedList<>(image.getEffectsHistory()); //Get copy of queue:
             BitmapRunnable effect;
             int totalEffects = effectQueue.size();
             int currentEffect = 1;
             effect = effectQueue.poll(); // Get first effect
-            while(effect != null){
+            while (effect != null) {
                 publishProgress(currentEffect++, totalEffects);
                 effect.setBmp(bmp); //Set new bitmap to run
                 effect.run();
@@ -77,15 +77,16 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Integer, Void> {
     }
 
     @Override
-    protected void onProgressUpdate(Integer... values){
+    protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
         MainActivity activity = activityWeakReference.get();
         if (activity == null || activity.isFinishing()) {
             return;
         }
-        Toast.makeText(activity,"Applying effect " + values[0] + " of " + values[1],Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "Applying effect " + values[0] + " of " + values[1], Toast.LENGTH_SHORT).show();
 
     }
+
     //Save big bitmap
     @Override
     protected void onPostExecute(Void voids) {
@@ -101,7 +102,7 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Integer, Void> {
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
         try {
             BitmapIO.saveBitmap(bmp, "pimp", activity);  // Save edited bitmap if saveBitmap returned false then get bitmap from image View
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             if (!BitmapIO.saveBitmap(image.getBitmap(), "pimp", activity)) { //Save downscaled bitmap instead | should not happen If this call returns false then we finish activity
                 Toast.makeText(activity, "Save cannot be performed", Toast.LENGTH_LONG).show();
