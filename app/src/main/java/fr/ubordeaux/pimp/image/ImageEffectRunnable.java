@@ -7,7 +7,7 @@ import android.graphics.Bitmap;
  * This is essentially used to "store" a particular effect method and its arguments, the {@link Runnable#run()} function must be defined to call an effect method.
  */
 
-public abstract class BitmapRunnable implements Runnable {
+public abstract class ImageEffectRunnable implements Runnable {
     private Bitmap bmp;
 
     /**
@@ -18,7 +18,7 @@ public abstract class BitmapRunnable implements Runnable {
     }
 
     /**
-     * Change bitmap reference in BitmapRunnable object
+     * Change bitmap reference in ImageEffectRunnable object
      *
      * @param bmp Bmp to modify
      */
@@ -31,7 +31,7 @@ public abstract class BitmapRunnable implements Runnable {
      *
      * @param bmp  Bitmap, target of the effect
      */
-    public BitmapRunnable(Bitmap bmp) {
+    public ImageEffectRunnable(Bitmap bmp) {
         this.bmp = bmp;
     }
 }

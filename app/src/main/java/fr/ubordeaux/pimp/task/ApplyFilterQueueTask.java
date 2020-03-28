@@ -2,7 +2,6 @@ package fr.ubordeaux.pimp.task;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,8 +12,8 @@ import java.util.Queue;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.image.ImageEffectRunnable;
 import fr.ubordeaux.pimp.io.BitmapIO;
-import fr.ubordeaux.pimp.image.BitmapRunnable;
 
 /**
  * Apply queue of filters
@@ -58,8 +57,8 @@ public class ApplyFilterQueueTask extends AsyncTask<Void, Integer, Void> {
                 e.printStackTrace();
                 return null;
             }
-            Queue<BitmapRunnable> effectQueue = new LinkedList<>(image.getEffectsHistory()); //Get copy of queue:
-            BitmapRunnable effect;
+            Queue<ImageEffectRunnable> effectQueue = new LinkedList<>(image.getEffectsHistory()); //Get copy of queue:
+            ImageEffectRunnable effect;
             int totalEffects = effectQueue.size();
             int currentEffect = 1;
             effect = effectQueue.poll(); // Get first effect

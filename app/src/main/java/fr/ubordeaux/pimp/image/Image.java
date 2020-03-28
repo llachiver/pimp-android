@@ -8,7 +8,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -41,8 +40,8 @@ public class Image {
     private int[] imgQuickSave;
 
     //Hitory of effects applyed.
-    private Queue<BitmapRunnable> confirmedEffectsHistory;
-    private Queue<BitmapRunnable> tempEffectsHistory;
+    private Queue<ImageEffectRunnable> confirmedEffectsHistory;
+    private Queue<ImageEffectRunnable> tempEffectsHistory;
 
     //Core of the Image, Bitmap representing its pixels.
     private Bitmap bitmap;
@@ -321,8 +320,8 @@ public class Image {
      *
      * @return FIFO of effects applyed to the Image.
      */
-    public Queue<BitmapRunnable> getEffectsHistory() {
-        Queue<BitmapRunnable> effects = new LinkedList<>(confirmedEffectsHistory); //Merge confirmed effects and temp effects.
+    public Queue<ImageEffectRunnable> getEffectsHistory() {
+        Queue<ImageEffectRunnable> effects = new LinkedList<>(confirmedEffectsHistory); //Merge confirmed effects and temp effects.
 
         if (tempEffectsHistory != null) {
             effects.addAll(tempEffectsHistory);
@@ -333,9 +332,9 @@ public class Image {
     /**
      * Apply an effect to the Image, it is still possible to apply an effect to the Bitmap of this Image, however using this method will assure that the hisotry of effects will be correct.
      *
-     * @param effect The runnable of the effect function with correct args, see the class {@link BitmapRunnable} for more information.
+     * @param effect The runnable of the effect function with correct args, see the class {@link ImageEffectRunnable} for more information.
      */
-    public void applyEffect(BitmapRunnable effect) {
+    public void applyEffect(ImageEffectRunnable effect) {
         effect.setBmp(this.getBitmap()); // to be sure that it will be applied on the Image
         effect.run(); //apply effect
 
