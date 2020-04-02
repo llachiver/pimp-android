@@ -35,16 +35,16 @@ import fr.ubordeaux.pimp.util.Effects;
 public class EffectSettingsFragment extends Fragment {
 
     //Contains the cancel/confirm buttons + the settings list.
-    RelativeLayout settingsLayout;
+    private RelativeLayout settingsLayout;
     //The effect settings list only (containing buttons, seekbars etc).
-    LinearLayout settingsList;
+    private LinearLayout settingsList;
 
     //The context of the main activity.
-    MainActivity mainActivity;
+    private MainActivity mainActivity;
     //The image we modify.
-    Image image;
+    private Image image;
 
-    ImageEffect currentEffect;
+    private ImageEffect currentEffect;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,12 +100,7 @@ public class EffectSettingsFragment extends Fragment {
                 break;
             case INVERT:
                 image.discard();
-                new ImageEffect(new ImageEffect.ImageEffectCommand() {
-                    @Override
-                    public void run(Bitmap bitmap) {
-
-                    }
-                });
+                new ImageEffect((Bitmap target) -> Color.invert(target, mainActivity));
                 currentEffect = new ImageEffect((Bitmap target) -> Color.invert(target, mainActivity));
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
                 break;
