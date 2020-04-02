@@ -45,7 +45,7 @@ public class ExportImageTask extends AsyncTask<Void, Integer, Void> {
         MainActivity activity = activityWeakReference.get();
         while (!isCancelled()) { //Prevent cancelled task by task.cancel()
 
-            if (!image.exportOriginalToGallery(activity, false)) {//export original Image
+            if (!image.exportOriginalToGallery(activity, true)) { //export original Image with Toast display.
 
                 //something went wrong :
                 Toast.makeText(activity, "Can't export original, exporting edited picture...", Toast.LENGTH_LONG).show();

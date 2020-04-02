@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.util.LinkedList;
@@ -289,24 +288,20 @@ public class Image {
      * @return True if export ends correclty
      */
     public boolean exportOriginalToGallery(Activity context, boolean toasted) {
-        Log.v("LOG", "ok entre exportoriginalmachin");
         if (context == null || context.isFinishing())
             return false;
         if (getUri() == null) return false;
         Bitmap result;
         try {
             result = BitmapIO.decodeAndScaleBitmapFromUri(getUri(), 5000, 5000, context); //TODO choose correct size, and warn user that exported image will be smaller if original size even too large
-            Log.v("LOG", "ok decode");
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
 
         Queue<ImageEffectRunnable> effectQueue = new LinkedList<>(getEffectsHistory()); //Get copy of queue:
-        Log.v("LOG", "ok copie queue");
 
         applyQueueEffects(effectQueue, result, toasted, context);
-        Log.v("LOG", "ok aplliquage");
 
         return BitmapIO.saveBitmap(result, "pimp_image", context);
     }
@@ -368,8 +363,17 @@ public class Image {
         int currentEffect = 1;
         effect = queue.poll(); // Get first effect
         while (effect != null) {
-            if (toasted) //TODO !!!!!! Fix it and use handlers !!!!!
-                Toast.makeText(context, "Applying effect " + currentEffect + " of " + totalEffects, Toast.LENGTH_SHORT).show();
+            if (toasted) //todo, use handler ??
+            {
+                final int finalCurrentEffect = currentEffect;
+                final int finalTotalEffects = totalEffects;
+                final Activity finalContext = context;
+                context.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(finalContext, "Applying effect " + finalCurrentEffect + " of " + finalTotalEffects, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
             effect.setBmp(bitmap); //Apply the effect on the right bitmap
             effect.run();
             effect = queue.poll();
