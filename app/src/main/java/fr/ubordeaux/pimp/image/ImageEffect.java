@@ -2,38 +2,34 @@ package fr.ubordeaux.pimp.image;
 
 import android.graphics.Bitmap;
 
+
 /**
  * This class can pack an Effect for pictures:
- * - its method call
- * - todo
+ * - Its method call
+ * - A name to describe the effect
+ * - An array of arguments, to describe which settings were applied on the effect.
  * <p>
- * See {@link #ImageEffect(ImageEffectCommand)} to see how to construct it.
+ * See {@link #ImageEffect(String, String[], ImageEffectCommand)} to see how to construct it.
  */
 public class ImageEffect {
 
-    /**
-     * Because we are using command patern, this interface allows to store lines of codes as an Object, and allows to simplified syntax with lambda expressions.
-     * See {@link ImageEffect}
-     */
-    public interface ImageEffectCommand {
-        void run(Bitmap bitmap);
-    }
-
     private ImageEffectCommand effect;
+    private String name;
+    private String[] args;
 
     /**
      * Construct a kind of effect pack, you have to pass to its function your(s) line(s) of code to apply your effect.
      * Example :
      * <pre>
      * {@code
-     * new ImageEffect((Bitmap target) -> myEffect(target, arg1, arg2, ...));
+     * new ImageEffect("My Effect A", new String{}, (Bitmap target) -> myEffect(target, arg1, arg2, ...));
      * }
      * </pre>
      * Or :
      * <pre>
      * {@code
-     * new ImageEffect((Bitmap target) -> {
-     *          foo(target);
+     * new ImageEffect("My Effect B", new String{"2", "activated"}, (Bitmap target) -> {
+     *          foo(target, 2, true);
      *          bar(target);
      * });
      * }
@@ -42,7 +38,7 @@ public class ImageEffect {
      * Or without lambda expression:
      * <pre>
      * {@code
-     * new ImageEffect(new ImageEffect.ImageEffectCommand() {
+     * new ImageEffect("My Effect C", new String{}, new ImageEffect.ImageEffectCommand() {
      *                     public void run(Bitmap bitmap) {
      *                          myEffect(target, arg1, arg2, ...);
      *                     }
@@ -53,10 +49,14 @@ public class ImageEffect {
      * <p>
      * Because your effects librarie is using Android {@link Bitmap} and not our {@link Image} librarie, the argument in the lambda is a Bitmap, and that's why this class manipulates direclty Bitmaps.
      *
-     * @param effect Effect method or lines of code.
+     * @param name   A name to describe the effect.
+     * @param args   Effect method or lines of code.
+     * @param effect An array of arguments, generally the sames as in the effect method.
      */
-    public ImageEffect(ImageEffectCommand effect) {
+    public ImageEffect(String name, String[] args, ImageEffectCommand effect) {
         this.effect = effect;
+        this.name = name;
+        this.args = args;
     }
 
 
@@ -67,6 +67,29 @@ public class ImageEffect {
      */
     void apply(Bitmap bitmap) {
         effect.run(bitmap);
+    }
+
+
+    /**
+     * Because we are using command patern, this interface allows to store lines of codes as an Object, and allows to simplified syntax with lambda expressions.
+     * See {@link ImageEffect}
+     */
+    public interface ImageEffectCommand {
+        void run(Bitmap bitmap);
+    }
+
+    /**
+     * @return Name description of the effect
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return Array of args, settings of the effect. (like intensity, hue, ...)
+     */
+    public String[] getArgs() {
+        return args;
     }
 }
 

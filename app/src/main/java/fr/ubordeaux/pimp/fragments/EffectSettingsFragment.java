@@ -90,18 +90,17 @@ public class EffectSettingsFragment extends Fragment {
             //Effects without layout are directly applied :
             case ENHANCE:
                 image.discard();
-                currentEffect = new ImageEffect((Bitmap target) -> Retouching.histogramEqualization(target, mainActivity));
+                currentEffect = new ImageEffect(effect.getName(), new String[]{}, (Bitmap target) -> Retouching.histogramEqualization(target, mainActivity));
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
                 break;
             case TO_GRAY:
                 image.discard();
-                currentEffect = new ImageEffect((Bitmap target) -> Color.toGray(target, mainActivity));
+                currentEffect = new ImageEffect(effect.getName(), new String[]{}, (Bitmap target) -> Color.toGray(target, mainActivity));
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
                 break;
             case INVERT:
                 image.discard();
-                new ImageEffect((Bitmap target) -> Color.invert(target, mainActivity));
-                currentEffect = new ImageEffect((Bitmap target) -> Color.invert(target, mainActivity));
+                currentEffect = new ImageEffect(effect.getName(), new String[]{}, (Bitmap target) -> Color.invert(target, mainActivity));
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
                 break;
             case NEON:
@@ -163,20 +162,20 @@ public class EffectSettingsFragment extends Fragment {
                 switch (effect) {
                     case BRIGHTNESS:
                         image.discard();
-                        currentEffect = new ImageEffect((Bitmap target) ->
+                        currentEffect = new ImageEffect(effect.getName(), new String[]{String.valueOf(progress)}, (Bitmap target) ->
                                 Retouching.setBrightness(target, progress, mainActivity));
                         image.applyEffect(currentEffect);
                         break;
                     case SATURATION:
                         image.discard();
-                        currentEffect = new ImageEffect((Bitmap target) ->
+                        currentEffect = new ImageEffect(effect.getName(), new String[]{String.valueOf(progress)}, (Bitmap target) ->
                                 Retouching.setSaturation(target, progress, mainActivity));
                         image.applyEffect(currentEffect);
 
                         break;
                     case CONTRAST:
                         image.discard();
-                        currentEffect = new ImageEffect((Bitmap target) ->
+                        currentEffect = new ImageEffect(effect.getName(), new String[]{String.valueOf(progress)}, (Bitmap target) ->
                                 Retouching.dynamicExtensionRGB(target, progress, mainActivity));
                         image.applyEffect(currentEffect);
 
@@ -185,7 +184,7 @@ public class EffectSettingsFragment extends Fragment {
                     case SHARPEN:
 
                         image.discard();
-                        currentEffect = new ImageEffect((Bitmap target) ->
+                        currentEffect = new ImageEffect(effect.getName(), new String[]{String.valueOf(progress)}, (Bitmap target) ->
                                 Convolution.sharpen(target, progress, mainActivity));
                         image.applyEffect(currentEffect);
                         break;
@@ -229,7 +228,7 @@ public class EffectSettingsFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
                 //Change hue call
                 image.discard();
-                currentEffect = new ImageEffect((Bitmap target) ->
+                currentEffect = new ImageEffect(Effects.CHANGE_HUE.getName(), new String[]{String.valueOf(progress), String.valueOf(cbUniform.isChecked())}, (Bitmap target) ->
                         Color.colorize(target, progress, mainActivity, cbUniform.isChecked()));
                 image.applyEffect(currentEffect);
             }
@@ -283,7 +282,7 @@ public class EffectSettingsFragment extends Fragment {
                 image.discard();
                 args[1] = progress;
 
-                currentEffect = new ImageEffect((Bitmap target) ->
+                currentEffect = new ImageEffect(Effects.KEEP_HUE.getName(), new String[]{String.valueOf(args[0]), String.valueOf(progress)}, (Bitmap target) ->
                         Color.keepColor(target, args[0], progress, mainActivity));
                 image.applyEffect(currentEffect);
             }
@@ -306,7 +305,7 @@ public class EffectSettingsFragment extends Fragment {
                 //Keep hue call
                 image.discard();
                 args[0] = progress;
-                currentEffect = new ImageEffect((Bitmap target) ->
+                currentEffect = new ImageEffect(Effects.KEEP_HUE.getName(), new String[]{String.valueOf(progress), String.valueOf(args[1])}, (Bitmap target) ->
                         Color.keepColor(target, progress, args[1], mainActivity));
                 image.applyEffect(currentEffect);
             }
@@ -360,14 +359,14 @@ public class EffectSettingsFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
                 if (rbGauss.isChecked()) {
                     image.discard();
-                    currentEffect = new ImageEffect((Bitmap target) ->
+                    currentEffect = new ImageEffect("Gaussian Blur", new String[]{String.valueOf(progress)}, (Bitmap target) ->
                             Convolution.gaussianBlur(target, progress, mainActivity));
                     image.applyEffect(currentEffect);
 
                 }
                 if (rbMean.isChecked()) {
                     image.discard();
-                    currentEffect = new ImageEffect((Bitmap target) ->
+                    currentEffect = new ImageEffect("Mean Blur", new String[]{String.valueOf(progress)}, (Bitmap target) ->
                             Convolution.meanBlur(target, progress, mainActivity));
                     image.applyEffect(currentEffect);
                 }
@@ -417,7 +416,7 @@ public class EffectSettingsFragment extends Fragment {
                 mainActivity.cancelCurrentTask(); //Avoid multiple checks
                 image.discard();
 
-                currentEffect = new ImageEffect((Bitmap target) ->
+                currentEffect = new ImageEffect(Effects.NEON_SOBEL.getName(), new String[]{}, (Bitmap target) ->
                         Convolution.neonSobel(target, mainActivity));
 
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
@@ -425,7 +424,7 @@ public class EffectSettingsFragment extends Fragment {
                 mainActivity.cancelCurrentTask(); //Avoid multiple checks
                 image.discard();
 
-                currentEffect = new ImageEffect((Bitmap target) ->
+                currentEffect = new ImageEffect(Effects.NEON_PREWITT.getName(), new String[]{}, (Bitmap target) ->
                         Convolution.neonPrewitt(target, mainActivity));
 
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
@@ -433,7 +432,7 @@ public class EffectSettingsFragment extends Fragment {
                 mainActivity.cancelCurrentTask(); //Avoid multiple checks
                 image.discard();
 
-                currentEffect = new ImageEffect((Bitmap target) ->
+                currentEffect = new ImageEffect(Effects.LAPLACE.getName(), new String[]{}, (Bitmap target) ->
                         Convolution.laplace(target, mainActivity));
 
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
