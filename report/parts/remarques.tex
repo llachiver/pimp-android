@@ -28,21 +28,7 @@ Pour manipuler des objets d'une activité à l'autre ou entre fragments, Android
 Il pourrait être intéressant de montrer des aperçus des effets en bas de l'écran dans la liste d'effets, pour cela il suffira de créer des instances d'Image générées à partir de l'image éditée mais en dimension inférieure. Les constructeurs sont déjà disponibles.
 \\
 
-Il peut être possible dans les classes d'effets de rajouter des surcharges aux méthodes d'effets pour leur passer directement une instance d'\textbf{Image}\ref{classeImage}. Il sera alors nécessaire de rajouter à Image une référence de son activité contexte, ce qui se fait facilement puisque l'image est chargée directement depuis MainActivity et y restera toujours.
-\\
-Cette simplification anodine offrirait un tout petit peu plus de lisibilité du code, cependant son ajout est débattable puisqu'elle rendrait les effets dépendants de la classe Image, ce qui romprait la modularité du code.
-\\
-
-Dans la classe Image nous utilisons une file d'effets \ref{file_effets}, pour l'instant cette file fournie par Image n'est pas vraiment reliée à la classe elle même dans le sens où l'utilisateur de la classe Image a le contrôle total de cette file.
-\\
-Il pourrait être tout à fait possible de masquer la gestion de cette file, qui se remplirait de manière automatique, ainsi il sera possible de faire une méthode \textbf{export()} dans la classe Image pour sauvegarder l'image, sans se soucier de gérer cette file. De même il serait possible d'annuler les derniers effets en ré appliquant sur l'image d'origine tout ceux que l'on souhaite conserver.
-\\
-Il faudrait cependant modifier le comportement de \textbf{quickSave()} et \textbf{discard()} afin de supprimer ou ré-ajouter la tête de file lors de l'aperçu des effets en glissant les curseurs.
-\\
-Cependant la principale problématique de cette fonctionnalité serait de passer d'un système où l'on appel les effets en passant l'Image (ou la Bitmap) en paramètre, à un système avec une méthode \textbf{applyEffect(...)} dans la classe Image. La question se pose alors de savoir comment préciser l'effet en question sans contraindre la classe Image à utiliser une batterie d'effets précise, ce qui romprait la modularité du code en rendant Image dépendant de nos classes d'effets. Ce problème est en réalité déjà réglé avec l'utilisation des \textbf{BitmapRunnable}, en effet il suffira de passer ces derniers à la méthode ce qui mettra une couche d'abstraction entre le terme "effet" et les classes de calculs des effets.
-\\
-
-L'utilisation d'un historique d'effet pourra aussi permettre à l'utilisateur de sauvegarder des séries d'effets pour créer des effets personnalisés.
+L'utilisation d'un historique d'effet pourra aussi permettre à l'utilisateur de sauvegarder des séries d'effets pour créer des effets personnalisés, c'est d'ailleurs pourquoi la classe \textbf{ImageEffect} contient des chaînes de caractères dédiées à la description de l'effet en question (nom et paramètres).
 
 \subsection{Tests et bugs repérés :}
 Des nombreux tests ont été faits pour assurer la stabilité de l'application, comme charger une image, supprimer cette dernière du stockage et puis sauvegarder celle qui est chargée dans l'application, essayer de charger un fichier corrompu, etc. Ces tests nous ont permis de repérer et de régler plusieurs bugs d'entrée et sortie de fichiers. Cependant nous n'avons pas trouvé des bugs pour l'instant.
