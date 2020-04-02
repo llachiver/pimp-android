@@ -32,8 +32,8 @@ public class Image {
     private int[] imgQuickSave;
 
     //Hitory of effects applyed.
-    private Queue<ImageEffectRunnable> confirmedEffectsHistory;
-    private Queue<ImageEffectRunnable> tempEffectsHistory;
+    private Queue<ImageEffect> confirmedEffectsHistory;
+    private Queue<ImageEffect> tempEffectsHistory;
 
     //Core of the Image, Bitmap representing its pixels.
     private Bitmap bitmap;
@@ -299,7 +299,7 @@ public class Image {
             return false;
         }
 
-        Queue<ImageEffectRunnable> effectQueue = new LinkedList<>(getEffectsHistory()); //Get copy of queue:
+        Queue<ImageEffect> effectQueue = new LinkedList<>(getEffectsHistory()); //Get copy of queue:
 
         applyQueueEffects(effectQueue, result, toasted, context);
 
@@ -324,8 +324,8 @@ public class Image {
      *
      * @return FIFO of effects applyed to the Image.
      */
-    public Queue<ImageEffectRunnable> getEffectsHistory() {
-        Queue<ImageEffectRunnable> effects = new LinkedList<>(confirmedEffectsHistory); //Merge confirmed effects and temp effects.
+    public Queue<ImageEffect> getEffectsHistory() {
+        Queue<ImageEffect> effects = new LinkedList<>(confirmedEffectsHistory); //Merge confirmed effects and temp effects.
 
         if (tempEffectsHistory != null) {
             effects.addAll(tempEffectsHistory);
@@ -336,11 +336,10 @@ public class Image {
     /**
      * Apply an effect to the Image, it is still possible to apply an effect to the Bitmap of this Image, however using this method will assure that the hisotry of effects will be correct.
      *
-     * @param effect The runnable of the effect function with correct args, see the class {@link ImageEffectRunnable} for more information.
+     * @param effect The runnable of the effect function with correct args, see the class {@link ImageEffect} for more information.
      */
-    public void applyEffect(ImageEffectRunnable effect) {
-        effect.setBmp(this.getBitmap()); // to be sure that it will be applied on the Image
-        effect.run(); //apply effect
+    public void applyEffect(ImageEffect effect) {
+        effect.apply(this.getBitmap()); //apply effect
 
         //add effect to history:
         if (tempEffectsHistory == null) //there is no quickSave
@@ -357,8 +356,8 @@ public class Image {
      * @param toasted true if you want to show advancement, with {@link Toast}.
      * @param context Must be define if toasted is set to true
      */
-    private static void applyQueueEffects(Queue<ImageEffectRunnable> queue, Bitmap bitmap, boolean toasted, Activity context) {
-        ImageEffectRunnable effect;
+    private static void applyQueueEffects(Queue<ImageEffect> queue, Bitmap bitmap, boolean toasted, Activity context) {
+        ImageEffect effect;
         int totalEffects = queue.size();
         int currentEffect = 1;
         effect = queue.poll(); // Get first effect
@@ -368,14 +367,9 @@ public class Image {
                 final int finalCurrentEffect = currentEffect;
                 final int finalTotalEffects = totalEffects;
                 final Activity finalContext = context;
-                context.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(finalContext, "Applying effect " + finalCurrentEffect + " of " + finalTotalEffects, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                context.runOnUiThread(() -> Toast.makeText(finalContext, "Applying effect " + finalCurrentEffect + " of " + finalTotalEffects, Toast.LENGTH_SHORT).show());
             }
-            effect.setBmp(bitmap); //Apply the effect on the right bitmap
-            effect.run();
+            effect.apply(bitmap);//Apply the effect on the right bitmap
             effect = queue.poll();
             currentEffect++;
         }

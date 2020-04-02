@@ -7,7 +7,7 @@ import java.lang.ref.WeakReference;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
-import fr.ubordeaux.pimp.image.ImageEffectRunnable;
+import fr.ubordeaux.pimp.image.ImageEffect;
 import fr.ubordeaux.pimp.image.Image;
 
 /**
@@ -15,10 +15,10 @@ import fr.ubordeaux.pimp.image.Image;
  */
 public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
     private WeakReference<MainActivity> activityWeakReference; //MainActivity reference
-    private ImageEffectRunnable effect;
+    private ImageEffect effect;
     private Image image;
 
-    public ApplyEffectTask(MainActivity activity, ImageEffectRunnable effect, Image image) {
+    public ApplyEffectTask(MainActivity activity, ImageEffect effect, Image image) {
         this.activityWeakReference = new WeakReference<>(activity);
         this.effect = effect;
         this.image = image;

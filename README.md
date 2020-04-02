@@ -4,6 +4,8 @@
 
 Just import it.
 
+Java 8 or above is required to compile the project.
+
 ### Android API required : 26 (Oreo 8.0)
 <TODO change it if min version change>
 

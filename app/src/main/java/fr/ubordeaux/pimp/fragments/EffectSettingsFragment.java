@@ -1,5 +1,6 @@
 package fr.ubordeaux.pimp.fragments;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,8 +24,8 @@ import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.filters.Color;
 import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
+import fr.ubordeaux.pimp.image.ImageEffect;
 import fr.ubordeaux.pimp.image.Image;
-import fr.ubordeaux.pimp.image.ImageEffectRunnable;
 import fr.ubordeaux.pimp.task.ApplyEffectTask;
 import fr.ubordeaux.pimp.util.Effects;
 
@@ -43,7 +44,7 @@ public class EffectSettingsFragment extends Fragment {
     //The image we modify.
     Image image;
 
-    ImageEffectRunnable currentEffect;
+    ImageEffect currentEffect;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,32 +90,23 @@ public class EffectSettingsFragment extends Fragment {
             //Effects without layout are directly applied :
             case ENHANCE:
                 image.discard();
-                currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                    @Override
-                    public void run() {
-                        Retouching.histogramEqualization(this.getBmp(), mainActivity);
-                    }
-                };
+                currentEffect = new ImageEffect((Bitmap target) -> Retouching.histogramEqualization(target, mainActivity));
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
                 break;
             case TO_GRAY:
                 image.discard();
-                currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                    @Override
-                    public void run() {
-                        Color.toGray(this.getBmp(), mainActivity);
-                    }
-                };
+                currentEffect = new ImageEffect((Bitmap target) -> Color.toGray(target, mainActivity));
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
                 break;
             case INVERT:
                 image.discard();
-                currentEffect = new ImageEffectRunnable(image.getBitmap()) {
+                new ImageEffect(new ImageEffect.ImageEffectCommand() {
                     @Override
-                    public void run() {
-                        Color.invert(this.getBmp(), mainActivity);
+                    public void run(Bitmap bitmap) {
+
                     }
-                };
+                });
+                currentEffect = new ImageEffect((Bitmap target) -> Color.invert(target, mainActivity));
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
                 break;
             case NEON:
@@ -140,23 +132,17 @@ public class EffectSettingsFragment extends Fragment {
         ImageButton bCancel = settingsLayout.findViewById(R.id.bCancel);
         ImageButton bConfirm = settingsLayout.findViewById(R.id.bConfirm);
         System.out.println(bCancel);
-        bCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainActivity.onBackPressed();
-                mainActivity.cancelCurrentTask();
-                currentEffect = null;
-                image.discard();
-            }
+        bCancel.setOnClickListener(v -> {
+            mainActivity.onBackPressed();
+            mainActivity.cancelCurrentTask();
+            currentEffect = null;
+            image.discard();
         });
 
-        bConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentEffect = null;
-                mainActivity.deflateEffectSettings();
+        bConfirm.setOnClickListener(v -> {
+            currentEffect = null;
+            mainActivity.deflateEffectSettings();
 
-            }
         });
 
     }
@@ -182,33 +168,21 @@ public class EffectSettingsFragment extends Fragment {
                 switch (effect) {
                     case BRIGHTNESS:
                         image.discard();
-                        currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                            @Override
-                            public void run() {
-                                Retouching.setBrightness(this.getBmp(), progress, mainActivity);
-                            }
-                        };
+                        currentEffect = new ImageEffect((Bitmap target) ->
+                                Retouching.setBrightness(target, progress, mainActivity));
                         image.applyEffect(currentEffect);
                         break;
                     case SATURATION:
                         image.discard();
-                        currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                            @Override
-                            public void run() {
-                                Retouching.setSaturation(this.getBmp(), progress, mainActivity);
-                            }
-                        };
+                        currentEffect = new ImageEffect((Bitmap target) ->
+                                Retouching.setSaturation(target, progress, mainActivity));
                         image.applyEffect(currentEffect);
 
                         break;
                     case CONTRAST:
                         image.discard();
-                        currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                            @Override
-                            public void run() {
-                                Retouching.dynamicExtensionRGB(this.getBmp(), progress, mainActivity);
-                            }
-                        };
+                        currentEffect = new ImageEffect((Bitmap target) ->
+                                Retouching.dynamicExtensionRGB(target, progress, mainActivity));
                         image.applyEffect(currentEffect);
 
                         break;
@@ -216,12 +190,8 @@ public class EffectSettingsFragment extends Fragment {
                     case SHARPEN:
 
                         image.discard();
-                        currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                            @Override
-                            public void run() {
-                                Convolution.sharpen(this.getBmp(), progress, mainActivity);
-                            }
-                        };
+                        currentEffect = new ImageEffect((Bitmap target) ->
+                                Convolution.sharpen(target, progress, mainActivity));
                         image.applyEffect(currentEffect);
                         break;
                 }
@@ -264,12 +234,8 @@ public class EffectSettingsFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
                 //Change hue call
                 image.discard();
-                currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                    @Override
-                    public void run() {
-                        Color.colorize(this.getBmp(), progress, mainActivity, cbUniform.isChecked());
-                    }
-                };
+                currentEffect = new ImageEffect((Bitmap target) ->
+                        Color.colorize(target, progress, mainActivity, cbUniform.isChecked()));
                 image.applyEffect(currentEffect);
             }
 
@@ -322,12 +288,8 @@ public class EffectSettingsFragment extends Fragment {
                 image.discard();
                 args[1] = progress;
 
-                currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                    @Override
-                    public void run() {
-                        Color.keepColor(this.getBmp(), args[0], progress, mainActivity);
-                    }
-                };
+                currentEffect = new ImageEffect((Bitmap target) ->
+                        Color.keepColor(target, args[0], progress, mainActivity));
                 image.applyEffect(currentEffect);
             }
 
@@ -349,12 +311,8 @@ public class EffectSettingsFragment extends Fragment {
                 //Keep hue call
                 image.discard();
                 args[0] = progress;
-                currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                    @Override
-                    public void run() {
-                        Color.keepColor(this.getBmp(), progress, args[1], mainActivity);
-                    }
-                };
+                currentEffect = new ImageEffect((Bitmap target) ->
+                        Color.keepColor(target, progress, args[1], mainActivity));
                 image.applyEffect(currentEffect);
             }
 
@@ -407,23 +365,15 @@ public class EffectSettingsFragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
                 if (rbGauss.isChecked()) {
                     image.discard();
-                    currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                        @Override
-                        public void run() {
-                            Convolution.gaussianBlur(this.getBmp(), progress, mainActivity);
-                        }
-                    };
+                    currentEffect = new ImageEffect((Bitmap target) ->
+                            Convolution.gaussianBlur(target, progress, mainActivity));
                     image.applyEffect(currentEffect);
 
                 }
                 if (rbMean.isChecked()) {
                     image.discard();
-                    currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                        @Override
-                        public void run() {
-                            Convolution.meanBlur(this.getBmp(), progress, mainActivity);
-                        }
-                    };
+                    currentEffect = new ImageEffect((Bitmap target) ->
+                            Convolution.meanBlur(target, progress, mainActivity));
                     image.applyEffect(currentEffect);
                 }
             }
@@ -467,41 +417,32 @@ public class EffectSettingsFragment extends Fragment {
         rbGroup.addView(rbSobel);
         rbGroup.addView(rbPrewitt);
         rbGroup.addView(rbLaplace);
-        rbGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (rbSobel.isChecked()) {
-                    mainActivity.cancelCurrentTask(); //Avoid multiple checks
-                    image.discard();
-                    currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                        @Override
-                        public void run() {
-                            Convolution.neonSobel(this.getBmp(), mainActivity);
-                        }
-                    };
-                    mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
-                } else if (rbPrewitt.isChecked()) {
-                    mainActivity.cancelCurrentTask(); //Avoid multiple checks
-                    image.discard();
-                    currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                        @Override
-                        public void run() {
-                            Convolution.neonPrewitt(this.getBmp(), mainActivity);
-                        }
-                    };
-                    mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
-                } else if (rbLaplace.isChecked()) {
-                    mainActivity.cancelCurrentTask(); //Avoid multiple checks
-                    image.discard();
-                    currentEffect = new ImageEffectRunnable(image.getBitmap()) {
-                        @Override
-                        public void run() {
-                            Convolution.laplace(this.getBmp(), mainActivity);
-                        }
-                    };
-                    mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
+        rbGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (rbSobel.isChecked()) {
+                mainActivity.cancelCurrentTask(); //Avoid multiple checks
+                image.discard();
 
-                }
+                currentEffect = new ImageEffect((Bitmap target) ->
+                        Convolution.neonSobel(target, mainActivity));
+
+                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
+            } else if (rbPrewitt.isChecked()) {
+                mainActivity.cancelCurrentTask(); //Avoid multiple checks
+                image.discard();
+
+                currentEffect = new ImageEffect((Bitmap target) ->
+                        Convolution.neonPrewitt(target, mainActivity));
+
+                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
+            } else if (rbLaplace.isChecked()) {
+                mainActivity.cancelCurrentTask(); //Avoid multiple checks
+                image.discard();
+
+                currentEffect = new ImageEffect((Bitmap target) ->
+                        Convolution.laplace(target, mainActivity));
+
+                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect, image).execute());
+
             }
         });
 
