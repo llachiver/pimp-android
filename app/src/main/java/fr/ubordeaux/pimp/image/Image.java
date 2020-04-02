@@ -277,17 +277,19 @@ public class Image {
      * @return True if export ends correclty
      */
     public boolean exportOriginalToGallery(Activity context) {
-        return exportOriginalToGallery(context, false);
+        return exportOriginalToGallery(context, null);
     }
 
     /**
-     * Same as {@link  #exportOriginalToGallery(Activity)} but you can specified to using {@link Toast} to show effects advancement.
+     * Same as {@link  #exportOriginalToGallery(Activity)} but you can specified to use an handler to perform actions between effectes applied during the processing.
+     * See {@link EffectProcessingHandler}
+     * Set null for no handler
      *
      * @param context Execution context
-     * @param toasted true if you want show Toasts
+     * @param handler Add an action to perform between each effect applied.
      * @return True if export ends correclty
      */
-    public boolean exportOriginalToGallery(Activity context, boolean toasted) {
+    public boolean exportOriginalToGallery(Activity context, EffectProcessingHandler handler) {
         if (context == null || context.isFinishing())
             return false;
         if (getUri() == null) return false;
@@ -301,9 +303,22 @@ public class Image {
 
         Queue<ImageEffect> effectQueue = new LinkedList<>(getEffectsHistory()); //Get copy of queue:
 
-        applyQueueEffects(effectQueue, result, toasted, context);
+        applyQueueEffects(effectQueue, result, handler, context);
 
         return BitmapIO.saveBitmap(result, "pimp_image", context);
+    }
+
+    /**
+     * Use it to define an action to perform between each effect during an export with {@link #exportOriginalToGallery(Activity, EffectProcessingHandler)}.
+     */
+    public interface EffectProcessingHandler {
+        /**
+         * Action after appliance of an effect.
+         *
+         * @param current Number of the effect (gebin at 1)
+         * @param max     Max number of effects in the queue
+         */
+        void action(int current, int max);
     }
 
     /**
@@ -353,22 +368,17 @@ public class Image {
      *
      * @param queue   A FIFO of effects to apply
      * @param bitmap  the target Bitmap
-     * @param toasted true if you want to show advancement, with {@link Toast}.
+     * @param handler Add an action to perform between each effect applied.
      * @param context Must be define if toasted is set to true
      */
-    private static void applyQueueEffects(Queue<ImageEffect> queue, Bitmap bitmap, boolean toasted, Activity context) {
+    private static void applyQueueEffects(Queue<ImageEffect> queue, Bitmap bitmap, EffectProcessingHandler handler, Activity context) {
         ImageEffect effect;
         int totalEffects = queue.size();
         int currentEffect = 1;
         effect = queue.poll(); // Get first effect
         while (effect != null) {
-            if (toasted) //todo, use handler ??
-            {
-                final int finalCurrentEffect = currentEffect;
-                final int finalTotalEffects = totalEffects;
-                final Activity finalContext = context;
-                context.runOnUiThread(() -> Toast.makeText(finalContext, "Applying effect " + finalCurrentEffect + " of " + finalTotalEffects, Toast.LENGTH_SHORT).show());
-            }
+            if (handler != null)
+                handler.action(currentEffect, totalEffects);
             effect.apply(bitmap);//Apply the effect on the right bitmap
             effect = queue.poll();
             currentEffect++;
