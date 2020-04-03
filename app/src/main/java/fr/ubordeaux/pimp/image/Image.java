@@ -31,7 +31,7 @@ public class Image {
     //Quick save of the image done when opening an effect, in order to discard its modifications later
     private int[] imgQuickSave;
 
-    //Hitory of effects applyed.
+    //History of effects applied.
     private Queue<ImageEffect> confirmedEffectsHistory;
     private Queue<ImageEffect> tempEffectsHistory;
 
@@ -87,7 +87,7 @@ public class Image {
     /**
      * Load an image from folders, size is automatically limited depending the screen size.
      *
-     * @param uri     Path of the picture to laod.
+     * @param uri     Path of the picture to load.
      * @param context Execution context
      */
     public Image(Uri uri, Activity context) {
@@ -109,7 +109,7 @@ public class Image {
      * Load an image from folders with size limitation.
      * See {@link fr.ubordeaux.pimp.util.Utils#calculateInSampleSize(int, int, int, int)}
      *
-     * @param uri            Path of the picture to laod.
+     * @param uri            Path of the picture to load.
      * @param requiredWidth  The desired width for the image.
      * @param requiredHeight The desired height for the image.
      * @param context        Execution context
@@ -271,23 +271,23 @@ public class Image {
 
     /**
      * Export to the device gallery the original picture file with all effects applied on the current Image
-     * This method needs permission to acces device storage, please allow it before call this method.
+     * This method needs permission to access device storage, please allow it before call this method.
      *
      * @param context Execution context
-     * @return True if export ends correclty
+     * @return True if export ends correctly
      */
     public boolean exportOriginalToGallery(Activity context) {
         return exportOriginalToGallery(context, null);
     }
 
     /**
-     * Same as {@link  #exportOriginalToGallery(Activity)} but you can specified to use an handler to perform actions between effectes applied during the processing.
+     * Same as {@link  #exportOriginalToGallery(Activity)} but you can specified to use an handler to perform actions between effects applied during the processing.
      * See {@link EffectProcessingHandler}
      * Set null for no handler
      *
      * @param context Execution context
      * @param handler Add an action to perform between each effect applied.
-     * @return True if export ends correclty
+     * @return True if export ends correctly
      */
     public boolean exportOriginalToGallery(Activity context, EffectProcessingHandler handler) {
         if (context == null || context.isFinishing())
@@ -315,7 +315,7 @@ public class Image {
         /**
          * Action after appliance of an effect.
          *
-         * @param current Number of the effect (gebin at 1)
+         * @param current Number of the effect (begin at 1)
          * @param max     Max number of effects in the queue
          */
         void action(int current, int max);
@@ -323,10 +323,10 @@ public class Image {
 
     /**
      * Export to the device gallery the current Image with the same size and all applied effects
-     * This method needs permission to acces device storage, please allow it before call this method.
+     * This method needs permission to access device storage, please allow it before call this method.
      *
      * @param context Execution context
-     * @return True if export ends correclty
+     * @return True if export ends correctly
      */
     public boolean exportToGallery(Activity context) {
         return BitmapIO.saveBitmap(getBitmap(), "pimp_image", context);
@@ -334,10 +334,10 @@ public class Image {
 
 
     /**
-     * Will return the history of all effects applyed to the Image.
+     * Will return the history of all effects applied to the Image.
      * Note that the returned List is created when calling this method, please store as quick as possible the returned value.
      *
-     * @return FIFO of effects applyed to the Image.
+     * @return FIFO of effects applied to the Image.
      */
     public Queue<ImageEffect> getEffectsHistory() {
         Queue<ImageEffect> effects = new LinkedList<>(confirmedEffectsHistory); //Merge confirmed effects and temp effects.
@@ -349,7 +349,7 @@ public class Image {
     }
 
     /**
-     * Apply an effect to the Image, it is still possible to apply an effect to the Bitmap of this Image, however using this method will assure that the hisotry of effects will be correct.
+     * Apply an effect to the Image, it is still possible to apply an effect to the Bitmap of this Image, however using this method will assure that the history of effects will be correct.
      *
      * @param effect The runnable of the effect function with correct args, see the class {@link ImageEffect} for more information.
      */
@@ -364,7 +364,7 @@ public class Image {
     }
 
     /**
-     * Apply severals effects on a Bitmap.
+     * Apply several effects on a Bitmap.
      *
      * @param queue   A FIFO of effects to apply
      * @param bitmap  the target Bitmap

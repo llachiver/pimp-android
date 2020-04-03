@@ -47,7 +47,7 @@ public class ImageEffect {
      *  </pre>
      * <p>
      * <p>
-     * Because your effects librarie is using Android {@link Bitmap} and not our {@link Image} librarie, the argument in the lambda is a Bitmap, and that's why this class manipulates direclty Bitmaps.
+     * Because your effects library is using Android {@link Bitmap} and not our {@link Image} library, the argument in the lambda is a Bitmap, and that's why this class manipulates directly Bitmaps.
      *
      * @param name   A name to describe the effect.
      * @param args   Effect method or lines of code.
@@ -71,7 +71,7 @@ public class ImageEffect {
 
 
     /**
-     * Because we are using command patern, this interface allows to store lines of codes as an Object, and allows to simplified syntax with lambda expressions.
+     * Because we are using command pattern, this interface allows to store lines of codes as an Object, and allows to simplified syntax with lambda expressions.
      * See {@link ImageEffect}
      */
     public interface ImageEffectCommand {
