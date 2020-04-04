@@ -27,5 +27,5 @@ In addition to a full image editing application, this project can provide to you
 * A library to apply advanced effects on Bitmap : package [fr.ubordeaux.pimp.filters](app/src/main/java/fr/ubordeaux/pimp/filters)
 
 
-## For more information read this report (french): [coming soon]()
-You can compile the report by compiling LATeX files in the *report folder*.
+## For more information build this [report](report) (french)
+You can compile the report by compiling LATeX files in the  folder.
