@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
-import android.widget.Toast;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -303,7 +302,7 @@ public class Image {
 
         Queue<ImageEffect> effectQueue = new LinkedList<>(getEffectsHistory()); //Get copy of queue:
 
-        applyQueueEffects(effectQueue, result, handler, context);
+        applyQueueEffects(effectQueue, result, handler);
 
         return BitmapIO.saveBitmap(result, "pimp_image", context);
     }
@@ -369,9 +368,8 @@ public class Image {
      * @param queue   A FIFO of effects to apply
      * @param bitmap  the target Bitmap
      * @param handler Add an action to perform between each effect applied.
-     * @param context Must be define if toasted is set to true
      */
-    private static void applyQueueEffects(Queue<ImageEffect> queue, Bitmap bitmap, EffectProcessingHandler handler, Activity context) {
+    private static void applyQueueEffects(Queue<ImageEffect> queue, Bitmap bitmap, EffectProcessingHandler handler) {
         ImageEffect effect;
         int totalEffects = queue.size();
         int currentEffect = 1;
