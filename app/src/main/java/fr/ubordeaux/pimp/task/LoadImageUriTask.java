@@ -56,6 +56,7 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
             }
             try {
                 image = new Image(source, activity); //load and create Image
+                //TODO create previews from this image
             }catch (Exception e){
                 this.cancel(true);
                 return null;
@@ -83,8 +84,10 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
         }
         //***Linked to main activity ***/
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
-        activity.setImage(image);
-        activity.updateIv();
+
+        activity.setImage(image); //TODO faudra aussi refiler les previews
+        activity.updateIv(); //TODO
+
     }
 
     @Override

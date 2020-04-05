@@ -134,9 +134,9 @@ public class EffectSettingsFragment extends Fragment {
         });
 
         bConfirm.setOnClickListener(v -> {
+            mainActivity.effectOnPreviews(currentEffect);
             currentEffect = null;
             mainActivity.deflateEffectSettings();
-
         });
 
     }

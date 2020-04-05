@@ -26,6 +26,7 @@ import fr.ubordeaux.pimp.fragments.EffectSettingsFragment;
 import fr.ubordeaux.pimp.fragments.EffectsFragment;
 import fr.ubordeaux.pimp.fragments.InfosFragment;
 import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.image.ImageEffect;
 import fr.ubordeaux.pimp.task.ExportImageTask;
 import fr.ubordeaux.pimp.task.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Effects;
@@ -46,30 +47,66 @@ public class MainActivity extends AppCompatActivity {
 
     private Menu menu;
 
-    public Image getImage() {
-        return image;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        iv = findViewById(R.id.photoView);
+
+
+        //Allow more zooming
+        iv.setMaximumScale(10);
+
+        //Init the fragments
+        effectsListFragment = new EffectsFragment();
+        //Used for fragment transactions
+        fragmentManager = getSupportFragmentManager();
+
+        inflateEffectsList();
+
+        try {
+            new LoadImageUriTask(this, getIntent().getData(), true).execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Can't load first picture", Toast.LENGTH_LONG).show();
+            // Rare situation, then go back to FirstActivity :
+            startActivity(new Intent(this, FirstActivity.class));
+        }
+
     }
 
-    public void setImage(Image image) {
-        this.image = image;
-    }
 
+    /**
+     * Refresh bitmap inside the PhotoView
+     */
     public void updateIv() {
         iv.setImageBitmap(image.getBitmap());
     }
 
-
-    public PhotoView getIv() {
-        return iv;
+    /**
+     *
+     * @return Instance of the main image, the image in the PhotoView at the center of the screen
+     */
+    public Image getImage() {
+        return image;
     }
 
-    public void setIv(PhotoView iv) {
-        this.iv = iv;
+    //TODO !!!!!!!!!!!!!!!!!
+    public void setImage(Image image) {
+        this.image = image;
     }
 
-    public AsyncTask getCurrentTask() {
-        return currentTask;
+    /**
+     * Apply the given effect on all previews
+     * @param effect the effect
+     */
+    public void effectOnPreviews(ImageEffect effect){
+        //TODO discard previews
+        //TODO apply given effect
+        //TODO reapply preview effect
     }
+
 
     public void setCurrentTask(AsyncTask currentTask) {
         this.currentTask = currentTask;
@@ -169,35 +206,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void showMenu() {
         getMenuInflater().inflate(R.menu.activity_main, menu);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        iv = findViewById(R.id.photoView);
-
-
-        //Allow more zooming
-        iv.setMaximumScale(10);
-
-        //Init the fragments
-        effectsListFragment = new EffectsFragment();
-        //Used for fragment transactions
-        fragmentManager = getSupportFragmentManager();
-
-        inflateEffectsList();
-
-        try {
-            new LoadImageUriTask(this, getIntent().getData(), true).execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Can't load first picture", Toast.LENGTH_LONG).show();
-            // Rare situation, then go back to FirstActivity :
-            startActivity(new Intent(this, FirstActivity.class));
-        }
-
     }
 
 

@@ -29,96 +29,74 @@ public class EffectsFragment extends Fragment {
 
         final MainActivity main = (MainActivity) getActivity();
 
-        Button bBrightness = (Button) view.findViewById(R.id.bBrightness);
-        Button bSaturation = (Button) view.findViewById(R.id.bSaturation);
-        Button bContrast = (Button) view.findViewById(R.id.bContrast);
-        Button bEnhance = (Button) view.findViewById(R.id.bEnhance);
-        Button bChangeHue = (Button) view.findViewById(R.id.bChangeHue);
-        Button bKeepHue = (Button) view.findViewById(R.id.bKeepHue);
-        Button bBlur = (Button) view.findViewById(R.id.bBlur);
-        Button bSharpen = (Button) view.findViewById(R.id.bSharpen);
-        Button bNeon = (Button) view.findViewById(R.id.bNeon);
-        Button bToGray = (Button) view.findViewById(R.id.bToGray);
-        Button bInvert = (Button) view.findViewById(R.id.bInvert);
+        Button bBrightness = view.findViewById(R.id.bBrightness);
+        Button bSaturation = view.findViewById(R.id.bSaturation);
+        Button bContrast = view.findViewById(R.id.bContrast);
+        Button bEnhance = view.findViewById(R.id.bEnhance);
+        Button bChangeHue = view.findViewById(R.id.bChangeHue);
+        Button bKeepHue = view.findViewById(R.id.bKeepHue);
+        Button bBlur = view.findViewById(R.id.bBlur);
+        Button bSharpen = view.findViewById(R.id.bSharpen);
+        Button bNeon = view.findViewById(R.id.bNeon);
+        Button bToGray = view.findViewById(R.id.bToGray);
+        Button bInvert = view.findViewById(R.id.bInvert);
 
 
-        bToGray.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(TO_GRAY);
-            }
+        bToGray.setOnClickListener(v -> {
+            assert main != null;
+            main.getImage().quickSave();
+            main.inflateEffectSettings(TO_GRAY);
         });
-        bInvert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(INVERT);
-            }
+        bInvert.setOnClickListener(v -> {
+            assert main != null;
+            main.getImage().quickSave();
+            main.inflateEffectSettings(INVERT);
         });
-        bBrightness.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(Effects.BRIGHTNESS);
-            }
+        bBrightness.setOnClickListener(v -> {
+            assert main != null;
+            main.getImage().quickSave();
+            main.inflateEffectSettings(Effects.BRIGHTNESS);
         });
-        bSaturation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(SATURATION);
-            }
+        bSaturation.setOnClickListener(v -> {
+            assert main != null;
+            main.getImage().quickSave();
+            main.inflateEffectSettings(SATURATION);
         });
 
-        bContrast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(CONTRAST);
-            }
+        bContrast.setOnClickListener(v -> {
+            assert main != null;
+            main.getImage().quickSave();
+            main.inflateEffectSettings(CONTRAST);
         });
-        bEnhance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(ENHANCE);
-            }
+        bEnhance.setOnClickListener(v -> {
+            assert main != null;
+            main.getImage().quickSave();
+            main.inflateEffectSettings(ENHANCE);
         });
-        bChangeHue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(CHANGE_HUE);
-            }
+        bChangeHue.setOnClickListener(v -> {
+            assert main != null;
+            main.getImage().quickSave();
+            main.inflateEffectSettings(CHANGE_HUE);
         });
-        bKeepHue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(KEEP_HUE);
-            }
+        bKeepHue.setOnClickListener(v -> {
+            assert main != null;
+            main.getImage().quickSave();
+            main.inflateEffectSettings(KEEP_HUE);
         });
-        bBlur.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(BLUR);
-            }
+        bBlur.setOnClickListener(v -> {
+            assert main != null;
+            main.getImage().quickSave();
+            main.inflateEffectSettings(BLUR);
         });
-        bSharpen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(SHARPEN);
-            }
+        bSharpen.setOnClickListener(v -> {
+            assert main != null;
+            main.getImage().quickSave();
+            main.inflateEffectSettings(SHARPEN);
         });
-        bNeon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(NEON);
-            }
+        bNeon.setOnClickListener(v -> {
+            assert main != null;
+            main.getImage().quickSave();
+            main.inflateEffectSettings(NEON);
         });
     }
 }
