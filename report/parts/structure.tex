@@ -32,17 +32,17 @@ L'idée de cette classe était d'empaqueter toutes ces informations afin de faci
 \subsubsection{File d'effets} \label{file_effets}
 Pour pouvoir exporter l'image éditée, il est nécessaire de ré appliquer sur l'image d'origine tout les effets appliqués à l'image affichée dans l'application.
 \\
-C'est pourquoi la classe Image permet d'empaqueter une Queue de \textbf{BitmapRunnable}. Les BitmapRunnable permettent de transporter des méthodes d'effets, en effet en définissant la méthode \textbf{run()} à l'instanciation de ces objets on peut empaqueter un effet applicable à un objet \textbf{Bitmap}. Ce qui permet de passer n'importe quel effet venant de n'importe quel auteur, ce qui renforce la modularité des effets et de la classe Image.
+C'est pourquoi la classe Image permet d'empaqueter une file de \textbf{ImageEffect}. Les ImageEffect permettent de transporter des méthodes d'effets, en effet en définissant la méthode \textbf{run()} de l'interface \textbf{ImageEffectCommand} avec une lambda on peut empaqueter un effet applicable à un objet \textbf{Bitmap}. Ce qui permet de passer n'importe quel effet venant de n'importe quel auteur, ce qui renforce la modularité des effets et de la classe Image.
 \\
-Dans la version actuelle cette Queue d'effets n'est qu'une liste "bloc-note" que l'utilisateur de Image peut utiliser, dans cette application les effets appliqués sont notés au fur et à mesure et cette liste est ensuite récupérée à l'export de l'image.
+Attention pour correctement utiliser l'historique, il est nécessaire d'appliquer les effets en passant par la classe Image et la méthode \textbf{applyEffect(...)} et non en appelant soi-même un effet et en passant la Bitmap de l'image. (Cela fonctionnera mais l'historique ne sera pas pris en compte et l'export pourrait ne pas marcher)
 
 
 \subsection{AsyncTasks}
 Les 3 classes du package \textbf{fr.ubordeaux.pimp.task} héritent de la classe Android \textbf{AsyncTask} et permettent d'exécuter certaines opérations en arrière plan, donc sans bloquer l'interface utilisateur.
 \\
-Ainsi \textbf{LoadImageUriTask} et \textbf{ApplyFilterQueueTask} permettent respectivement de charger une image et de l'exporter, elles s'occupent d'afficher un petit logo de chargement et de lancer les calculs.
+Ainsi \textbf{LoadImageUriTask} et \textbf{ExportImageTask} permettent respectivement de charger une image et de l'exporter, elles s'occupent d'afficher un petit logo de chargement et de lancer les calculs.
 \\
-\textbf{ApplyEffectTask} est un peu différente, elle permet de mettre en arrière plan le calcul d'application d'un effet. Elle fonctionne pour n'importe quel effet, pour ce faire elle a besoin d'un paramètre, le type d'effet sous la forme d'un \textbf{Runnable}.
+\textbf{ApplyEffectTask} est un peu différente, elle permet de mettre en arrière plan le calcul d'application d'un effet. Elle fonctionne pour n'importe quel effet, pour ce faire elle a besoin d'un paramètre, le type d'effet sous la forme d'un \textbf{ImageEffect}.
 
 \subsection{Classes d'effets}
 Les effets applicables dans notre application sur des Bitmap sont rangés dans 3 classes du package \textbf{fr.ubordeaux.pimp.filters}.
