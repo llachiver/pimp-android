@@ -36,6 +36,12 @@ C'est pourquoi la classe Image permet d'empaqueter une file de \textbf{ImageEffe
 \\
 Attention pour correctement utiliser l'historique, il est nécessaire d'appliquer les effets en passant par la classe Image et la méthode \textbf{applyEffect(...)} et non en appelant soi-même un effet et en passant la Bitmap de l'image. (Cela fonctionnera mais l'historique ne sera pas pris en compte et l'export pourrait ne pas marcher)
 
+\subsubsection{Classe ImagePack}
+Cette classe un peu particulière fournie dans le package image n'est utile que lors de l'utilisation d'aperçus d'image et avec une utilisation bien précise de \textbf{quickSave()} et \textbf{discard()}. A savoir sauvegarder l'image quand l'on confirme un effet, pour pouvoir la restaurer si un évenxtuel futur effet actif n'est finalement pas choisi par l'utilisateur (bouton annuler).
+\\
+Ainsi avec cette classe il est possible de regrouper l'image actuellement éditée et une batterie d'aperçus de différents effets. Des méthodes sont à disposition pour faciliter la confirmation d'un effet ou la réinitialisation de l'image d'origine.
+
+
 
 \subsection{AsyncTasks}
 Les 3 classes du package \textbf{fr.ubordeaux.pimp.task} héritent de la classe Android \textbf{AsyncTask} et permettent d'exécuter certaines opérations en arrière plan, donc sans bloquer l'interface utilisateur.
