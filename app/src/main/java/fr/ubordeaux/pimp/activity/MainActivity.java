@@ -29,12 +29,16 @@ import fr.ubordeaux.pimp.fragments.EffectsFragment;
 import fr.ubordeaux.pimp.fragments.InfosFragment;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.image.ImageEffect;
+import fr.ubordeaux.pimp.image.ImagePack;
 import fr.ubordeaux.pimp.task.ExportImageTask;
 import fr.ubordeaux.pimp.task.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Effects;
 import fr.ubordeaux.pimp.util.Utils;
 
 public class MainActivity extends AppCompatActivity {
+
+    public final static int PREVIEWS_WIDTH = 100; //TODO
+    public final static int PREVIEWS_HEIGHT = 100;
 
     private EffectsFragment effectsListFragment;
     private EffectSettingsFragment effectSettingsFragment;
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Image currently modified.
-    private Image image;
+    private ImagePack edition;
 
     private PhotoView iv;
 
@@ -82,20 +86,31 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Refresh bitmap inside the PhotoView
      */
-    public void updateIv() { //TODO refresh also previews
-        iv.setImageBitmap(image.getBitmap());
+    public void updateIv() { //TODO refresh also previews ?
+        iv.setImageBitmap(edition.getMainImage().getBitmap());
     }
 
     /**
      * @return Instance of the main image, the image in the PhotoView at the center of the screen
      */
     public Image getImage() {
-        return image;
+        return edition.getMainImage();
     }
 
-    //TODO !!!!!!!!!!!!!!!!!
-    public void setImage(Image image) {
-        this.image = image;
+    /**
+     * @return Instance of the image pacj currently edited.
+     */
+    public ImagePack getImagePack() {
+        return edition;
+    }
+
+    /**
+     * Set currently edite {@link ImagePack}.
+     *
+     * @param imagePack the pack
+     */
+    public void setImagePack(ImagePack imagePack) {
+        this.edition = imagePack;
     }
 
     /**
@@ -104,9 +119,7 @@ public class MainActivity extends AppCompatActivity {
      * @param effect the effect
      */
     public void effectOnPreviews(ImageEffect effect) {
-        //TODO discard previews
-        //TODO apply given effect
-        //TODO reapply preview effect
+        edition.applyEffect(effect, false); // Not on the main Image because EffectSettingsFragment already done it.
     }
 
 
@@ -134,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 ActivityIO.startCameraActivityWithPermissions(this);
                 return true;
             case R.id.restoreChanges:
-                image.reset(); //TODO reset previews
+                edition.reset();
                 updateIv(); //Update imageview
                 return true;
             case R.id.exportToGallery: //this operation need a permission :
@@ -217,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
             fragmentManager.popBackStack();
         } else if (effectSettingsFragment != null && effectSettingsFragment.isVisible()) {
             if (currentTask != null) currentTask.cancel(true); //Cancel task if running
-            image.discard();
+            getImage().discard();
             deflateEffectSettings();
         } else {
             moveTaskToBack(true);
@@ -357,7 +370,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void exportImage() {
         try {
-            new ExportImageTask(this, image).execute();
+            new ExportImageTask(this, getImage()).execute();
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Save cannot be performed", Toast.LENGTH_LONG).show();

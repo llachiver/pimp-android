@@ -10,14 +10,26 @@ import androidx.fragment.app.Fragment;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
-import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.image.ImageEffect;
+import fr.ubordeaux.pimp.image.ImagePack;
 import fr.ubordeaux.pimp.util.Effects;
 
 import static fr.ubordeaux.pimp.util.Effects.*;
 
 public class EffectsFragment extends Fragment {
 
+    /**
+     * Tools method to create our effects preview in an {@link ImagePack}.
+     *
+     * @param pack The ImagePack
+     */
+    public static void createPreviews(ImagePack pack) {
+//TODO
+    }
+
+    public void updatePreviews(ImageEffect effect) {
+//TODO
+    }
 
     Button bBrightness;
     Button bSaturation;
@@ -31,13 +43,6 @@ public class EffectsFragment extends Fragment {
     Button bToGray;
     Button bInvert;
 
-    public void createPreviews(Image image) {
-//TODO
-    }
-
-    public void updatePreviews(ImageEffect effect) {
-//TODO
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -54,6 +54,7 @@ public class ImagePack {
         this.mainImage = mainImage;
         this.previewWidth = requiredPreviewWidth;
         this.previewHeight = requiredPreviewHeight;
+        previews = new ArrayList<>();
     }
 
     /**
@@ -105,6 +106,13 @@ public class ImagePack {
             preview.image.quickSave();
             preview.effect.apply(preview.image.getBitmap());
         }
+    }
+
+    /**
+     * @return Main image of the pack
+     */
+    public Image getMainImage() {
+        return mainImage;
     }
 
 

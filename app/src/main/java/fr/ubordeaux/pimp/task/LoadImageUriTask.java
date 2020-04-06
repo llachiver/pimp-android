@@ -9,7 +9,9 @@ import java.lang.ref.WeakReference;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.fragments.EffectsFragment;
 import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.image.ImagePack;
 
 /**
  * Load asynchronously a new Image from Uri with async task
@@ -17,6 +19,7 @@ import fr.ubordeaux.pimp.image.Image;
 public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
     private WeakReference<MainActivity> activityWeakReference; //MainActivity reference
     private Image image;
+    private ImagePack imagePack;
     private Uri source;
     private boolean first;
 
@@ -56,8 +59,9 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
             }
             try {
                 image = new Image(source, activity); //load and create Image
-                //TODO create previews from this image
-            }catch (Exception e){
+                imagePack = new ImagePack(image, MainActivity.PREVIEWS_WIDTH, MainActivity.PREVIEWS_HEIGHT);
+                EffectsFragment.createPreviews(imagePack); //create previews
+            } catch (Exception e) {
                 this.cancel(true);
                 return null;
             }
@@ -85,14 +89,14 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
         //***Linked to main activity ***/
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
 
-        activity.setImage(image); //TODO faudra aussi refiler les previews
-        activity.updateIv(); //TODO
+        activity.setImagePack(imagePack);
+        activity.updateIv();
 
     }
 
     @Override
-    protected void onCancelled(Void voids){ //Something wrong happenend return to firstActivity
-        Toast.makeText(activityWeakReference.get(), "Something went wrong, file may be corrupted",Toast.LENGTH_LONG).show();
+    protected void onCancelled(Void voids) { //Something wrong happenend return to firstActivity
+        Toast.makeText(activityWeakReference.get(), "Something went wrong, file may be corrupted", Toast.LENGTH_LONG).show();
         activityWeakReference.get().finish();
     }
 }
