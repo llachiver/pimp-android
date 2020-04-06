@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Refresh bitmap inside the PhotoView
      */
-    public void updateIv() {
+    public void updateIv() { //TODO refresh also previews
         iv.setImageBitmap(image.getBitmap());
     }
 
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 ActivityIO.startCameraActivityWithPermissions(this);
                 return true;
             case R.id.restoreChanges:
-                image.reset();
+                image.reset(); //TODO reset previews
                 updateIv(); //Update imageview
                 return true;
             case R.id.exportToGallery: //this operation need a permission :

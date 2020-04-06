@@ -10,11 +10,34 @@ import androidx.fragment.app.Fragment;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.image.Image;
+import fr.ubordeaux.pimp.image.ImageEffect;
 import fr.ubordeaux.pimp.util.Effects;
 
 import static fr.ubordeaux.pimp.util.Effects.*;
 
 public class EffectsFragment extends Fragment {
+
+
+    Button bBrightness;
+    Button bSaturation;
+    Button bContrast;
+    Button bEnhance;
+    Button bChangeHue;
+    Button bKeepHue;
+    Button bBlur;
+    Button bSharpen;
+    Button bNeon;
+    Button bToGray;
+    Button bInvert;
+
+    public void createPreviews(Image image) {
+//TODO
+    }
+
+    public void updatePreviews(ImageEffect effect) {
+//TODO
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,17 +53,17 @@ public class EffectsFragment extends Fragment {
 
         final MainActivity main = (MainActivity) getActivity();
 
-        Button bBrightness = view.findViewById(R.id.bBrightness);
-        Button bSaturation = view.findViewById(R.id.bSaturation);
-        Button bContrast = view.findViewById(R.id.bContrast);
-        Button bEnhance = view.findViewById(R.id.bEnhance);
-        Button bChangeHue = view.findViewById(R.id.bChangeHue);
-        Button bKeepHue = view.findViewById(R.id.bKeepHue);
-        Button bBlur = view.findViewById(R.id.bBlur);
-        Button bSharpen = view.findViewById(R.id.bSharpen);
-        Button bNeon = view.findViewById(R.id.bNeon);
-        Button bToGray = view.findViewById(R.id.bToGray);
-        Button bInvert = view.findViewById(R.id.bInvert);
+        bBrightness = view.findViewById(R.id.bBrightness);
+        bSaturation = view.findViewById(R.id.bSaturation);
+        bContrast = view.findViewById(R.id.bContrast);
+        bEnhance = view.findViewById(R.id.bEnhance);
+        bChangeHue = view.findViewById(R.id.bChangeHue);
+        bKeepHue = view.findViewById(R.id.bKeepHue);
+        bBlur = view.findViewById(R.id.bBlur);
+        bSharpen = view.findViewById(R.id.bSharpen);
+        bNeon = view.findViewById(R.id.bNeon);
+        bToGray = view.findViewById(R.id.bToGray);
+        bInvert = view.findViewById(R.id.bInvert);
 
 
         bToGray.setOnClickListener(v -> {
