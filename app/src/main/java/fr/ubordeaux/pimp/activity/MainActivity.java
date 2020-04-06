@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
@@ -85,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @return Instance of the main image, the image in the PhotoView at the center of the screen
      */
     public Image getImage() {
@@ -99,9 +100,10 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Apply the given effect on all previews
+     *
      * @param effect the effect
      */
-    public void effectOnPreviews(ImageEffect effect){
+    public void effectOnPreviews(ImageEffect effect) {
         //TODO discard previews
         //TODO apply given effect
         //TODO reapply preview effect
@@ -321,12 +323,30 @@ public class MainActivity extends AppCompatActivity {
         args.putSerializable("effect", effect);
         effectSettingsFragment.setArguments(args);
 
+
+        //resize image view :
+        ConstraintSet constraintSet = new ConstraintSet();
+        ConstraintLayout constraintLayout = findViewById(R.id.mainLayout);
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.photoView, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 0);
+        constraintSet.applyTo(constraintLayout);
+
+
+        //fragment switch :
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_settings_container, effectSettingsFragment);
         fragmentTransaction.commit();
     }
 
     public void deflateEffectSettings() {
+        //resize image view :
+        ConstraintSet constraintSet = new ConstraintSet();
+        ConstraintLayout constraintLayout = findViewById(R.id.mainLayout);
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.photoView, ConstraintSet.BOTTOM, R.id.guideline3, ConstraintSet.BOTTOM, 0);
+        constraintSet.applyTo(constraintLayout);
+
+        //fragment switch :
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.remove(effectSettingsFragment);
         fragmentTransaction.commit();
