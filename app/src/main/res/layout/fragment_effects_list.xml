@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <HorizontalScrollView
         android:id="@+id/effects_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -18,97 +18,280 @@
             android:id="@+id/effects"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/bBrightness"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_brightness_medium_black_24dp"
-                android:text="BRIGHTNESS" />
+            android:orientation="horizontal">
 
 
-            <Button
-                android:id="@+id/bContrast"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_tonality_black_24dp"
-                android:text="CONTRAST" />
-
-            <Button
-                android:id="@+id/bSaturation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_color_lens_black_24dp"
-                android:text="SATURATION" />
-
-            <Button
-                android:id="@+id/bEnhance"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_star_black_24dp"
-                android:text="ENHANCE" />
-
-            <Button
-                android:id="@+id/bToGray"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_gradient_black_24dp"
-                android:text="TO GRAY" />
-
-            <Button
-                android:id="@+id/bInvert"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_invert_colors_black_24dp"
-                android:text="INVERT" />
-
-
-            <Button
-                android:id="@+id/bChangeHue"
+            <RelativeLayout
+                android:id="@+id/effectBrightness"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/ic_colorize_black_24dp"
-                android:text="HUE" />
+                android:minWidth="170dp"
+                android:padding="10dp">
 
-            <Button
-                android:id="@+id/bKeepHue"
+                <ImageView
+                    android:id="@+id/imgBrightness"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imgBrightness"
+
+                    android:background="?attr/colorPrimary"
+                    android:drawableTop="@drawable/ic_brightness_medium_black_24dp"
+                    android:text="BRIGHTNESS"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/effectContrast"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/ic_brush_black_24dp"
-                android:text="KEEP HUE" />
+                android:minWidth="170dp"
+                android:padding="10dp">
 
-            <Button
-                android:id="@+id/bBlur"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/imgContrast"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imgContrast"
+
+                    android:background="?attr/colorPrimary"
+                    android:drawableTop="@drawable/ic_tonality_black_24dp"
+                    android:text="CONTRAST"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/effectSaturation"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/ic_blur_on_black_24dp"
-                android:text="BLUR" />
+                android:minWidth="170dp"
+                android:padding="10dp">
 
-            <Button
-                android:id="@+id/bSharpen"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/imgSaturation"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imgSaturation"
+
+                    android:background="?attr/colorPrimary"
+                    android:drawableTop="@drawable/ic_color_lens_black_24dp"
+                    android:text="SATURATION"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/effectEnhance"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/ic_details_black_24dp"
-                android:text="SHARPEN" />
+                android:minWidth="170dp"
+                android:padding="10dp">
 
-            <Button
-                android:id="@+id/bNeon"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/imgEnhance"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imgEnhance"
+
+                    android:background="?attr/colorPrimary"
+                    android:drawableTop="@drawable/ic_star_black_24dp"
+                    android:text="ENHANCE"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/effectToGray"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/ic_wb_iridescent_black_24dp"
-                android:text="NEON" />
+                android:minWidth="170dp"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/imgToGray"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imgToGray"
+
+                    android:background="?attr/colorPrimary"
+                    android:drawableTop="@drawable/ic_gradient_black_24dp"
+                    android:text="GRAY"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/effectInvert"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:minWidth="170dp"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/imgInvert"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imgInvert"
+
+                    android:background="?attr/colorPrimary"
+                    android:drawableTop="@drawable/ic_invert_colors_black_24dp"
+                    android:text="INVERT"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/effectChangeHue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:minWidth="170dp"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/imgChangeHue"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imgChangeHue"
+
+                    android:background="?attr/colorPrimary"
+                    android:drawableTop="@drawable/ic_colorize_black_24dp"
+                    android:text="HUE"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/effectKeepHue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:minWidth="170dp"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/imgKeepHue"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imgKeepHue"
+
+                    android:background="?attr/colorPrimary"
+                    android:drawableTop="@drawable/ic_brush_black_24dp"
+                    android:text="KEEP HUE"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/effectBlur"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:minWidth="170dp"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/imgBlur"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imgBlur"
+
+                    android:background="?attr/colorPrimary"
+                    android:drawableTop="@drawable/ic_blur_on_black_24dp"
+                    android:text="BLUR"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/effectSharpen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:minWidth="170dp"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/imgSharpen"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imgSharpen"
+
+                    android:background="?attr/colorPrimary"
+                    android:drawableTop="@drawable/ic_details_black_24dp"
+                    android:text="SHARPEN"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/effectNeon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:minWidth="170dp"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/imgNeon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imgNeon"
+
+                    android:background="?attr/colorPrimary"
+                    android:drawableTop="@drawable/ic_wb_iridescent_black_24dp"
+                    android:text="NEON"
+                    android:textAlignment="center" />
+            </RelativeLayout>
 
 
         </LinearLayout>

@@ -2,12 +2,13 @@ package fr.ubordeaux.pimp.fragments;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import androidx.fragment.app.Fragment;
 
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.filters.Color;
+import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.ImageEffect;
 import fr.ubordeaux.pimp.image.ImagePack;
@@ -24,17 +27,18 @@ import static fr.ubordeaux.pimp.util.Effects.*;
 
 public class EffectsFragment extends Fragment {
 
-    private Button bBrightness;
-    private Button bSaturation;
-    private Button bContrast;
-    private Button bEnhance;
-    private Button bChangeHue;
-    private Button bKeepHue;
-    private Button bBlur;
-    private Button bSharpen;
-    private Button bNeon;
-    private Button bToGray;
-    private Button bInvert;
+    private ImageView imgBrightness;
+    private ImageView imgContrast;
+    private ImageView imgSaturation;
+    private ImageView imgEnhance;
+    private ImageView imgToGray;
+    private ImageView imgInvert;
+    private ImageView imgChangeHue;
+    private ImageView imgKeepHue;
+    private ImageView imgBlur;
+    private ImageView imgSharpen;
+    private ImageView imgNeon;
+
 
     /**
      * Tools method to create our effects preview in an {@link ImagePack}.
@@ -48,6 +52,45 @@ public class EffectsFragment extends Fragment {
         pack.createNewPreview(new ImageEffect("Brightness preview", new String[]{String.valueOf(200)}, (Bitmap target) ->
                 Retouching.setBrightness(target, 200, context)));
 
+        //Contrast effect :
+        pack.createNewPreview(new ImageEffect("Contrast preview", new String[]{String.valueOf(200)}, (Bitmap target) ->
+                Retouching.dynamicExtensionRGB(target, 200, context)));
+
+        //Saturation effect :
+        pack.createNewPreview(new ImageEffect("Saturation preview", new String[]{String.valueOf(240)}, (Bitmap target) ->
+                Retouching.setSaturation(target, 240, context)));
+
+        //Enhance effect :
+        pack.createNewPreview(new ImageEffect("Enhance preview", new String[]{}, (Bitmap target) ->
+                Retouching.histogramEqualization(target, context)));
+
+        //Gray effect :
+        pack.createNewPreview(new ImageEffect("Gray preview", new String[]{}, (Bitmap target) ->
+                Color.toGray(target, context)));
+
+        //Invert effect :
+        pack.createNewPreview(new ImageEffect("Invert preview", new String[]{}, (Bitmap target) ->
+                Color.invert(target, context)));
+
+        //Hue effect :
+        pack.createNewPreview(new ImageEffect("Hue preview", new String[]{String.valueOf(80), String.valueOf(true)}, (Bitmap target) ->
+                Color.colorize(target, 80, context, true)));
+
+        //Keep hue effect :
+        pack.createNewPreview(new ImageEffect("Keep Hue preview", new String[]{String.valueOf(0), String.valueOf(70)}, (Bitmap target) ->
+                Color.keepColor(target, 0, 70, context)));
+
+        //Blur effect :
+        pack.createNewPreview(new ImageEffect("Gauss Blur preview", new String[]{String.valueOf(2)}, (Bitmap target) ->
+                Convolution.gaussianBlur(target, 2, context)));
+
+        //Sharpen effect :
+        pack.createNewPreview(new ImageEffect("Sharpen preview", new String[]{String.valueOf(2)}, (Bitmap target) ->
+                Convolution.sharpen(target, 2, context)));
+
+        //Neon effect :
+        pack.createNewPreview(new ImageEffect("Sobel neon preview", new String[]{}, (Bitmap target) ->
+                Convolution.neonSobel(target, context)));
     }
 
     /**
@@ -58,7 +101,17 @@ public class EffectsFragment extends Fragment {
     public void showPreviews(ImagePack pack) {
         ArrayList<ImagePack.Preview> list = pack.getPreviewsList();
 
-        bBrightness.setBackground(new BitmapDrawable(getResources(), list.get(0).image.getBitmap()));
+        imgBrightness.setImageBitmap(list.get(0).image.getBitmap());
+        imgContrast.setImageBitmap(list.get(1).image.getBitmap());
+        imgSaturation.setImageBitmap(list.get(2).image.getBitmap());
+        imgEnhance.setImageBitmap(list.get(3).image.getBitmap());
+        imgToGray.setImageBitmap(list.get(4).image.getBitmap());
+        imgInvert.setImageBitmap(list.get(5).image.getBitmap());
+        imgChangeHue.setImageBitmap(list.get(6).image.getBitmap());
+        imgKeepHue.setImageBitmap(list.get(7).image.getBitmap());
+        imgBlur.setImageBitmap(list.get(8).image.getBitmap());
+        imgSharpen.setImageBitmap(list.get(9).image.getBitmap());
+        imgNeon.setImageBitmap(list.get(9).image.getBitmap());
     }
 
 
@@ -76,71 +129,84 @@ public class EffectsFragment extends Fragment {
 
         final MainActivity main = (MainActivity) getActivity();
 
-        bBrightness = view.findViewById(R.id.bBrightness);
-        bSaturation = view.findViewById(R.id.bSaturation);
-        bContrast = view.findViewById(R.id.bContrast);
-        bEnhance = view.findViewById(R.id.bEnhance);
-        bChangeHue = view.findViewById(R.id.bChangeHue);
-        bKeepHue = view.findViewById(R.id.bKeepHue);
-        bBlur = view.findViewById(R.id.bBlur);
-        bSharpen = view.findViewById(R.id.bSharpen);
-        bNeon = view.findViewById(R.id.bNeon);
-        bToGray = view.findViewById(R.id.bToGray);
-        bInvert = view.findViewById(R.id.bInvert);
+        RelativeLayout effectBrightness = view.findViewById(R.id.effectBrightness);
+        RelativeLayout effectContrast = view.findViewById(R.id.effectContrast);
+        RelativeLayout effectSaturation = view.findViewById(R.id.effectSaturation);
+        RelativeLayout effectEnhance = view.findViewById(R.id.effectEnhance);
+        RelativeLayout effectToGray = view.findViewById(R.id.effectToGray);
+        RelativeLayout effectInvert = view.findViewById(R.id.effectInvert);
+        RelativeLayout effectChangeHue = view.findViewById(R.id.effectChangeHue);
+        RelativeLayout effectKeepHue = view.findViewById(R.id.effectKeepHue);
+        RelativeLayout effectBlur = view.findViewById(R.id.effectBlur);
+        RelativeLayout effectSharpen = view.findViewById(R.id.effectSharpen);
+        RelativeLayout effectNeon = view.findViewById(R.id.effectNeon);
 
 
-        bToGray.setOnClickListener(v -> {
+        imgBrightness = view.findViewById(R.id.imgBrightness);
+        imgContrast = view.findViewById(R.id.imgContrast);
+        imgSaturation = view.findViewById(R.id.imgSaturation);
+        imgEnhance = view.findViewById(R.id.imgEnhance);
+        imgToGray = view.findViewById(R.id.imgToGray);
+        imgInvert = view.findViewById(R.id.imgInvert);
+        imgChangeHue = view.findViewById(R.id.imgChangeHue);
+        imgKeepHue = view.findViewById(R.id.imgKeepHue);
+        imgBlur = view.findViewById(R.id.imgBlur);
+        imgSharpen = view.findViewById(R.id.imgSharpen);
+        imgNeon = view.findViewById(R.id.imgNeon);
+
+
+        effectToGray.setOnClickListener(v -> {
             assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(TO_GRAY);
         });
-        bInvert.setOnClickListener(v -> {
+        effectInvert.setOnClickListener(v -> {
             assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(INVERT);
         });
-        bBrightness.setOnClickListener(v -> {
+        effectBrightness.setOnClickListener(v -> {
             assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(Effects.BRIGHTNESS);
         });
-        bSaturation.setOnClickListener(v -> {
+        effectSaturation.setOnClickListener(v -> {
             assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(SATURATION);
         });
 
-        bContrast.setOnClickListener(v -> {
+        effectContrast.setOnClickListener(v -> {
             assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(CONTRAST);
         });
-        bEnhance.setOnClickListener(v -> {
+        effectEnhance.setOnClickListener(v -> {
             assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(ENHANCE);
         });
-        bChangeHue.setOnClickListener(v -> {
+        effectChangeHue.setOnClickListener(v -> {
             assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(CHANGE_HUE);
         });
-        bKeepHue.setOnClickListener(v -> {
+        effectKeepHue.setOnClickListener(v -> {
             assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(KEEP_HUE);
         });
-        bBlur.setOnClickListener(v -> {
+        effectBlur.setOnClickListener(v -> {
             assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(BLUR);
         });
-        bSharpen.setOnClickListener(v -> {
+        effectSharpen.setOnClickListener(v -> {
             assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(SHARPEN);
         });
-        bNeon.setOnClickListener(v -> {
+        effectNeon.setOnClickListener(v -> {
             assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(NEON);

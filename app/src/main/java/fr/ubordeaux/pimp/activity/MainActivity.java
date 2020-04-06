@@ -37,8 +37,8 @@ import fr.ubordeaux.pimp.util.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
-    public final static int PREVIEWS_WIDTH = 100; //TODO
-    public final static int PREVIEWS_HEIGHT = 100;
+    public final static int PREVIEWS_WIDTH = 200; //TODO
+    public final static int PREVIEWS_HEIGHT = 200;
 
     private EffectsFragment effectsListFragment;
     private EffectSettingsFragment effectSettingsFragment;
