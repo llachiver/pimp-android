@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Image currently modified.
-    private ImagePack edition;
+    private ImagePack editionPack;
 
     private PhotoView iv;
 
@@ -80,28 +80,37 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, FirstActivity.class));
         }
 
+
+    }
+
+
+    /**
+     * Update previews UI
+     */
+    public void showPreviews() {
+        effectsListFragment.showPreviews(editionPack);
     }
 
 
     /**
      * Refresh bitmap inside the PhotoView
      */
-    public void updateIv() { //TODO refresh also previews ?
-        iv.setImageBitmap(edition.getMainImage().getBitmap());
+    public void updateIv() {
+        iv.setImageBitmap(editionPack.getMainImage().getBitmap());
     }
 
     /**
      * @return Instance of the main image, the image in the PhotoView at the center of the screen
      */
     public Image getImage() {
-        return edition.getMainImage();
+        return editionPack.getMainImage();
     }
 
     /**
      * @return Instance of the image pacj currently edited.
      */
     public ImagePack getImagePack() {
-        return edition;
+        return editionPack;
     }
 
     /**
@@ -110,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
      * @param imagePack the pack
      */
     public void setImagePack(ImagePack imagePack) {
-        this.edition = imagePack;
+        this.editionPack = imagePack;
     }
 
     /**
@@ -119,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
      * @param effect the effect
      */
     public void effectOnPreviews(ImageEffect effect) {
-        edition.applyEffect(effect, false); // Not on the main Image because EffectSettingsFragment already done it.
+        editionPack.applyEffect(effect, false); // Not on the main Image because EffectSettingsFragment already done it.
     }
 
 
@@ -147,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 ActivityIO.startCameraActivityWithPermissions(this);
                 return true;
             case R.id.restoreChanges:
-                edition.reset();
+                editionPack.reset();
                 updateIv(); //Update imageview
                 return true;
             case R.id.exportToGallery: //this operation need a permission :
@@ -179,9 +188,9 @@ public class MainActivity extends AppCompatActivity {
                 InfosFragment fragment = new InfosFragment();
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("info", getImage().getInfo()); //send image info to fragment
-                if (edition.getPreviewsList().size() > 0) {
-                    bundle.putInt("prW", edition.getPreviewsList().get(0).image.getWidth());
-                    bundle.putInt("prH", edition.getPreviewsList().get(0).image.getHeight());
+                if (editionPack.getPreviewsList().size() > 0) {
+                    bundle.putInt("prW", editionPack.getPreviewsList().get(0).image.getWidth());
+                    bundle.putInt("prH", editionPack.getPreviewsList().get(0).image.getHeight());
                 }
                 fragment.setArguments(bundle);
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

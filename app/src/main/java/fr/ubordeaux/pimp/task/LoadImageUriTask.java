@@ -60,8 +60,9 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
             try {
                 image = new Image(source, activity); //load and create Image
                 imagePack = new ImagePack(image, MainActivity.PREVIEWS_WIDTH, MainActivity.PREVIEWS_HEIGHT);
-                EffectsFragment.createPreviews(imagePack); //create previews
+                EffectsFragment.createPreviews(imagePack, activity); //create previews
             } catch (Exception e) {
+                e.printStackTrace();
                 this.cancel(true);
                 return null;
             }
@@ -91,6 +92,7 @@ public class LoadImageUriTask extends AsyncTask<Void, Void, Void> {
 
         activity.setImagePack(imagePack);
         activity.updateIv();
+        activity.showPreviews();
 
     }
 

@@ -1,5 +1,8 @@
 package fr.ubordeaux.pimp.fragments;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +11,11 @@ import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.ImageEffect;
 import fr.ubordeaux.pimp.image.ImagePack;
 import fr.ubordeaux.pimp.util.Effects;
@@ -18,30 +24,42 @@ import static fr.ubordeaux.pimp.util.Effects.*;
 
 public class EffectsFragment extends Fragment {
 
+    private Button bBrightness;
+    private Button bSaturation;
+    private Button bContrast;
+    private Button bEnhance;
+    private Button bChangeHue;
+    private Button bKeepHue;
+    private Button bBlur;
+    private Button bSharpen;
+    private Button bNeon;
+    private Button bToGray;
+    private Button bInvert;
+
     /**
      * Tools method to create our effects preview in an {@link ImagePack}.
      *
+     * @param pack    The ImagePack
+     * @param context activity context
+     */
+    public static void createPreviews(ImagePack pack, Activity context) {
+
+        //Brightness effect :
+        pack.createNewPreview(new ImageEffect("Brightness preview", new String[]{String.valueOf(200)}, (Bitmap target) ->
+                Retouching.setBrightness(target, 200, context)));
+
+    }
+
+    /**
+     * Update previews view. lol
+     *
      * @param pack The ImagePack
      */
-    public static void createPreviews(ImagePack pack) {
-//TODO
-    }
+    public void showPreviews(ImagePack pack) {
+        ArrayList<ImagePack.Preview> list = pack.getPreviewsList();
 
-    public void updatePreviews(ImageEffect effect) {
-//TODO
+        bBrightness.setBackground(new BitmapDrawable(getResources(), list.get(0).image.getBitmap()));
     }
-
-    Button bBrightness;
-    Button bSaturation;
-    Button bContrast;
-    Button bEnhance;
-    Button bChangeHue;
-    Button bKeepHue;
-    Button bBlur;
-    Button bSharpen;
-    Button bNeon;
-    Button bToGray;
-    Button bInvert;
 
 
     @Override
