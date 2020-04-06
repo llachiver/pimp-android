@@ -179,6 +179,10 @@ public class MainActivity extends AppCompatActivity {
                 InfosFragment fragment = new InfosFragment();
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("info", getImage().getInfo()); //send image info to fragment
+                if (edition.getPreviewsList().size() > 0) {
+                    bundle.putInt("prW", edition.getPreviewsList().get(0).image.getWidth());
+                    bundle.putInt("prH", edition.getPreviewsList().get(0).image.getHeight());
+                }
                 fragment.setArguments(bundle);
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.infosFragment, fragment);

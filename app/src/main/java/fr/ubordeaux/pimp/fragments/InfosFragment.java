@@ -40,8 +40,12 @@ public class InfosFragment extends Fragment {
 
         // Get ImageInfo to print
         Bundle bundle = this.getArguments();
-        if (bundle != null)
+        int prH = 0, prW = 0;
+        if (bundle != null) {
             imageInfo = bundle.getParcelable("info");
+            prW = bundle.getInt("prW");
+            prH = bundle.getInt("prH");
+        }
 
         if (imageInfo == null) return;
 
@@ -79,7 +83,13 @@ public class InfosFragment extends Fragment {
             infoCardsList.add(new InfoCard(R.drawable.ic_location_on_white_24dp, "Location", location));
 
         // App information:
-        infoCardsList.add(new InfoCard(R.drawable.ic_settings_white_24dp, "Loaded preview", imageInfo.getLoadedWidth() + " x " + imageInfo.getLoadedHeight()));
+        String sizes;
+        if (prH != 0 && prW != 0)
+            sizes = imageInfo.getLoadedWidth() + " x " + imageInfo.getLoadedHeight() + " / " + prW + " x " + prH;
+        else
+            sizes = imageInfo.getLoadedWidth() + " x " + imageInfo.getLoadedHeight();
+
+        infoCardsList.add(new InfoCard(R.drawable.ic_settings_white_24dp, "Loaded preview", sizes));
 
         RecyclerView mRecyclerView = getView().findViewById(R.id.info_recycler_view);
         mRecyclerView.setHasFixedSize(true);
