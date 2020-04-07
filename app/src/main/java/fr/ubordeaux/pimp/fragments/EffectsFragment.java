@@ -111,7 +111,7 @@ public class EffectsFragment extends Fragment {
         imgKeepHue.setImageBitmap(list.get(7).image.getBitmap());
         imgBlur.setImageBitmap(list.get(8).image.getBitmap());
         imgSharpen.setImageBitmap(list.get(9).image.getBitmap());
-        imgNeon.setImageBitmap(list.get(9).image.getBitmap());
+        imgNeon.setImageBitmap(list.get(10).image.getBitmap());
     }
 
 
