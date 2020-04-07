@@ -197,7 +197,8 @@ public class Image {
     public void reset() {
         bitmap.setPixels(imgBase, 0, width, 0, 0, width, height);
         confirmedEffectsHistory.clear();
-        tempEffectsHistory.clear();
+        if (imgQuickSave != null)
+            tempEffectsHistory.clear();
     }
 
 
