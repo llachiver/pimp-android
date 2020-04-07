@@ -32,7 +32,8 @@
                 <ImageView
                     android:id="@+id/imgBrightness"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -57,7 +58,8 @@
                 <ImageView
                     android:id="@+id/imgContrast"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -82,7 +84,8 @@
                 <ImageView
                     android:id="@+id/imgSaturation"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -107,7 +110,8 @@
                 <ImageView
                     android:id="@+id/imgEnhance"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -132,7 +136,8 @@
                 <ImageView
                     android:id="@+id/imgToGray"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -156,7 +161,8 @@
                 <ImageView
                     android:id="@+id/imgInvert"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -181,7 +187,8 @@
                 <ImageView
                     android:id="@+id/imgChangeHue"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -206,7 +213,8 @@
                 <ImageView
                     android:id="@+id/imgKeepHue"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -231,7 +239,8 @@
                 <ImageView
                     android:id="@+id/imgBlur"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -255,7 +264,8 @@
                 <ImageView
                     android:id="@+id/imgSharpen"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -280,7 +290,8 @@
                 <ImageView
                     android:id="@+id/imgNeon"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
 
                 <TextView
                     android:layout_width="match_parent"
