@@ -134,7 +134,8 @@ public class EffectSettingsFragment extends Fragment {
         });
 
         bConfirm.setOnClickListener(v -> {
-            mainActivity.effectOnPreviews(currentEffect);
+            if(currentEffect != null) // cases like no effect choice in Neon for example
+                mainActivity.effectOnPreviews(currentEffect);
             currentEffect = null;
             mainActivity.deflateEffectSettings();
         });
