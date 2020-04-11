@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.filters.CLAHE;
 import fr.ubordeaux.pimp.util.Effects;
 
 import static fr.ubordeaux.pimp.util.Effects.*;
@@ -52,8 +53,9 @@ public class EffectsFragment extends Fragment {
         bInvert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                main.getImage().quickSave();
-                main.inflateEffectSettings(INVERT);
+                CLAHE.CLAHE(main.getImage().getBitmap(),main);
+                /*main.getImage().quickSave();
+                main.inflateEffectSettings(INVERT);*/
             }
         });
         bBrightness.setOnClickListener(new View.OnClickListener() {

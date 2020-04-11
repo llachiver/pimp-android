@@ -9,9 +9,11 @@
 //Histogram size
 #define H_SIZE 256
 
-//Histogram type declaration and size
+//Histogram type declaration
 typedef uint64_t Histogram[H_SIZE];
-uint32_t size;
+
+//Number of bins in the image
+uint32_t nbrBins;
 
 //LUT table
 typedef uchar LUTret[H_SIZE];
@@ -39,6 +41,6 @@ static void modeOutConvert(LUTret *result, const Histogram *h) {
     uint64_t hValue;
     for (int i = 0; i < H_SIZE; i++) {
         acc += (*h)[i];
-        (*result)[i] = (int) ((acc * (H_SIZE-1)) / size);
+        (*result)[i] = (int) ((acc * (H_SIZE-1)) / nbrBins);
     }
 }

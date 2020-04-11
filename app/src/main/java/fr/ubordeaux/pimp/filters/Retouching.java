@@ -7,7 +7,7 @@ import android.renderscript.RenderScript;
 import android.renderscript.Short2;
 
 import fr.ubordeaux.pimp.ScriptC_cumulativeHistogram;
-import fr.ubordeaux.pimp.ScriptC_assignLut;
+import fr.ubordeaux.pimp.ScriptC_lut;
 import fr.ubordeaux.pimp.ScriptC_brightness;
 import fr.ubordeaux.pimp.ScriptC_dynamicExtension;
 import fr.ubordeaux.pimp.ScriptC_findMinMax;
@@ -115,14 +115,14 @@ public class Retouching {
 
         //We compute the LUT extracted from the cumulative histogram.
         ScriptC_cumulativeHistogram histoScript = new ScriptC_cumulativeHistogram(rs);
-        histoScript.set_size(bmp.getWidth() * bmp.getHeight());
+        histoScript.set_nbrBins(bmp.getWidth() * bmp.getHeight());
         short[] LUTValue;
         LUTValue = histoScript.reduce_LUTCumulativeHistogram(input).get();
         histoScript.destroy();
 
         //Then we assign the LUT values to the image with the assignLut script.
-        ScriptC_assignLut lut = new ScriptC_assignLut(rs);
-        lut.set_lutSingle(LUTValue);
+        ScriptC_lut lut = new ScriptC_lut(rs);
+        lut.set_lutValue(LUTValue);
         lut.forEach_assignLutHSV(input,output);
 
         output.copyTo(bmp);
