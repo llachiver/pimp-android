@@ -125,7 +125,6 @@ public class EffectSettingsFragment extends Fragment {
 
         ImageButton bCancel = settingsLayout.findViewById(R.id.bCancel);
         ImageButton bConfirm = settingsLayout.findViewById(R.id.bConfirm);
-        System.out.println(bCancel);
         bCancel.setOnClickListener(v -> {
             mainActivity.onBackPressed();
             mainActivity.cancelCurrentTask();
