@@ -84,15 +84,19 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
             // Set up the buttons
             builder.setPositiveButton("OK", (dialog, which) -> {
-                macrosList.get(0).setName(input.getText().toString());
-                adapter.notifyItemChanged(0);
+                String in = input.getText().toString();
+                if (!in.equals("")) {
+                    macrosList.get(0).setName(in);
+                    adapter.notifyItemChanged(0);
+                    effectNumber--;
+                }
             });
 
             builder.show();
 
             effectNumber++;
 
-            macrosList.add(0, new Macro("Effect " + (effectNumber + 1),
+            macrosList.add(0, new Macro("Effect " + effectNumber,
                     queue.size() + " effects", queue));
             adapter.notifyItemInserted(0); //insert at top, must use .add(0, ...) !!!!
 
