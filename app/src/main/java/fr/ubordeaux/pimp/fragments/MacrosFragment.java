@@ -1,6 +1,7 @@
 package fr.ubordeaux.pimp.fragments;
 
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,9 +19,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,14 +34,14 @@ import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.image.ImageEffect;
 import fr.ubordeaux.pimp.util.Effects;
 
-import static fr.ubordeaux.pimp.util.Effects.BRIGHTNESS;
-
 public class MacrosFragment extends Fragment implements MacroAdapter.MacroListener {
 
 
     private ArrayList<Macro> macrosList = new ArrayList<>();
     private RecyclerView recyclerView;
     private int effectNumber = 0;
+    private Macro lastAded;
+    private int lastNumber = 0;
 
 
     @Override
@@ -68,19 +68,36 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
             Queue<ImageEffect> queue = ((MainActivity) getActivity()).getImage().getEffectsHistory();
 
-            if (queue.size() <= effectNumber) {
+            if (queue.size() <= lastNumber) {
                 Toast.makeText(getActivity(), "Please apply effect(s) before", Toast.LENGTH_LONG).show();
                 return;
             }
 
 
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Name your effect :");
+
+            final EditText input = new EditText(getActivity());
+            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+
+            // Set up the buttons
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                macrosList.get(0).setName(input.getText().toString());
+                adapter.notifyItemChanged(0);
+            });
+
+            builder.show();
+
             effectNumber++;
 
-
-            macrosList.add(0, new Macro("Personal Effect " + effectNumber,
+            macrosList.add(0, new Macro("Effect " + (effectNumber + 1),
                     queue.size() + " effects", queue));
             adapter.notifyItemInserted(0); //insert at top, must use .add(0, ...) !!!!
 
+            lastAded = macrosList.get(0);
+            lastNumber = lastAded.getEffects().size();
         });
 
 
@@ -91,7 +108,7 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
      * Call it when you load or reset a picture, this will reset the value used to limit the user to avoid that he creates macro for 0 effects or that he duplicates macros
      */
     public void resetCounter() {
-        effectNumber = 0;
+        lastNumber = 0;
     }
 
     @Override
@@ -161,6 +178,9 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
     @Override
     public void onClickDelete(int position) {
+        if (macrosList.get(position) == lastAded) {
+            lastNumber -= macrosList.get(position).getEffects().size();
+        }
         macrosList.remove(position);
         recyclerView.removeViewAt(position);
         MacroAdapter adapter = (MacroAdapter) recyclerView.getAdapter();

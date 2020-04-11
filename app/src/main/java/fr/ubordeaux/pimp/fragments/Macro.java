@@ -51,4 +51,13 @@ public class Macro {
     Queue<ImageEffect> getEffects() {
         return effects;
     }
+
+    /**
+     * Change name String
+     *
+     * @param name new Name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 }
