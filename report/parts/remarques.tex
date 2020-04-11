@@ -25,8 +25,6 @@ Lors de la construction des instances d'\textbf{Image}\ref{classeImage}, nous de
 Pour manipuler des objets d'une activité à l'autre ou entre fragments, Android utilise des \textbf{Intent} ou des \textbf{Bundle}, passer des objets entiers devient assez lourd dans le code et nécessite l'utilisation de l'interface \textbf{Parcelable}, de plus passer un objet trop gros entraîne une \textbf{RuntimeException}. Finalement au sein d'une même application on peut se demander s'il est bien nécessaire de systématiser leur utilisation ou s'il ne serait pas plus simple de passer une référence ou simplement faire des accès statiques (au risque de perdre un peu la modularité du code).
 
 \subsection{Améliorations à court terme :}
-Il pourrait être intéressant de montrer des aperçus des effets en bas de l'écran dans la liste d'effets, pour cela il suffira de créer des instances d'Image générées à partir de l'image éditée mais en dimension inférieure. Les constructeurs sont déjà disponibles.
-\\
 
 L'utilisation d'un historique d'effet pourra aussi permettre à l'utilisateur de sauvegarder des séries d'effets pour créer des effets personnalisés, c'est d'ailleurs pourquoi la classe \textbf{ImageEffect} contient des chaînes de caractères dédiées à la description de l'effet en question (nom et paramètres).
 
