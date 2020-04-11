@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EffectsFragment effectsListFragment;
     private EffectSettingsFragment effectSettingsFragment;
+    private InfosFragment infosFragment;
     private FragmentManager fragmentManager;
     private AsyncTask currentTask; //Current asyncTask
 
@@ -64,8 +65,9 @@ public class MainActivity extends AppCompatActivity {
         //Allow more zooming
         iv.setMaximumScale(10);
 
-        //Init the fragments
+        //Init fragments :
         effectsListFragment = new EffectsFragment();
+
         //Used for fragment transactions
         fragmentManager = getSupportFragmentManager();
 
@@ -185,16 +187,19 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.imageInfo:
-                InfosFragment fragment = new InfosFragment();
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("info", getImage().getInfo()); //send image info to fragment
-                if (editionPack.getPreviewsList().size() > 0) {
-                    bundle.putInt("prW", editionPack.getPreviewsList().get(0).image.getWidth());
-                    bundle.putInt("prH", editionPack.getPreviewsList().get(0).image.getHeight());
+                //init info fragment :
+                if (infosFragment == null) {
+                    infosFragment = new InfosFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("info", getImage().getInfo()); //send image info to fragment
+                    if (editionPack.getPreviewsList().size() > 0) {
+                        bundle.putInt("prW", editionPack.getPreviewsList().get(0).image.getWidth());
+                        bundle.putInt("prH", editionPack.getPreviewsList().get(0).image.getHeight());
+                    }
+                    infosFragment.setArguments(bundle);
                 }
-                fragment.setArguments(bundle);
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.infosFragment, fragment);
+                ft.replace(R.id.infosFragment, infosFragment);
                 ft.addToBackStack("info_fragment");
                 ft.commit();
                 return true;
