@@ -30,8 +30,8 @@ public class CLAHE {
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Bitmap input
         Allocation output = Allocation.createTyped(rs, input.getType());
 
-        int regNbrX = 3;
-        int regNbrY = 3;
+        int regNbrX = 5;
+        int regNbrY = 5;
         int regNbr = regNbrX*regNbrY;
 
         short luts[][] = new short[regNbr][256];
@@ -46,23 +46,23 @@ public class CLAHE {
 
         int regIdx;
 
+        ScriptC_cumulativeHistogram histoScript = new ScriptC_cumulativeHistogram(rs);
+
         for(int y = 0 ; y < regNbrY ; y++){
             for(int x = 0 ; x < regNbrX ; x++){
-                ScriptC_cumulativeHistogram histoScript = new ScriptC_cumulativeHistogram(rs);
                 regIdx = x + y*regNbrX;
                 lo.setX(x * regSizeX,x * regSizeX + regSizeX);
                 lo.setY(y * regSizeY,y * regSizeY + regSizeY);
                 histoScript.set_nbrBins(regNbrBins);
                 luts[regIdx] = histoScript.reduce_LUTCumulativeHistogram(input,lo).get();
-                histoScript.destroy();
                 System.out.println("lut n° " + regIdx + " : " + mean(luts[regIdx]));
             }
         }
+        ScriptC_assignCLAHELuts lut = new ScriptC_assignCLAHELuts(rs);
 
         for(int y = 0 ; y < regNbrY ; y++){
             for(int x = 0 ; x < regNbrX ; x++){
                 regIdx = x + y*regNbrX;
-                ScriptC_assignCLAHELuts lut = new ScriptC_assignCLAHELuts(rs);
                 lo.setX(x * regSizeX,x * regSizeX + regSizeX);
                 lo.setY(y * regSizeY,y * regSizeY + regSizeY);
 
@@ -88,10 +88,11 @@ public class CLAHE {
         /**/
 
         output.copyTo(bmp);
+        histoScript.destroy();
 
         input.destroy();
         output.destroy();
-        //lut.destroy();
+        lut.destroy();
         rs.destroy();
     }
 
