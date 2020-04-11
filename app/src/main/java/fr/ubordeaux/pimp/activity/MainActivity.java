@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -27,6 +28,7 @@ import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.fragments.EffectSettingsFragment;
 import fr.ubordeaux.pimp.fragments.EffectsFragment;
 import fr.ubordeaux.pimp.fragments.InfosFragment;
+import fr.ubordeaux.pimp.fragments.MacrosFragment;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.image.ImageEffect;
 import fr.ubordeaux.pimp.image.ImagePack;
@@ -197,6 +199,14 @@ public class MainActivity extends AppCompatActivity {
                 ft.replace(R.id.infosFragment, fragment);
                 ft.addToBackStack("info_fragment");
                 ft.commit();
+                return true;
+
+            case R.id.macroMenu:
+                MacrosFragment mFragment = new MacrosFragment();
+                FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
+                ft2.replace(R.id.macrosFragment, mFragment);
+                ft2.addToBackStack("info_fragment");
+                ft2.commit();
                 return true;
             default:
                 super.onOptionsItemSelected(item);
