@@ -2,9 +2,10 @@ package fr.ubordeaux.pimp.fragments;
 
 
 /**
- * Object used with {@link MacroAdapter}.
+ * Using a card patern, see  {@link MacroAdapter}.
+ * But also a class to represent a macro of several effects.
  */
-public class MacroCard {
+public class Macro {
 
 
     private String name;
@@ -16,7 +17,7 @@ public class MacroCard {
      * @param name First line, name of the macro
      * @param info Second line to print
      */
-    public MacroCard(String name, String info) {
+    public Macro(String name, String info) {
         this.name = name;
         this.info = info;
     }

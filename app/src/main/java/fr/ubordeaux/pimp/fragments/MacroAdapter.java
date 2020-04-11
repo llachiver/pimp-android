@@ -1,10 +1,8 @@
 package fr.ubordeaux.pimp.fragments;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,10 +13,10 @@ import java.util.ArrayList;
 import fr.ubordeaux.pimp.R;
 
 /**
- * Adapter class for macros of effects, see {@link MacroCard} and {@link MacrosFragment}.
+ * Adapter class for macros of effects, see {@link Macro} and {@link MacrosFragment}.
  */
 class MacroAdapter extends RecyclerView.Adapter<MacroAdapter.MacroViewHolder> {
-    private ArrayList<MacroCard> dataset;
+    private ArrayList<Macro> dataset;
     private MacroListener adapterListener;
 
 
@@ -28,7 +26,7 @@ class MacroAdapter extends RecyclerView.Adapter<MacroAdapter.MacroViewHolder> {
      * @param data            List of macro cards to display.
      * @param adapterListener Listener
      */
-    public MacroAdapter(ArrayList<MacroCard> data, MacroListener adapterListener) {
+    public MacroAdapter(ArrayList<Macro> data, MacroListener adapterListener) {
         this.dataset = data;
         this.adapterListener = adapterListener;
     }
@@ -76,7 +74,7 @@ class MacroAdapter extends RecyclerView.Adapter<MacroAdapter.MacroViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MacroAdapter.MacroViewHolder holder, int position) {
-        MacroCard currentItem = dataset.get(position);
+        Macro currentItem = dataset.get(position);
 
         holder.nameLine.setText(currentItem.getName());
         holder.secondLine.setText(currentItem.getInfoLine());

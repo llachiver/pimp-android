@@ -26,7 +26,7 @@ import fr.ubordeaux.pimp.R;
 public class MacrosFragment extends Fragment implements MacroAdapter.MacroListener {
 
 
-    private ArrayList<MacroCard> cardsList = new ArrayList<>();
+    private ArrayList<Macro> cardsList = new ArrayList<>();
     private int effectNumber = 0;
 
 
@@ -52,7 +52,7 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
             effectNumber++;
 
-            cardsList.add(0, new MacroCard("Personal Effect " + effectNumber,
+            cardsList.add(0, new Macro("Personal Effect " + effectNumber,
                     "0 effect(s)"));
             adapter.notifyItemInserted(0); //insert at top, must use .add(0, ...) !!!!
 
