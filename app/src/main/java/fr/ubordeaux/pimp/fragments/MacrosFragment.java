@@ -1,5 +1,6 @@
 package fr.ubordeaux.pimp.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -7,12 +8,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -20,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Queue;
 
 import fr.ubordeaux.pimp.R;
@@ -113,7 +119,26 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
     @Override
     public void onClickInfo(int position) {
-        Toast.makeText(getActivity(), "Info on " + macrosList.get(position).getName(), Toast.LENGTH_SHORT).show();
+        if (getActivity() == null) return;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setIcon(R.drawable.ic_arrow_downward_white_24dp);
+        builder.setTitle("Effects :");
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_expandable_list_item_1);
+
+        ArrayList<String> values = new ArrayList<>();
+        for (ImageEffect effect : macrosList.get(position).getEffects()) {
+            values.add(effect.getName() + (effect.getArgs().length > 0 ? " " + Arrays.toString(effect.getArgs()) : ""));
+        }
+
+        arrayAdapter.addAll(values);
+
+
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+
+        builder.setAdapter(arrayAdapter, null); //no action when click on items
+        builder.show();
     }
 
     @Override

@@ -27,6 +27,7 @@ public class Macro {
     public Macro(String name, String info, Queue<ImageEffect> effects) {
         this.name = name;
         this.info = info;
+        this.effects = effects;
     }
 
 
