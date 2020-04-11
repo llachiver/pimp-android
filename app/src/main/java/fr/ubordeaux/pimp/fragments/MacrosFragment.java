@@ -20,8 +20,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 import fr.ubordeaux.pimp.R;
+import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.image.ImageEffect;
 
 public class MacrosFragment extends Fragment implements MacroAdapter.MacroListener {
 
@@ -53,8 +56,13 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
             effectNumber++;
 
+            if (getActivity() == null) return;
+
+            Queue<ImageEffect> queue = ((MainActivity) getActivity()).getImage().getEffectsHistory();
+
+
             macrosList.add(0, new Macro("Personal Effect " + effectNumber,
-                    "0 effect(s)"));
+                    queue.size() + " effects", queue));
             adapter.notifyItemInserted(0); //insert at top, must use .add(0, ...) !!!!
 
 
