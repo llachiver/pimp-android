@@ -26,7 +26,8 @@ import fr.ubordeaux.pimp.R;
 public class MacrosFragment extends Fragment implements MacroAdapter.MacroListener {
 
 
-    private ArrayList<Macro> cardsList = new ArrayList<>();
+    private ArrayList<Macro> macrosList = new ArrayList<>();
+    private RecyclerView recyclerView;
     private int effectNumber = 0;
 
 
@@ -40,24 +41,24 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
 
         //add list to recycler :
-        RecyclerView recyclerView = layout.findViewById(R.id.macrosList);
+        recyclerView = layout.findViewById(R.id.macrosList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        MacroAdapter adapter = new MacroAdapter(cardsList, this);
+        MacroAdapter adapter = new MacroAdapter(macrosList, this);
         recyclerView.setAdapter(adapter);
 
-        //listeners :
+
         Button bAdd = layout.findViewById(R.id.addMacro);
         bAdd.setOnClickListener(v -> { //Add a new macro:
 
             effectNumber++;
 
-            cardsList.add(0, new Macro("Personal Effect " + effectNumber,
+            macrosList.add(0, new Macro("Personal Effect " + effectNumber,
                     "0 effect(s)"));
             adapter.notifyItemInserted(0); //insert at top, must use .add(0, ...) !!!!
 
 
-            Toast.makeText(getActivity(), cardsList.size() + "", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), macrosList.size() + "", Toast.LENGTH_SHORT).show();
 
         });
 
@@ -99,16 +100,21 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
     @Override
     public void onClickApply(int position) {
-        Toast.makeText(getActivity(), "Apply on " + cardsList.get(position).getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Apply on " + macrosList.get(position).getName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onClickInfo(int position) {
-        Toast.makeText(getActivity(), "Info on " + cardsList.get(position).getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Info on " + macrosList.get(position).getName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onClickDelete(int position) {
-        Toast.makeText(getActivity(), "Delete on " + cardsList.get(position).getName(), Toast.LENGTH_SHORT).show();
+        macrosList.remove(position);
+        recyclerView.removeViewAt(position);
+        MacroAdapter adapter = (MacroAdapter) recyclerView.getAdapter();
+        if (adapter == null) return;
+        adapter.notifyItemRemoved(position);
+        adapter.notifyItemRangeChanged(position, macrosList.size());
     }
 }
