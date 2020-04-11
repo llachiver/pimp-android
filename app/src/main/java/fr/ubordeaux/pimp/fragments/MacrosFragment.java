@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,11 +64,17 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
         Button bAdd = layout.findViewById(R.id.addMacro);
         bAdd.setOnClickListener(v -> { //Add a new macro:
 
-            effectNumber++;
-
             if (getActivity() == null) return;
 
             Queue<ImageEffect> queue = ((MainActivity) getActivity()).getImage().getEffectsHistory();
+
+            if (queue.size() <= effectNumber) {
+                Toast.makeText(getActivity(), "Please apply effect(s) before", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+
+            effectNumber++;
 
 
             macrosList.add(0, new Macro("Personal Effect " + effectNumber,
@@ -78,6 +85,13 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
 
         return layout;
+    }
+
+    /**
+     * Call it when you load or reset a picture, this will reset the value used to limit the user to avoid that he creates macro for 0 effects or that he duplicates macros
+     */
+    public void resetCounter() {
+        effectNumber = 0;
     }
 
     @Override
@@ -114,7 +128,6 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
     @Override
     public void onClickApply(int position) {
-
         MainActivity main = (MainActivity) getActivity();
         if (main == null) return;
         main.getImage().quickSave();

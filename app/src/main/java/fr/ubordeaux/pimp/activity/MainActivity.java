@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void setImagePack(ImagePack imagePack) {
         this.editionPack = imagePack;
+        macrosFragment.resetCounter();
     }
 
     /**
@@ -174,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.restoreChanges:
                 editionPack.reset();
                 updateIv(); //Update imageview
+                macrosFragment.resetCounter();
                 return true;
             case R.id.exportToGallery: //this operation need a permission :
                 if (ContextCompat.checkSelfPermission(this,
@@ -375,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
      * Inflates the settings (seekbars, buttons...) of a specific effect w/ listeners.
      *
      * @param effect the enum of the effect
-     * @param macro additional paramter for MACRO option
+     * @param macro  additional paramter for MACRO option
      */
     public void inflateEffectSettings(Effects effect, Queue<ImageEffect> macro) {
         hideEffectsList();
