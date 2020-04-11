@@ -66,18 +66,12 @@ public class CLAHE {
                 lo.setX(x * regSizeX,x * regSizeX + regSizeX);
                 lo.setY(y * regSizeY,y * regSizeY + regSizeY);
 
-                if(y > 0) lut.set_lutNorth(luts[regIdx-regNbrX]);
-                else lut.set_lutNorth(luts[regIdx]);
-                if(y < regNbrY-1) lut.set_lutSouth(luts[regIdx+regNbrX]);
-                else lut.set_lutSouth(luts[regIdx]);
-                if(x > 0) lut.set_lutWest(luts[regIdx - 1]);
-                else lut.set_lutWest(luts[regIdx]);
-                if(x < regNbrX-1) lut.set_lutEast(luts[regIdx + 1]);
-                else lut.set_lutEast(luts[regIdx]);
-
-                lut.set_input(input);
-
                 lut.set_lutValue(luts[regIdx]);
+                if(y > 0) lut.set_lutNorth(luts[regIdx-regNbrX]);
+                if(y < regNbrY-1) lut.set_lutSouth(luts[regIdx+regNbrX]);
+                if(x > 0) lut.set_lutWest(luts[regIdx - 1]);
+                if(x < regNbrX-1) lut.set_lutEast(luts[regIdx + 1]);
+
                 lut.set_regIdxX(x);
                 lut.set_regIdxY(y);
                 lut.set_regNbrX(regNbrX);

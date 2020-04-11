@@ -7,8 +7,6 @@
 
 #include "utils.rs"
 
-rs_allocation input;
-
 //Number of regions in x and y (in the whole image)
 int regNbrX, regNbrY;
 
@@ -37,16 +35,23 @@ uchar4 RS_KERNEL assignLutHSV(uchar4 in, uint32_t x, uint32_t y){
     if (in.a == 0) return in;
     out = RGBtoHSV(out); //Change to HSV
 
+    int xClose,xFar;
+
     uint32_t v = (uint32_t) (out.s2 * 255.0);
 
     if((regIdxY == 0 && y < regCenterY) ||  (regIdxY == regNbrY-1 && y > regCenterY)){
-        uint32_t xCoef = x - regIdxX*regSizeX;
-        uint32_t xInvCoef = regSizeX - xCoef;
-        float value = xCoef*lutWest[v] + xInvCoef*lutEast[v]/((float)(regSizeX)*255);
-
+        float value;
+        xClose = x > regCenterX ? x - regCenterX : regCenterX - x;
+        xFar = regSizeX - xClose;
+        if(x<regCenterX){
+            value = xFar*lutValue[v] + xClose*lutWest[v];
+        }
+        else{
+            value = xFar*lutValue[v] + xClose*lutEast[v];
+        }
         //out.s0 = 0.0;
         //out.s1 = 1.0;
-        out.s2 = value / 255.0;
+        out.s2 = value / ((float) regSizeX * 255.0);
     }
     else{
         out.s2 = lutValue[v] / 255.0;
