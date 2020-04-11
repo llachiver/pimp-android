@@ -1,7 +1,6 @@
 package fr.ubordeaux.pimp.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 
 import fr.ubordeaux.pimp.R;
 
-public class MacrosFragment extends Fragment {
+public class MacrosFragment extends Fragment implements MacroAdapter.MacroListener {
 
 
     private ArrayList<MacroCard> cardsList = new ArrayList<>();
@@ -44,7 +43,7 @@ public class MacrosFragment extends Fragment {
         RecyclerView recyclerView = layout.findViewById(R.id.macrosList);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        MacroAdapter adapter = new MacroAdapter(cardsList);
+        MacroAdapter adapter = new MacroAdapter(cardsList, this);
         recyclerView.setAdapter(adapter);
 
         //listeners :
@@ -54,7 +53,7 @@ public class MacrosFragment extends Fragment {
             effectNumber++;
 
             cardsList.add(0, new MacroCard("Personal Effect " + effectNumber,
-                    "0 effect"));
+                    "0 effect(s)"));
             adapter.notifyItemInserted(0); //insert at top, must use .add(0, ...) !!!!
 
 
@@ -96,5 +95,20 @@ public class MacrosFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClickApply(int position) {
+        Toast.makeText(getActivity(), "Apply on " + cardsList.get(position).getName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClickInfo(int position) {
+        Toast.makeText(getActivity(), "Info on " + cardsList.get(position).getName(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClickDelete(int position) {
+        Toast.makeText(getActivity(), "Delete on " + cardsList.get(position).getName(), Toast.LENGTH_SHORT).show();
     }
 }

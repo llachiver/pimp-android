@@ -27,7 +27,7 @@
         app:autoSizeMaxTextSize="30sp"
         app:autoSizeMinTextSize="8sp"
         app:autoSizeTextType="uniform"
-        android:text="0 effects"
+        android:text="X effect(s)"
         app:layout_constraintBottom_toBottomOf="@+id/infoMacro"
         app:layout_constraintStart_toStartOf="@+id/macroName"
         app:layout_constraintTop_toBottomOf="@+id/macroName" />
