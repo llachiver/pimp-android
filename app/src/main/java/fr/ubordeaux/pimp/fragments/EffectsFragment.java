@@ -127,6 +127,7 @@ public class EffectsFragment extends Fragment {
     private void listeners(View view) {
 
         final MainActivity main = (MainActivity) getActivity();
+        if(main == null) return;
 
         RelativeLayout effectBrightness = view.findViewById(R.id.effectBrightness);
         RelativeLayout effectContrast = view.findViewById(R.id.effectContrast);
@@ -155,58 +156,47 @@ public class EffectsFragment extends Fragment {
 
 
         effectToGray.setOnClickListener(v -> {
-            assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(TO_GRAY);
         });
         effectInvert.setOnClickListener(v -> {
-            assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(INVERT);
         });
         effectBrightness.setOnClickListener(v -> {
-            assert main != null;
             main.getImage().quickSave();
-            main.inflateEffectSettings(Effects.BRIGHTNESS);
+            main.inflateEffectSettings(BRIGHTNESS);
         });
         effectSaturation.setOnClickListener(v -> {
-            assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(SATURATION);
         });
 
         effectContrast.setOnClickListener(v -> {
-            assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(CONTRAST);
         });
         effectEnhance.setOnClickListener(v -> {
-            assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(ENHANCE);
         });
         effectChangeHue.setOnClickListener(v -> {
-            assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(CHANGE_HUE);
         });
         effectKeepHue.setOnClickListener(v -> {
-            assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(KEEP_HUE);
         });
         effectBlur.setOnClickListener(v -> {
-            assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(BLUR);
         });
         effectSharpen.setOnClickListener(v -> {
-            assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(SHARPEN);
         });
         effectNeon.setOnClickListener(v -> {
-            assert main != null;
             main.getImage().quickSave();
             main.inflateEffectSettings(NEON);
         });

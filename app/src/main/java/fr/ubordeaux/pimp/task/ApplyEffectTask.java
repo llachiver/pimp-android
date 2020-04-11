@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
+import java.util.Queue;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
@@ -16,11 +17,18 @@ import fr.ubordeaux.pimp.image.Image;
 public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
     private WeakReference<MainActivity> activityWeakReference; //MainActivity reference
     private ImageEffect effect;
+    private Queue<ImageEffect> effects;
     private Image image;
 
     public ApplyEffectTask(MainActivity activity, ImageEffect effect, Image image) {
         this.activityWeakReference = new WeakReference<>(activity);
         this.effect = effect;
+        this.image = image;
+    }
+
+    public ApplyEffectTask(MainActivity activity, Queue<ImageEffect> effects, Image image) {
+        this.activityWeakReference = new WeakReference<>(activity);
+        this.effects = effects;
         this.image = image;
     }
 
@@ -43,7 +51,10 @@ public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
             if (activity == null || activity.isFinishing()) {
                 return null;
             }
-            image.applyEffect(effect);//Apply effect
+            if (effect == null) //apply several effects
+                image.applyEffects(effects);//Apply effects
+            else
+                image.applyEffect(effect);//Apply effect
             return null;
         }
 

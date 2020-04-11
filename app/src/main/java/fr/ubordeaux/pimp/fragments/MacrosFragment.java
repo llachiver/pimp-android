@@ -1,6 +1,5 @@
 package fr.ubordeaux.pimp.fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,11 +7,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,9 +16,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +31,9 @@ import java.util.Queue;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.image.ImageEffect;
+import fr.ubordeaux.pimp.util.Effects;
+
+import static fr.ubordeaux.pimp.util.Effects.BRIGHTNESS;
 
 public class MacrosFragment extends Fragment implements MacroAdapter.MacroListener {
 
@@ -71,9 +74,6 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
                     queue.size() + " effects", queue));
             adapter.notifyItemInserted(0); //insert at top, must use .add(0, ...) !!!!
 
-
-            Toast.makeText(getActivity(), macrosList.size() + "", Toast.LENGTH_SHORT).show();
-
         });
 
 
@@ -91,7 +91,7 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
      * Change ToolBar for this fragment.
      */
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear(); //hide main ToolBar
         assert (getActivity() != null); //avoid warnings
@@ -114,7 +114,12 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
     @Override
     public void onClickApply(int position) {
-        Toast.makeText(getActivity(), "Apply on " + macrosList.get(position).getName(), Toast.LENGTH_SHORT).show();
+
+        MainActivity main = (MainActivity) getActivity();
+        if (main == null) return;
+        main.getImage().quickSave();
+        main.onBackPressed();
+        main.inflateEffectSettings(Effects.MACRO, macrosList.get(position).getEffects());
     }
 
     @Override

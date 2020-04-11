@@ -308,6 +308,7 @@ public class Image {
         return BitmapIO.saveBitmap(result, "pimp_image", context);
     }
 
+
     /**
      * Use it to define an action to perform between each effect during an export with {@link #exportOriginalToGallery(Activity, EffectProcessingHandler)}.
      */
@@ -361,6 +362,17 @@ public class Image {
             confirmedEffectsHistory.add(effect);
         else
             tempEffectsHistory.add(effect);
+    }
+
+    /**
+     * Similar to {@link #applyEffect(ImageEffect)} but will aply all effects in the queue.
+     *
+     * @param effects Runnables of effects functions with correct args, see the class {@link ImageEffect} for more information.
+     */
+    public void applyEffects(Queue<ImageEffect> effects) {
+        for (ImageEffect effect : effects) {
+            applyEffect(effect);
+        }
     }
 
     /**

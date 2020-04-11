@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
+import java.util.Queue;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.fragments.EffectSettingsFragment;
@@ -137,6 +138,15 @@ public class MainActivity extends AppCompatActivity {
         editionPack.applyEffect(effect, false); // Not on the main Image because EffectSettingsFragment already done it.
     }
 
+    /**
+     * Apply the given effects on all previews
+     *
+     * @param macro the effects
+     */
+    public void effectOnPreviews(Queue<ImageEffect> macro) {
+        editionPack.applyEffect(macro, false); // Not on the main Image because MacroConfirmationFragment already done it.
+    }
+
 
     public void setCurrentTask(AsyncTask currentTask) {
         this.currentTask = currentTask;
@@ -211,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.macroMenu:
                 FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
                 ft2.replace(R.id.macrosFragment, macrosFragment);
-                ft2.addToBackStack("info_fragment");
+                ft2.addToBackStack("macro_fragment");
                 ft2.commit();
                 return true;
             default:
@@ -358,8 +368,18 @@ public class MainActivity extends AppCompatActivity {
      * @param effect the enum of the effect
      */
     public void inflateEffectSettings(Effects effect) {
+        inflateEffectSettings(effect, null);
+    }
+
+    /**
+     * Inflates the settings (seekbars, buttons...) of a specific effect w/ listeners.
+     *
+     * @param effect the enum of the effect
+     * @param macro additional paramter for MACRO option
+     */
+    public void inflateEffectSettings(Effects effect, Queue<ImageEffect> macro) {
         hideEffectsList();
-        effectSettingsFragment = new EffectSettingsFragment();
+        effectSettingsFragment = new EffectSettingsFragment(macro);
 
         Bundle args = new Bundle();
         args.putSerializable("effect", effect);

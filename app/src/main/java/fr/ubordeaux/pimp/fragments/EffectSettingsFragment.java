@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import java.util.Queue;
+
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.filters.Color;
@@ -45,6 +47,12 @@ public class EffectSettingsFragment extends Fragment {
     private Image image;
 
     private ImageEffect currentEffect;
+
+    Queue<ImageEffect> macro;
+
+    public EffectSettingsFragment(Queue<ImageEffect> macro) {
+        this.macro = macro;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,6 +114,10 @@ public class EffectSettingsFragment extends Fragment {
             case NEON:
                 neonView();
                 break;
+            case MACRO:
+                //no currentEffect but macro is not null
+                mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, macro, image).execute());
+                break;
             default:
                 break;
         }
@@ -129,13 +141,17 @@ public class EffectSettingsFragment extends Fragment {
             mainActivity.onBackPressed();
             mainActivity.cancelCurrentTask();
             currentEffect = null;
+            macro = null;
             image.discard();
         });
 
         bConfirm.setOnClickListener(v -> {
-            if(currentEffect != null) // cases like no effect choice in Neon for example
+            if (currentEffect != null) // cases like no effect choice in Neon for example
                 mainActivity.effectOnPreviews(currentEffect);
+            if (macro != null)
+                mainActivity.effectOnPreviews(macro);
             currentEffect = null;
+            macro = null;
             mainActivity.deflateEffectSettings();
         });
 

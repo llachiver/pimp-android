@@ -1,6 +1,7 @@
 package fr.ubordeaux.pimp.image;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 /**
  * This class is used to store an {@link Image} and a list of "previews" of this {@link Image}.
@@ -93,6 +94,29 @@ public class ImagePack {
             effect.apply(preview.image.getBitmap());
             preview.image.quickSave();
             preview.effect.apply(preview.image.getBitmap());
+        }
+    }
+
+    /**
+     * Will apply all effects on ALL images, the main and all previews (they will then re-apply their own effects)
+     *
+     * @param effects Effect queue.
+     * @param onMain  Set as false if you want apply your effect only on previews (if for example the mainImage already has the effect)
+     */
+    public void applyEffect(Queue<ImageEffect> effects, boolean onMain) {
+
+        for (ImageEffect effect : effects) {
+            //Apply on Image:
+            if (onMain)
+                effect.apply(mainImage.getBitmap());
+
+            //Apply on all effects :
+            for (Preview preview : previews) {
+                preview.image.discard();
+                effect.apply(preview.image.getBitmap());
+                preview.image.quickSave();
+                preview.effect.apply(preview.image.getBitmap());
+            }
         }
     }
 
