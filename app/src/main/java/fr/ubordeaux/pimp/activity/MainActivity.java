@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EffectsFragment effectsListFragment;
     private EffectSettingsFragment effectSettingsFragment;
+    private MacrosFragment macrosFragment;
     private FragmentManager fragmentManager;
     private AsyncTask currentTask; //Current asyncTask
 
@@ -66,8 +67,10 @@ public class MainActivity extends AppCompatActivity {
         //Allow more zooming
         iv.setMaximumScale(10);
 
-        //Init the fragments
+        //Init fragments
         effectsListFragment = new EffectsFragment();
+        macrosFragment = new MacrosFragment(); //only one instanciation of fragments
+
         //Used for fragment transactions
         fragmentManager = getSupportFragmentManager();
 
@@ -202,9 +205,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.macroMenu:
-                MacrosFragment mFragment = new MacrosFragment();
                 FragmentTransaction ft2 = getSupportFragmentManager().beginTransaction();
-                ft2.replace(R.id.macrosFragment, mFragment);
+                ft2.replace(R.id.macrosFragment, macrosFragment);
                 ft2.addToBackStack("info_fragment");
                 ft2.commit();
                 return true;
