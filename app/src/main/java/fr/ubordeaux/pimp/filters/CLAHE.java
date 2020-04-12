@@ -32,8 +32,8 @@ public class CLAHE {
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Bitmap input
         Allocation output = Allocation.createTyped(rs, input.getType());
 
-        int regNbrX = 5;
-        int regNbrY = 5;
+        int regNbrX = 15;
+        int regNbrY = 15;
         int regNbr = regNbrX*regNbrY;
 
         short luts[][] = new short[regNbr][256];
@@ -64,7 +64,6 @@ public class CLAHE {
             }
         }
         ScriptC_assignCLAHELuts lut = new ScriptC_assignCLAHELuts(rs);
-        lut.set_input(input);
         for(int y = 0 ; y < regNbrY ; y++){
             for(int x = 0 ; x < regNbrX ; x++){
                 regIdx = x + y*regNbrX;
