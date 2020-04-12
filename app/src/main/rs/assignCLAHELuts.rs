@@ -7,6 +7,7 @@
 
 #include "utils.rs"
 
+
 //Number of regions in x and y (in the whole image)
 int regNbrX, regNbrY;
 
@@ -30,11 +31,11 @@ uchar lutWest[LUT_SIZE];
 
 static bool corner(int x, int y){
     return (regIdxY == 0 &&
-                ((regIdxX == 0 && x < regCenterX && y < regCenterY) ||
-                  (regIdxX == (regNbrX-1) && x > regCenterX && y < regCenterY))) ||
+                ((regIdxX == 0 && x <= regCenterX && y <= regCenterY) ||
+                  (regIdxX == (regNbrX-1) && x >= regCenterX && y <= regCenterY))) ||
            (regIdxY == (regNbrY-1) &&
-                  ((regIdxX == 0 && x < regCenterX && y > regCenterY)||
-                  (regIdxX == (regNbrX-1) && x > regCenterX && y > regCenterY)));
+                  ((regIdxX == 0 && x <= regCenterX && y >= regCenterY)||
+                  (regIdxX == (regNbrX-1) && x >= regCenterX && y >= regCenterY)));
 }
 
 static bool top_or_bottom(int x, int y){
@@ -59,11 +60,11 @@ uchar4 RS_KERNEL assignLutHSV(uchar4 in, uint32_t x, uint32_t y){
     }
     else{
         //The final terms of the interpolation
-        int x1, x2, y1, y2;
+        int x1, x2, y1, y2, x3, y3;
         //The normalization factor for the interpolation
         float normFactor;
 
-        if(top_or_bottom(x,y)){ //linear interpolation
+        if(top_or_bottom(x,y)){ //linear interpolation horizontal
             int xCoeffHeavy,xCoeffLight;
             xCoeffLight = abs(((int) x) - regCenterX);
             xCoeffHeavy = regSizeX - xCoeffLight;
@@ -73,7 +74,7 @@ uchar4 RS_KERNEL assignLutHSV(uchar4 in, uint32_t x, uint32_t y){
             normFactor = (float) regSizeX * 255.0;
 
         }
-        else if(left_or_right(x,y)){ //linear interpolation
+        else if(left_or_right(x,y)){ //linear interpolation vertical
             int yCoeffHeavy, yCoeffLight;
             yCoeffLight = abs(((int) y) - regCenterY);
             yCoeffHeavy = regSizeY - yCoeffLight;
@@ -84,12 +85,21 @@ uchar4 RS_KERNEL assignLutHSV(uchar4 in, uint32_t x, uint32_t y){
         }
         else{ //bilinear interpolation
             int yCoeffHeavy, yCoeffLight;
-                        yCoeffLight = abs(((int) y) - regCenterY);
-                        yCoeffHeavy = regSizeY - yCoeffLight;
-                        y1 = yCoeffHeavy*lutValue[v];
-                        y2 = y < regCenterY ? yCoeffLight*lutNorth[v] : yCoeffLight*lutSouth[v];
-            normFactor = (float) regSizeY * 255.0;
-            //rsDebug("value", (x1 + x2 + y1 + y2), normFactor);
+            yCoeffLight = abs(((int) y) - regCenterY);
+            yCoeffHeavy = regSizeY - yCoeffLight;
+            y1 = yCoeffHeavy*lutValue[v];
+            y2 = y < regCenterY ? yCoeffLight*lutNorth[v] : yCoeffLight*lutSouth[v];
+            int xCoeffHeavy,xCoeffLight;
+            xCoeffLight = abs(((int) x) - regCenterX);
+            xCoeffHeavy = regSizeX - xCoeffLight;
+            x1 = xCoeffHeavy*lutValue[v];
+            x2 = x < regCenterX ? xCoeffLight*lutWest[v] : xCoeffLight*lutEast[v];
+
+
+            normFactor = (float) (regSizeY+regSizeX) * 255.0;
+
+            //normFactor = (float) (regSizeX + regSizeY) * 255.0;
+
         }
 
         out.s2 = (x1 + x2 + y1 + y2) / normFactor;

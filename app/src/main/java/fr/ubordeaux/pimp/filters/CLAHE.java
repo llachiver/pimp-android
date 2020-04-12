@@ -21,6 +21,8 @@ public class CLAHE {
         return sum/256;
     }
 
+
+
     public static void CLAHE(Bitmap bmp, Context context){
 
         int width = bmp.getWidth();
@@ -47,6 +49,9 @@ public class CLAHE {
         int regIdx;
 
         ScriptC_cumulativeHistogram histoScript = new ScriptC_cumulativeHistogram(rs);
+        histoScript.set_clip(true);
+        histoScript.set_slope(0.3f);
+        histoScript.set_regSize(regNbrBins);
 
         for(int y = 0 ; y < regNbrY ; y++){
             for(int x = 0 ; x < regNbrX ; x++){
@@ -55,11 +60,11 @@ public class CLAHE {
                 lo.setY(y * regSizeY,y * regSizeY + regSizeY);
                 histoScript.set_nbrBins(regNbrBins);
                 luts[regIdx] = histoScript.reduce_LUTCumulativeHistogram(input,lo).get();
-                System.out.println("lut n° " + regIdx + " : " + mean(luts[regIdx]));
+                //System.out.println("lut n° " + regIdx + " : " + mean(luts[regIdx]));
             }
         }
         ScriptC_assignCLAHELuts lut = new ScriptC_assignCLAHELuts(rs);
-
+        lut.set_input(input);
         for(int y = 0 ; y < regNbrY ; y++){
             for(int x = 0 ; x < regNbrX ; x++){
                 regIdx = x + y*regNbrX;
@@ -67,10 +72,11 @@ public class CLAHE {
                 lo.setY(y * regSizeY,y * regSizeY + regSizeY);
 
                 lut.set_lutValue(luts[regIdx]);
-                if(y > 0) lut.set_lutNorth(luts[regIdx-regNbrX]);
-                if(y < regNbrY-1) lut.set_lutSouth(luts[regIdx+regNbrX]);
-                if(x > 0) lut.set_lutWest(luts[regIdx - 1]);
-                if(x < regNbrX-1) lut.set_lutEast(luts[regIdx + 1]);
+                if (y > 0) lut.set_lutNorth(luts[regIdx - regNbrX]);
+                if (y < regNbrY - 1) lut.set_lutSouth(luts[regIdx + regNbrX]);
+                if (x > 0) lut.set_lutWest(luts[regIdx - 1]);
+                if (x < regNbrX - 1) lut.set_lutEast(luts[regIdx + 1]);
+
 
                 lut.set_regIdxX(x);
                 lut.set_regIdxY(y);

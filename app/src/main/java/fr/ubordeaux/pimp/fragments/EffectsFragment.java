@@ -53,9 +53,9 @@ public class EffectsFragment extends Fragment {
         bInvert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CLAHE.CLAHE(main.getImage().getBitmap(),main);
-                /*main.getImage().quickSave();
-                main.inflateEffectSettings(INVERT);*/
+
+                main.getImage().quickSave();
+                main.inflateEffectSettings(INVERT);
             }
         });
         bBrightness.setOnClickListener(new View.OnClickListener() {
