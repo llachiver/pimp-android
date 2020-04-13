@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
+import fr.ubordeaux.pimp.filters.CLAHE;
 import fr.ubordeaux.pimp.filters.Color;
 import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
@@ -111,7 +112,8 @@ public class EffectSettingsFragment extends Fragment {
                 currentEffect = new BitmapRunnable(image.getBitmap()) {
                     @Override
                     public void run() {
-                        Color.invert(this.getBmp(), mainActivity);
+                        //Color.invert(this.getBmp(), mainActivity);
+                        CLAHE.CLAHE(this.getBmp(), mainActivity);
                     }
                 };
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());

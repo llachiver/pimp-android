@@ -7,6 +7,7 @@
 
 #include "utils.rs"
 
+
 //Number of regions in x and y (in the whole image)
 int regNbrX, regNbrY;
 
@@ -46,7 +47,7 @@ static bool top_or_bottom(int x, int y){
 }
 
 static bool left_or_right(int x, int y){
-    return (regIdxX == 0 && x < regCenterX) || (regIdxX == regNbrX-1 && x > regCenterX) && (y > regSizeY/2 && y < (regNbrY*regSizeY + regSizeY/2));
+    return ((regIdxX == 0 && x < regCenterX) || (regIdxX == regNbrX-1 && x > regCenterX)) && (y > regSizeY/2 && y < (regNbrY*regSizeY + regSizeY/2));
 }
 
 
@@ -62,7 +63,7 @@ uchar4 RS_KERNEL assignLutHSV(uchar4 in, uint32_t x, uint32_t y){
         out.s2 = lutThis[v] / 255.0;
     }
     else{
-        if(top_or_bottom(x,y)){ //linear interpolation
+        if(top_or_bottom(x,y)){ //horizontal linear interpolation 
             int x1, x2;
             int xCoeffHeavy,xCoeffLight;
             xCoeffLight = abs(((int) x) - regCenterX);
@@ -71,7 +72,7 @@ uchar4 RS_KERNEL assignLutHSV(uchar4 in, uint32_t x, uint32_t y){
             x2 = x < regCenterX ? xCoeffLight*lutW[v] : xCoeffLight*lutE[v];
             out.s2 = (x1 + x2) / ((float) regSizeX * 255.0);
         }
-        else if(left_or_right(x,y)){ //linear interpolation
+        else if(left_or_right(x,y)){ //vertical linear interpolation
             int y1,y2;
             int yCoeffHeavy, yCoeffLight;
             yCoeffLight = abs(((int) y) - regCenterY);
@@ -99,7 +100,7 @@ uchar4 RS_KERNEL assignLutHSV(uchar4 in, uint32_t x, uint32_t y){
                     xy1 = xCoeffLight*lutNE[v] + xCoeffHeavy*lutN[v];
                     xy2 = xCoeffLight*lutE[v] + xCoeffHeavy*lutThis[v];
                 }
-                xy = yCoeffLight * xy1 + yCoeffHeavy * xy2; //max regSizeY*regSizeX*255
+                xy = yCoeffLight * xy1 + yCoeffHeavy * xy2;
             } else{
                 if(x < regCenterX){  //bottom left corner
                     xy1 = xCoeffLight*lutW[v] + xCoeffHeavy*lutThis[v];
@@ -112,7 +113,6 @@ uchar4 RS_KERNEL assignLutHSV(uchar4 in, uint32_t x, uint32_t y){
                 xy = yCoeffHeavy * xy1 + yCoeffLight * xy2;
             }
             out.s2 = xy / ((float) regSizeX*regSizeY*255);
-            rsDebug("out : ", out.s2);
         }
     }
 
