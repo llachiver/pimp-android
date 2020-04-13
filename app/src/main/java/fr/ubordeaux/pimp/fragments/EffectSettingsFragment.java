@@ -176,8 +176,8 @@ public class EffectSettingsFragment extends Fragment {
         tv.setText(effect.getName());
 
         SeekBar sb = new SeekBar(super.getContext());
-        sb.setMax(25);
-        sb.setProgress(5);
+        sb.setMax(255);
+        sb.setProgress(127);
 
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
