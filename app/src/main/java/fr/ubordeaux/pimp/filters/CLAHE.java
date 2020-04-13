@@ -23,7 +23,7 @@ public class CLAHE {
 
 
 
-    public static void CLAHE(Bitmap bmp, Context context){
+    public static void CLAHE(Bitmap bmp, Context context, int regionSize, float clip){
 
         int width = bmp.getWidth();
         int height = bmp.getHeight();
@@ -32,8 +32,8 @@ public class CLAHE {
         Allocation input = Allocation.createFromBitmap(rs, bmp); //Bitmap input
         Allocation output = Allocation.createTyped(rs, input.getType());
 
-        int regNbrX = 15;
-        int regNbrY = 15;
+        int regNbrX = regionSize;
+        int regNbrY = regionSize;
         int regNbr = regNbrX*regNbrY;
 
         short luts[][] = new short[regNbr][256];
@@ -50,7 +50,7 @@ public class CLAHE {
 
         ScriptC_cumulativeHistogram histoScript = new ScriptC_cumulativeHistogram(rs);
         histoScript.set_clip(true);
-        histoScript.set_slope(0.3f);
+        histoScript.set_slope(clip);
         histoScript.set_regSize(regNbrBins);
 
         for(int y = 0 ; y < regNbrY ; y++){

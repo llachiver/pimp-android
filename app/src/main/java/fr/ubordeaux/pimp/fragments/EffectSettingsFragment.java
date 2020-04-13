@@ -113,7 +113,7 @@ public class EffectSettingsFragment extends Fragment {
                     @Override
                     public void run() {
                         //Color.invert(this.getBmp(), mainActivity);
-                        CLAHE.CLAHE(this.getBmp(), mainActivity);
+                        CLAHE.CLAHE(this.getBmp(), mainActivity, 15, 0.3f);
                     }
                 };
                 mainActivity.setCurrentTask(new ApplyEffectTask(mainActivity, currentEffect).execute());
@@ -176,8 +176,8 @@ public class EffectSettingsFragment extends Fragment {
         tv.setText(effect.getName());
 
         SeekBar sb = new SeekBar(super.getContext());
-        sb.setMax(255);
-        sb.setProgress(127);
+        sb.setMax(25);
+        sb.setProgress(5);
 
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -189,6 +189,7 @@ public class EffectSettingsFragment extends Fragment {
                             @Override
                             public void run() {
                                 Retouching.setBrightness(this.getBmp(), progress, mainActivity);
+
                             }
                         };
                         currentEffect.run();
