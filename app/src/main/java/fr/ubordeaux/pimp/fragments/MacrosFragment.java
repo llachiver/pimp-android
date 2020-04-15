@@ -2,6 +2,7 @@ package fr.ubordeaux.pimp.fragments;
 
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -82,26 +83,28 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
             input.setInputType(InputType.TYPE_CLASS_TEXT);
             builder.setView(input);
 
-            // Set up the buttons
+
+            // Set up the button:
             builder.setPositiveButton("OK", (dialog, which) -> {
-                String in = input.getText().toString();
-                if (!in.equals("")) {
-                    macrosList.get(0).setName(in);
-                    adapter.notifyItemChanged(0);
-                    effectNumber--;
+            });
+
+            builder.setOnDismissListener(e -> {
+                String name = input.getText().toString();
+                if (name.equals("")) {
+                    effectNumber++;
+                    name = "Effect " + effectNumber;
                 }
+                macrosList.add(0, new Macro(name,
+                        queue.size() + " effects", queue));
+                adapter.notifyItemInserted(0); //insert at top, must use .add(0, ...) !!!!
+
+                lastAded = macrosList.get(0);
+                lastNumber = lastAded.getEffects().size();
             });
 
             builder.show();
 
-            effectNumber++;
 
-            macrosList.add(0, new Macro("Effect " + effectNumber,
-                    queue.size() + " effects", queue));
-            adapter.notifyItemInserted(0); //insert at top, must use .add(0, ...) !!!!
-
-            lastAded = macrosList.get(0);
-            lastNumber = lastAded.getEffects().size();
         });
 
 
