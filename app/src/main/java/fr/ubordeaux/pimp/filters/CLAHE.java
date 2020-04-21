@@ -53,7 +53,6 @@ public class CLAHE {
         ScriptC_cumulativeHistogram histoScript = new ScriptC_cumulativeHistogram(rs);
         histoScript.set_clip(true);
         histoScript.set_slope(clip);
-        histoScript.set_regSize(regNbrBins);
 
         //Used for launching the kernel on each region
         Script.LaunchOptions lo = new Script.LaunchOptions();

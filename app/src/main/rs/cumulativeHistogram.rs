@@ -10,10 +10,11 @@ typedef uint64_t Histogram[H_SIZE];
 //Those params are mainly used for CLAHE
 bool clip;
 float slope;
-int regSize;
+//Number of bins in the image
+uint32_t nbrBins;
 
 static void clipHistogram(float clipLimit, uint64_t *  histo){
-    long clipLimitInt = clipLimit * H_SIZE - 1; //Normalize cliplimit between 0 and 255
+    long clipLimitInt = clipLimit * (nbrBins) / (H_SIZE - 1); //Normalize cliplimit between 0 and 255
     long clipCount = 0;
     for (int i = 0; i < H_SIZE; i++){
         if(histo[i] > clipLimitInt){
@@ -22,8 +23,8 @@ static void clipHistogram(float clipLimit, uint64_t *  histo){
         }
     }
 
-    int redistBatch = clipCount / H_SIZE; //Redistribution pixels average
-    int residual = clipCount - redistBatch * H_SIZE; //Residual pixels to increase value
+    long redistBatch = clipCount / H_SIZE; //Redistribution pixels average
+    long residual = clipCount - redistBatch * H_SIZE; //Residual pixels to increase value
 
     for(int i = 0; i < H_SIZE; i++)
         histo[i] += redistBatch;
@@ -35,8 +36,6 @@ static void clipHistogram(float clipLimit, uint64_t *  histo){
 #pragma rs reduce(histogram) \
     accumulator(histAccum) combiner(histCombine)
 
-//Number of bins in the image
-uint32_t nbrBins;
 
 //LUT table
 typedef uchar LUTret[H_SIZE];
