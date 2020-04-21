@@ -70,9 +70,7 @@ public class MainActivity extends AppCompatActivity {
         iv.setMaximumScale(10);
 
         //Loads stored macros :
-        if (!MacroIO.createMacroDir(this)) {
-            Toast.makeText(this, "Can't create directory in app files", Toast.LENGTH_LONG).show();
-        }
+        MacroIO.createMacroDir(this);
         if (!MacroIO.loadAllMacros(this)) {
             Toast.makeText(this, "Personal effects couldn't be loaded.", Toast.LENGTH_LONG).show();
         }

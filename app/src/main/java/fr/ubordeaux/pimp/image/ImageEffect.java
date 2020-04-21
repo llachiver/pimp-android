@@ -2,6 +2,8 @@ package fr.ubordeaux.pimp.image;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
+
 
 /**
  * This class can pack an Effect for pictures:
@@ -11,7 +13,7 @@ import android.graphics.Bitmap;
  * <p>
  * See {@link #ImageEffect(String, String[], ImageEffectCommand)} to see how to construct it.
  */
-public class ImageEffect {
+public class ImageEffect implements Serializable {
 
     private ImageEffectCommand effect;
     private String name;
@@ -74,7 +76,7 @@ public class ImageEffect {
      * Because we are using command pattern, this interface allows to store lines of codes as an Object, and allows to simplified syntax with lambda expressions.
      * See {@link ImageEffect}
      */
-    public interface ImageEffectCommand {
+    public interface ImageEffectCommand{
         void run(Bitmap bitmap);
     }
 

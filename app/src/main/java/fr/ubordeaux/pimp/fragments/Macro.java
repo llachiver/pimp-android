@@ -1,6 +1,7 @@
 package fr.ubordeaux.pimp.fragments;
 
 
+import java.io.Serializable;
 import java.util.Queue;
 
 import fr.ubordeaux.pimp.image.ImageEffect;
@@ -9,7 +10,7 @@ import fr.ubordeaux.pimp.image.ImageEffect;
  * Using a card patern, see  {@link MacroAdapter}.
  * But also a class to represent a macro of several effects.
  */
-public class Macro {
+public class Macro implements Serializable {
 
 
     private String name;

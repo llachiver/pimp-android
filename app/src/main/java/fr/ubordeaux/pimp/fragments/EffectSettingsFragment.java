@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import java.io.Serializable;
 import java.util.Queue;
 
 import fr.ubordeaux.pimp.R;

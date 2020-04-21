@@ -4,7 +4,13 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -51,6 +57,16 @@ public class MacroIO {
                 if (array[1].equals("macro")) {
                     int n = Integer.valueOf(array[0]);
                     if (n > highest) highest = n;
+                    //read file :
+                    File f = new File(context.getFilesDir(), "macros/" + file);
+                    Log.v("pimp_log", f + "--------" + file);
+                    try (ObjectInput oi = new ObjectInputStream(new FileInputStream(f))) {
+                        Macro macro;
+                        macro = (Macro) oi.readObject();
+                        Log.v("pimp_log", macro + "");
+                        macrosIDs.put(macro, n);
+
+                    }
                 } else {
                     Log.e("pimp_log", "There is a file with a wrong extension in macros folder");
                 }
@@ -58,6 +74,9 @@ public class MacroIO {
                 Log.e("pimp_log", "There is a file without extension in macros folder");
             } catch (NumberFormatException e) {
                 Log.e("pimp_log", "There is a file without name as integer in macro folder");
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                Log.e("pimp_log", "Reading problem");
             }
         }
 
@@ -87,19 +106,27 @@ public class MacroIO {
      * @return false if something goes wrong.
      */
     public static boolean saveMacro(Macro macro, Context context) {
-/*
+
         try {
-           File myObj = new File(context.getFilesDir(),  "macros/42.macro");
-            if (myObj.createNewFile()) {
-                Log.v("LOG", "File created: " + myObj.getAbsolutePath());
+            File f = new File(context.getFilesDir(), "macros/" + currentID + ".macro");
+            if (f.createNewFile()) {
+                Log.v("pimp_log", "File created: " + f.getAbsolutePath());
+                //write macro in file :
+                try (ObjectOutput oo = new ObjectOutputStream(new FileOutputStream(f))) {
+                    oo.writeObject(macro);
+                }
+
             } else {
-                Log.v("LOG", "File already exists.");
+                Log.v("pimp_log", "File already exists.");
+                return false;
             }
         } catch (IOException e) {
-            Log.v("LOG", "An error occurred.");
             e.printStackTrace();
-        }*/
-        return false;
+            currentID++;
+            return false;
+        }
+        currentID++;
+        return true;
     }
 
     /**
