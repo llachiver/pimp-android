@@ -7,6 +7,7 @@
 //Histogram type declaration
 typedef uint64_t Histogram[H_SIZE];
 
+//Those params are mainly used for CLAHE
 bool clip;
 float slope;
 int regSize;
@@ -29,12 +30,10 @@ static void clipHistogram(float clipLimit, uint64_t *  histo){
     for(int i = 0; i < residual; i++)
         histo[i]++;
 }
+
 //Accumulator declaration
 #pragma rs reduce(histogram) \
     accumulator(histAccum) combiner(histCombine)
-
-//Histogram size
-
 
 //Number of bins in the image
 uint32_t nbrBins;

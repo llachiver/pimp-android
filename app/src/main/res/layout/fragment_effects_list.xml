@@ -110,6 +110,14 @@
                 android:drawableTop="@drawable/ic_wb_iridescent_black_24dp"
                 android:text="NEON" />
 
+            <Button
+                android:id="@+id/bCLAHE"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_grid_on_black_24dp"
+                android:text="CLAHE" />
+
 
         </LinearLayout>
     </HorizontalScrollView>

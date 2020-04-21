@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
-import fr.ubordeaux.pimp.filters.CLAHE;
 import fr.ubordeaux.pimp.util.Effects;
 
 import static fr.ubordeaux.pimp.util.Effects.*;
@@ -41,6 +40,7 @@ public class EffectsFragment extends Fragment {
         Button bNeon = (Button) view.findViewById(R.id.bNeon);
         Button bToGray = (Button) view.findViewById(R.id.bToGray);
         Button bInvert = (Button) view.findViewById(R.id.bInvert);
+        Button bEqualize = (Button) view.findViewById(R.id.bCLAHE);
 
 
         bToGray.setOnClickListener(new View.OnClickListener() {
@@ -53,7 +53,6 @@ public class EffectsFragment extends Fragment {
         bInvert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 main.getImage().quickSave();
                 main.inflateEffectSettings(INVERT);
             }
@@ -120,6 +119,13 @@ public class EffectsFragment extends Fragment {
             public void onClick(View v) {
                 main.getImage().quickSave();
                 main.inflateEffectSettings(NEON);
+            }
+        });
+        bEqualize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.getImage().quickSave();
+                main.inflateEffectSettings(CLAHE);
             }
         });
     }

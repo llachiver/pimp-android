@@ -15,6 +15,8 @@ public enum Effects {
     BLUR("Blur"),
     SHARPEN("Sharpen"),
     NEON("Neon"),
+    CLAHE("CLAHE"),
+    
     //used for benchmarking :
     GAUSS_MIN("Gaussian blur 3x3"),
     GAUSS_MAX("Gaussian blur 25x25"),

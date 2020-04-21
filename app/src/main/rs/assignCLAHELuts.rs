@@ -33,6 +33,7 @@ uchar lutNE[LUT_SIZE];
 uchar lutSW[LUT_SIZE];
 uchar lutSE[LUT_SIZE];
 
+//Test if we are at a corner of the image (no interpolation)
 static bool corner(int x, int y){
     return (regIdxY == 0 &&
                 ((regIdxX == 0 && x <= regCenterX && y <= regCenterY) ||
@@ -42,28 +43,29 @@ static bool corner(int x, int y){
                   (regIdxX == (regNbrX-1) && x >= regCenterX && y >= regCenterY)));
 }
 
+//Test if we are at the top or bottom line of the image (linear interpolation)
 static bool top_or_bottom(int x, int y){
     return ((regIdxY == 0 && y < regCenterY) || (regIdxY == regNbrY-1 && y > regCenterY)) && (x > regSizeX/2 && x < (regNbrX*regSizeX + regSizeX/2));
 }
 
+//Test if we are at the left or right column of the image (linear interpolation)
 static bool left_or_right(int x, int y){
     return ((regIdxX == 0 && x < regCenterX) || (regIdxX == regNbrX-1 && x > regCenterX)) && (y > regSizeY/2 && y < (regNbrY*regSizeY + regSizeY/2));
 }
-
 
 //Assign LUT fot HSV value
 uchar4 RS_KERNEL assignLutHSV(uchar4 in, uint32_t x, uint32_t y){
     float4 out = rsUnpackColor8888(in);
     if (in.a == 0) return in;
 
-    out = RGBtoHSV(out); //Change to HSV
+    out = RGBtoHSV(out); //change to HSV
     uint32_t v = (uint32_t) (out.s2 * 255.0);
 
-    if(corner(x, y)){
+    if(corner(x, y)){ //no interpolation
         out.s2 = lutThis[v] / 255.0;
     }
     else{
-        if(top_or_bottom(x,y)){ //horizontal linear interpolation 
+        if(top_or_bottom(x,y)){ //horizontal linear interpolation
             int x1, x2;
             int xCoeffHeavy,xCoeffLight;
             xCoeffLight = abs(((int) x) - regCenterX);
@@ -82,10 +84,16 @@ uchar4 RS_KERNEL assignLutHSV(uchar4 in, uint32_t x, uint32_t y){
             out.s2 = (y1 + y2) / ((float) regSizeY * 255.0);
         }
         else{ //bilinear interpolation
+
+            //"Heavy" and "light" coefficients for the interpolation
             int xCoeffLight, xCoeffHeavy;
             int yCoeffLight, yCoeffHeavy;
+
+            //The 2 values at the top and bottom of the value we're searching
             int xy1,xy2;
+            //The value (not normalized)
             int xy;
+
             xCoeffLight = abs(((int) x) - regCenterX);
             xCoeffHeavy = regSizeX - xCoeffLight;
             yCoeffLight = abs(((int) y) - regCenterY);
@@ -112,6 +120,8 @@ uchar4 RS_KERNEL assignLutHSV(uchar4 in, uint32_t x, uint32_t y){
                 }
                 xy = yCoeffHeavy * xy1 + yCoeffLight * xy2;
             }
+
+            //Normalize the value
             out.s2 = xy / ((float) regSizeX*regSizeY*255);
         }
     }
