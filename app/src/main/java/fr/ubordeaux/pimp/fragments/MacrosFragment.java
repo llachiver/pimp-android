@@ -110,7 +110,7 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
                 lastNumber = lastAded.getEffects().size();
 
                 //save into file :
-                if (!MacroIO.saveMacro(lastAded)) {
+                if (!MacroIO.saveMacro(lastAded, getActivity())) {
                     Toast.makeText(getActivity(), "Problem to save effect !", Toast.LENGTH_LONG).show();
                 }
 
@@ -211,7 +211,7 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
         adapter.notifyItemRemoved(position);
         adapter.notifyItemRangeChanged(position, macrosList.size());
         //remove file :
-        if (!MacroIO.deleteMacro(removing)) {
+        if (!MacroIO.deleteMacro(removing, getActivity())) {
             Toast.makeText(getActivity(), "Problem to delete effect on disk !", Toast.LENGTH_LONG).show();
         }
 
