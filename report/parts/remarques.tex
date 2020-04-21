@@ -4,7 +4,7 @@
 A propos de la classe \textbf{Image} \ref{classeImage}, nous sauvegardons systématiquement une copie des pixels d'origine de l'Image, de plus si un appel à \textbf{quickSave()} est effectué une 3ème copie de l'Image est chargée en mémoire. Image offre cependant des constructeurs pour charger une image proportionnée à l'écran de l'appareil. Le risque de débordement mémoire est donc largement évité par cette limitation de taille.
 \\
 
-Lors du chargement d'une nouvelle image, nous ré-instancions un objet de la classe Image. Ce qui veut techniquement dire que jusqu'au prochain passage du ramasse miette Android, deux images sont en mémoires, donc deux Bitmap et deux tableaux de pixels (la copie originale des Images, voir \ref{classeImage}). C'est un élément discutable cependant notre application limite la taille des Images chargées. Ce qui évite largement les dépassements mémoire.
+Lors du chargement d'une nouvelle image, nous ré-instancions un objet de la classe Image. Ce qui veut techniquement dire que jusqu'au prochain passage du ramasse miette Android, deux images sont en mémoires, donc deux Bitmap et deux tableaux de pixels (la copie originale des Images, voir \ref{classeImage}). C'est un élément discutable cependant notre application limite la taille des Images chargées.
 \\
 
 Dans la partie \ref{navig} nous créons une \textbf{MainActivity} après avoir récupéré une \textbf{Uri}, il aurait été idéal de rester dans \textbf{FirstActivity} jusqu'à chargement complet de la première image. Ce qui éviterait un éventuel aller-retour entre les activités en cas d'erreur. Cependant les limites de \textbf{Parcelable} \ref{parcelable} ainsi que l'utilisation d'une \textbf{AsyncTask} (donc un Thread différent) nous ont contraint à garder ce fonctionnement.
@@ -29,7 +29,8 @@ Pour manipuler des objets d'une activité à l'autre ou entre fragments, Android
 
 \subsection{Améliorations à court terme :}
 
-L'utilisation d'un historique d'effet pourra aussi permettre à l'utilisateur de sauvegarder des séries d'effets pour créer des effets personnalisés, c'est d'ailleurs pourquoi la classe \textbf{ImageEffect} contient des chaînes de caractères dédiées à la description de l'effet en question (nom et paramètres).
+Les effets personnalisés ne sont pas encore persistants et sont perdus au redémarrage de l'application. La sauvegarde des \textbf{ImageEffect} pose en effet problème car même si les lambdas sont sérialisables, elles contiennent des références vers l'image éditée et vers l'activité qui elles ne sont pas sérialisables.\\
+Il faudrait donc passer par des références propres aux ImageEffects qui seraient misent à \textit{null} au moment de la sérialisation. Ou alors se passer des ImageEffects et faire une traduction vers une énumération et des arguments, ce qui empêcherait d'utiliser d'autres effets que les nôtres.
 
 \subsection{Tests et bugs repérés :}
 Sous Android 10 (API 29) et supérieur, l'application peut planter au moment de l'export de l'image, du fait d'un changement des gestions des autorisations sous Android 10.
