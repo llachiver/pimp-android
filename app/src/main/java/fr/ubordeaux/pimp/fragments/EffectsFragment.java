@@ -20,9 +20,19 @@ import fr.ubordeaux.pimp.filters.Convolution;
 import fr.ubordeaux.pimp.filters.Retouching;
 import fr.ubordeaux.pimp.image.ImageEffect;
 import fr.ubordeaux.pimp.image.ImagePack;
-import fr.ubordeaux.pimp.util.Effects;
 
-import static fr.ubordeaux.pimp.util.Effects.*;
+import static fr.ubordeaux.pimp.util.Effects.BLUR;
+import static fr.ubordeaux.pimp.util.Effects.BRIGHTNESS;
+import static fr.ubordeaux.pimp.util.Effects.CHANGE_HUE;
+import static fr.ubordeaux.pimp.util.Effects.CLAHE;
+import static fr.ubordeaux.pimp.util.Effects.CONTRAST;
+import static fr.ubordeaux.pimp.util.Effects.ENHANCE;
+import static fr.ubordeaux.pimp.util.Effects.INVERT;
+import static fr.ubordeaux.pimp.util.Effects.KEEP_HUE;
+import static fr.ubordeaux.pimp.util.Effects.NEON;
+import static fr.ubordeaux.pimp.util.Effects.SATURATION;
+import static fr.ubordeaux.pimp.util.Effects.SHARPEN;
+import static fr.ubordeaux.pimp.util.Effects.TO_GRAY;
 
 public class EffectsFragment extends Fragment {
 
@@ -37,6 +47,7 @@ public class EffectsFragment extends Fragment {
     private ImageView imgBlur;
     private ImageView imgSharpen;
     private ImageView imgNeon;
+    private ImageView imgClahe;
 
 
     /**
@@ -90,6 +101,12 @@ public class EffectsFragment extends Fragment {
         //Neon effect :
         pack.createNewPreview(new ImageEffect("Sobel neon preview", new String[]{}, (Bitmap target) ->
                 Convolution.neonSobel(target, context)));
+
+        //CLAHE effect :
+        pack.createNewPreview(new ImageEffect("CLAHE", new String[]{String.valueOf(16), String.valueOf(0.5f)}, (Bitmap target) ->
+                fr.ubordeaux.pimp.filters.CLAHE.CLAHE(target, 16, 0.5f, context)
+        ));
+
     }
 
     /**
@@ -111,6 +128,7 @@ public class EffectsFragment extends Fragment {
         imgBlur.setImageBitmap(list.get(8).image.getBitmap());
         imgSharpen.setImageBitmap(list.get(9).image.getBitmap());
         imgNeon.setImageBitmap(list.get(10).image.getBitmap());
+        imgClahe.setImageBitmap(list.get(11).image.getBitmap());
     }
 
 
@@ -127,7 +145,7 @@ public class EffectsFragment extends Fragment {
     private void listeners(View view) {
 
         final MainActivity main = (MainActivity) getActivity();
-        if(main == null) return;
+        if (main == null) return;
 
         RelativeLayout effectBrightness = view.findViewById(R.id.effectBrightness);
         RelativeLayout effectContrast = view.findViewById(R.id.effectContrast);
@@ -140,6 +158,7 @@ public class EffectsFragment extends Fragment {
         RelativeLayout effectBlur = view.findViewById(R.id.effectBlur);
         RelativeLayout effectSharpen = view.findViewById(R.id.effectSharpen);
         RelativeLayout effectNeon = view.findViewById(R.id.effectNeon);
+        RelativeLayout effectClahe = view.findViewById(R.id.effectClahe);
 
 
         imgBrightness = view.findViewById(R.id.imgBrightness);
@@ -153,6 +172,7 @@ public class EffectsFragment extends Fragment {
         imgBlur = view.findViewById(R.id.imgBlur);
         imgSharpen = view.findViewById(R.id.imgSharpen);
         imgNeon = view.findViewById(R.id.imgNeon);
+        imgClahe = view.findViewById(R.id.imgClahe);
 
 
         effectToGray.setOnClickListener(v -> {
@@ -199,6 +219,10 @@ public class EffectsFragment extends Fragment {
         effectNeon.setOnClickListener(v -> {
             main.getImage().quickSave();
             main.inflateEffectSettings(NEON);
+        });
+        effectClahe.setOnClickListener(v -> {
+            main.getImage().quickSave();
+            main.inflateEffectSettings(CLAHE);
         });
     }
 }

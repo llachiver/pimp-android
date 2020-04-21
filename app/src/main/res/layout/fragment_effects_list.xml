@@ -304,6 +304,31 @@
                     android:textAlignment="center" />
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/effectClahe"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:minWidth="170dp"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/imgClahe"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/imgClahe"
+
+                    android:background="?attr/colorPrimary"
+                    android:drawableTop="@drawable/ic_grid_on_black_24dp"
+                    android:text="CLAHE"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+
 
         </LinearLayout>
     </HorizontalScrollView>
