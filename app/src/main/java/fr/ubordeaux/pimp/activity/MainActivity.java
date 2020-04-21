@@ -32,6 +32,7 @@ import fr.ubordeaux.pimp.fragments.MacrosFragment;
 import fr.ubordeaux.pimp.image.Image;
 import fr.ubordeaux.pimp.image.ImageEffect;
 import fr.ubordeaux.pimp.image.ImagePack;
+import fr.ubordeaux.pimp.io.MacroIO;
 import fr.ubordeaux.pimp.task.ExportImageTask;
 import fr.ubordeaux.pimp.task.LoadImageUriTask;
 import fr.ubordeaux.pimp.util.Effects;
@@ -67,6 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
         //Allow more zooming
         iv.setMaximumScale(10);
+
+        //Loads stored macros :
+        if (!MacroIO.loadAllMacros()) {
+            Toast.makeText(this, "Personal effects couldn't be loaded.", Toast.LENGTH_LONG).show();
+        }
+
 
         //Init fragments
         effectsListFragment = new EffectsFragment();

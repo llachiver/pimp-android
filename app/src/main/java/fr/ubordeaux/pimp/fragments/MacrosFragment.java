@@ -2,7 +2,6 @@ package fr.ubordeaux.pimp.fragments;
 
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +32,7 @@ import java.util.Queue;
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
 import fr.ubordeaux.pimp.image.ImageEffect;
+import fr.ubordeaux.pimp.io.MacroIO;
 import fr.ubordeaux.pimp.util.Effects;
 
 public class MacrosFragment extends Fragment implements MacroAdapter.MacroListener {
@@ -43,6 +43,14 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
     private int effectNumber = 0;
     private Macro lastAded;
     private int lastNumber = 0;
+
+    /**
+     * Override constructor which also load into visual list the macros list from {@link MacroIO}
+     */
+    public MacrosFragment() {
+        super();
+        macrosList.addAll(MacroIO.getLoadedMacros());
+    }
 
 
     @Override
@@ -100,6 +108,12 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
                 lastAded = macrosList.get(0);
                 lastNumber = lastAded.getEffects().size();
+
+                //save into file :
+                if (!MacroIO.saveMacro(lastAded)) {
+                    Toast.makeText(getActivity(), "Problem to save effect !", Toast.LENGTH_LONG).show();
+                }
+
             });
 
             builder.show();
@@ -185,14 +199,21 @@ public class MacrosFragment extends Fragment implements MacroAdapter.MacroListen
 
     @Override
     public void onClickDelete(int position) {
-        if (macrosList.get(position) == lastAded) {
-            lastNumber -= macrosList.get(position).getEffects().size();
+        Macro removing = macrosList.get(position);
+        if (removing == lastAded) {
+            lastNumber -= removing.getEffects().size();
         }
+
         macrosList.remove(position);
         recyclerView.removeViewAt(position);
         MacroAdapter adapter = (MacroAdapter) recyclerView.getAdapter();
         if (adapter == null) return;
         adapter.notifyItemRemoved(position);
         adapter.notifyItemRangeChanged(position, macrosList.size());
+        //remove file :
+        if (!MacroIO.deleteMacro(removing)) {
+            Toast.makeText(getActivity(), "Problem to delete effect on disk !", Toast.LENGTH_LONG).show();
+        }
+
     }
 }
