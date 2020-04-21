@@ -2,34 +2,26 @@ package fr.ubordeaux.pimp.task;
 
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
-import java.util.Queue;
 
 import fr.ubordeaux.pimp.R;
 import fr.ubordeaux.pimp.activity.MainActivity;
-import fr.ubordeaux.pimp.image.ImageEffect;
 import fr.ubordeaux.pimp.image.Image;
 
 /**
- * General Async task any filter function from this project as an async ApplyEffectTask
+ * Apply queue of filters
  */
-public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
+public class ExportImageTask extends AsyncTask<Void, Integer, Void> {
     private WeakReference<MainActivity> activityWeakReference; //MainActivity reference
-    private ImageEffect effect;
-    private Queue<ImageEffect> effects;
     private Image image;
+    private boolean done;
 
-    public ApplyEffectTask(MainActivity activity, ImageEffect effect, Image image) {
+    public ExportImageTask(MainActivity activity, Image image) {
         this.activityWeakReference = new WeakReference<>(activity);
-        this.effect = effect;
         this.image = image;
-    }
-
-    public ApplyEffectTask(MainActivity activity, Queue<ImageEffect> effects, Image image) {
-        this.activityWeakReference = new WeakReference<>(activity);
-        this.effects = effects;
-        this.image = image;
+        done = true;
     }
 
     //Work to do before heavy task
@@ -40,7 +32,11 @@ public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
         if (activity == null || activity.isFinishing()) { //Prevent memory leaks
             return;
         }
+        Toast.makeText(activity, "Preparing picture for treatment...", Toast.LENGTH_SHORT).show();
+        activity.hideMenu();
+        activity.hideEffectsList();
         activity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE); //Show progressBar
+
     }
 
     //Heavy task to do
@@ -48,21 +44,29 @@ public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         MainActivity activity = activityWeakReference.get();
         while (!isCancelled()) { //Prevent cancelled task by task.cancel()
-            if (activity == null || activity.isFinishing()) {
-                return null;
+
+            if (!image.exportOriginalToGallery(activity,
+                    (int current, int max) ->
+                            activity.runOnUiThread(() -> Toast.makeText(activity, "Applying effect " + current + " of " + max, Toast.LENGTH_SHORT).show())
+            )) { //export original Image with Toast display.
+
+                //something went wrong :
+                Toast.makeText(activity, "Can't export original, exporting edited picture...", Toast.LENGTH_LONG).show();
+                if (!image.exportToGallery(activity)) {
+                    Toast.makeText(activity, "Can't export original, exporting edited picture...", Toast.LENGTH_LONG).show();
+                    done = false;
+                    return null;
+                }
+
             }
-            if (effect == null) //apply several effects
-                image.applyEffects(effects);//Apply effects
-            else
-                image.applyEffect(effect);//Apply effect
+
             return null;
         }
 
         return null;
     }
 
-
-    //Update image when heavy task is finished
+    //Save big bitmap
     @Override
     protected void onPostExecute(Void voids) {
         super.onPostExecute(voids);
@@ -72,10 +76,12 @@ public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
         }
 
         //***Linked to main activity ***/
+        activity.showMenu();
+        activity.showEffectsList();
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+        Toast.makeText(activity, done ? "Save success" : "Can't export anything", Toast.LENGTH_SHORT).show();
     }
 
-    //User cancelled effect
     @Override
     protected void onCancelled() {
         super.onCancelled();
@@ -83,7 +89,8 @@ public class ApplyEffectTask extends AsyncTask<Void, Void, Void> {
         if (activity == null || activity.isFinishing()) {
             return;
         }
-        activity.getImage().discard(); //Abort current effect
+        activity.showMenu();
+        activity.showEffectsList();
         activity.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE); //Hide progressbar
 
     }

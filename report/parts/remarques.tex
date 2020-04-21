@@ -10,6 +10,9 @@ Lors du chargement d'une nouvelle image, nous ré-instancions un objet de la cla
 Dans la partie \ref{navig} nous créons une \textbf{MainActivity} après avoir récupéré une \textbf{Uri}, il aurait été idéal de rester dans \textbf{FirstActivity} jusqu'à chargement complet de la première image. Ce qui éviterait un éventuel aller-retour entre les activités en cas d'erreur. Cependant les limites de \textbf{Parcelable} \ref{parcelable} ainsi que l'utilisation d'une \textbf{AsyncTask} (donc un Thread différent) nous ont contraint à garder ce fonctionnement.
 \\
 
+Par ailleurs notre gestion des fragments n'est finalement pas très optimale, en effet à cause des difficultés du passage de paramètre entre eux (voir section suivante) nous n'avons pas un code très constant puisque parfois nous utilisons des Parcelable ou des Bundle mais parfois nous passons des paramètres aux constructeurs ou aux mutateurs.
+\\
+
 Comme dit précédemment nous chargeons une image plus petite que l'originale afin d'optimiser la fluidité de l'application, à l'export en revanche le fichier image d'origine est chargé pour subir la même suite d'effets. Cette méthode ne permet pas d'empêcher un crash mémoire si l'image est immense (image d'appareil photo par exemple). On pourrait à l'avenir complexifier l'export pour charger et sauvegarder par morceaux le fichier image. Cependant ce n'est pas une priorité, la majorité des utilisateurs de l'application vont éditer des images venant d'appareils mobiles qui dépassent rarement les 20Mpx.
 Nous avons défini une limite de 5000x5000px comme taille d'image en entrée, les images au dessus de cette taille seront redimensionnées en facteur $x^2$ à la sauvegarde pour assurer la fluidité de l'application.
 \\
@@ -25,25 +28,13 @@ Lors de la construction des instances d'\textbf{Image}\ref{classeImage}, nous de
 Pour manipuler des objets d'une activité à l'autre ou entre fragments, Android utilise des \textbf{Intent} ou des \textbf{Bundle}, passer des objets entiers devient assez lourd dans le code et nécessite l'utilisation de l'interface \textbf{Parcelable}, de plus passer un objet trop gros entraîne une \textbf{RuntimeException}. Finalement au sein d'une même application on peut se demander s'il est bien nécessaire de systématiser leur utilisation ou s'il ne serait pas plus simple de passer une référence ou simplement faire des accès statiques (au risque de perdre un peu la modularité du code).
 
 \subsection{Améliorations à court terme :}
-Il pourrait être intéressant de montrer des aperçus des effets en bas de l'écran dans la liste d'effets, pour cela il suffira de créer des instances d'Image générées à partir de l'image éditée mais en dimension inférieure. Les constructeurs sont déjà disponibles.
-\\
 
-Il peut être possible dans les classes d'effets de rajouter des surcharges aux méthodes d'effets pour leur passer directement une instance d'\textbf{Image}\ref{classeImage}. Il sera alors nécessaire de rajouter à Image une référence de son activité contexte, ce qui se fait facilement puisque l'image est chargée directement depuis MainActivity et y restera toujours.
-\\
-Cette simplification anodine offrirait un tout petit peu plus de lisibilité du code, cependant son ajout est débattable puisqu'elle rendrait les effets dépendants de la classe Image, ce qui romprait la modularité du code.
-\\
-
-Dans la classe Image nous utilisons une file d'effets \ref{file_effets}, pour l'instant cette file fournie par Image n'est pas vraiment reliée à la classe elle même dans le sens où l'utilisateur de la classe Image a le contrôle total de cette file.
-\\
-Il pourrait être tout à fait possible de masquer la gestion de cette file, qui se remplirait de manière automatique, ainsi il sera possible de faire une méthode \textbf{export()} dans la classe Image pour sauvegarder l'image, sans se soucier de gérer cette file. De même il serait possible d'annuler les derniers effets en ré appliquant sur l'image d'origine tout ceux que l'on souhaite conserver.
-\\
-Il faudrait cependant modifier le comportement de \textbf{quickSave()} et \textbf{discard()} afin de supprimer ou ré-ajouter la tête de file lors de l'aperçu des effets en glissant les curseurs.
-\\
-Cependant la principale problématique de cette fonctionnalité serait de passer d'un système où l'on appel les effets en passant l'Image (ou la Bitmap) en paramètre, à un système avec une méthode \textbf{applyEffect(...)} dans la classe Image. La question se pose alors de savoir comment préciser l'effet en question sans contraindre la classe Image à utiliser une batterie d'effets précise, ce qui romprait la modularité du code en rendant Image dépendant de nos classes d'effets. Ce problème est en réalité déjà réglé avec l'utilisation des \textbf{BitmapRunnable}, en effet il suffira de passer ces derniers à la méthode ce qui mettra une couche d'abstraction entre le terme "effet" et les classes de calculs des effets.
-\\
-
-L'utilisation d'un historique d'effet pourra aussi permettre à l'utilisateur de sauvegarder des séries d'effets pour créer des effets personnalisés.
+L'utilisation d'un historique d'effet pourra aussi permettre à l'utilisateur de sauvegarder des séries d'effets pour créer des effets personnalisés, c'est d'ailleurs pourquoi la classe \textbf{ImageEffect} contient des chaînes de caractères dédiées à la description de l'effet en question (nom et paramètres).
 
 \subsection{Tests et bugs repérés :}
-Des nombreux tests ont été faits pour assurer la stabilité de l'application, comme charger une image, supprimer cette dernière du stockage et puis sauvegarder celle qui est chargée dans l'application, essayer de charger un fichier corrompu, etc. Ces tests nous ont permis de repérer et de régler plusieurs bugs d'entrée et sortie de fichiers. Cependant nous n'avons pas trouvé des bugs pour l'instant.
+Sous Android 10 (API 29) et supérieur, l'application peut planter au moment de l'export de l'image, du fait d'un changement des gestions des autorisations sous Android 10.
+\\
+
+On pourra noter la possibilité de planter l'application en ouvrant un menu pendant le bref chargement initial de la première image. 
+\\
 

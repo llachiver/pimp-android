@@ -26,7 +26,8 @@ public enum Effects {
     SHARPEN_MAX("Sharpen 13x13"),
     NEON_SOBEL("Sobel filter"),
     NEON_PREWITT("Prewitt filter"),
-    LAPLACE("Laplacian filter");
+    LAPLACE("Laplacian filter"),
+    MACRO("demissio lol");
 
 
     private String name = "";
