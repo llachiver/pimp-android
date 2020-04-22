@@ -470,20 +470,20 @@ public class EffectSettingsFragment extends Fragment {
 
         final TextView tvReg = new TextView(super.getContext());
         tvReg.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tvReg.setText("Size of the grid : 16*16");
+        tvReg.setText("Size of the grid : 6*6");
 
         //I can't set the minimum of the seekbar, so we'll have to add an offset of 3 to the progress value.
         final SeekBar sbRegNbr = new SeekBar(mainActivity);
-        sbRegNbr.setMax(17);
-        sbRegNbr.setProgress(13);
+        sbRegNbr.setMax(5);
+        sbRegNbr.setProgress(3);
 
         final TextView tvClip = new TextView(super.getContext());
         tvClip.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tvClip.setText("Clip limit : " + 0.5f);
+        tvClip.setText("Clip limit : " + 2.0f);
 
         final SeekBar sbClip = new SeekBar(mainActivity);
         sbClip.setMax(400);
-        sbClip.setProgress(50);
+        sbClip.setProgress(200);
 
         //We apply the effect once with a 16*16 grid and clip = 0.5f
         image.discard();
@@ -498,6 +498,7 @@ public class EffectSettingsFragment extends Fragment {
                 currentEffect = new ImageEffect(Effects.CLAHE.getName(), new String[]{String.valueOf(3 + progress), String.valueOf((float) sbClip.getProgress() / 100.0f)}, (Bitmap target) ->
                         CLAHE.CLAHE(target, 3 + progress, (float) sbClip.getProgress() / 100.0f, mainActivity));
                 image.applyEffect(currentEffect);
+
                 tvReg.setText("Size of the grid : " + (3 + progress) + "*" + (3 + progress));
             }
 
@@ -519,10 +520,8 @@ public class EffectSettingsFragment extends Fragment {
                 currentEffect = new ImageEffect(Effects.CLAHE.getName(), new String[]{String.valueOf(3 + sbRegNbr.getProgress()), String.valueOf((float) progress / 100.0f)}, (Bitmap target) ->
                         CLAHE.CLAHE(target, 3 + sbRegNbr.getProgress(), (float) progress / 100.0f, mainActivity));
                 image.applyEffect(currentEffect);
-                if (progress > 0)
-                    tvClip.setText("Clip limit : " + progress / 100.0f);
-                else
-                    tvClip.setText("Clip limit : 0 (no clip limit)");
+
+                tvClip.setText("Clip limit : " + progress / 100.0f);
             }
 
             @Override
