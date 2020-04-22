@@ -103,7 +103,7 @@ public class EffectsFragment extends Fragment {
                 Convolution.neonSobel(target, context)));
 
         //CLAHE effect :
-        pack.createNewPreview(new ImageEffect("CLAHE", new String[]{String.valueOf(16), String.valueOf(0.5f)}, (Bitmap target) ->
+        pack.createNewPreview(new ImageEffect("CLAHE", new String[]{String.valueOf(6), String.valueOf(2.0f)}, (Bitmap target) ->
                 fr.ubordeaux.pimp.filters.CLAHE.CLAHE(target, 6, 2.0f, context)
         ));
 
