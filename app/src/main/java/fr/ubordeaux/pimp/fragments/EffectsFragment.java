@@ -104,7 +104,7 @@ public class EffectsFragment extends Fragment {
 
         //CLAHE effect :
         pack.createNewPreview(new ImageEffect("CLAHE", new String[]{String.valueOf(16), String.valueOf(0.5f)}, (Bitmap target) ->
-                fr.ubordeaux.pimp.filters.CLAHE.CLAHE(target, 16, 0.5f, context)
+                fr.ubordeaux.pimp.filters.CLAHE.CLAHE(target, 6, 2.0f, context)
         ));
 
     }
