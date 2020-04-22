@@ -106,10 +106,6 @@ Comme son nom l'indique, cet effet utilise l'égalisation d'histogramme afin d'a
 On calcule d'abord l'histogramme cumulé et on en déduit la LUT (Look Up Table), que nous assignons ensuite à chaque pixel.
 \\
 
-Cependant, afin d'égaliser l'histogramme, l'algorithme éclaircit les zones sombres, ce qui donne un résultat peu convaincant sur les images de faible luminosité.
-Une solution à ce problème est l'égalisation d'histogramme adaptative (CLAHE), mais nous n'avons pas eu le temps de l'implémenter pour ce rendu.
-\\
-
 \subsection{Niveaux de gris (To gray) :}
 
 \begin{figure}[!h]
@@ -376,6 +372,7 @@ le reste des pixels en échelle de gris en convertissant les couleurs de chaque 
 
 
         \emph{Méthode appelante : Convolution.sharpen()}
+
         \emph{Scripts : convolution.rs} 
         \\
 
@@ -471,8 +468,63 @@ le reste des pixels en échelle de gris en convertissant les couleurs de chaque 
             ainsi qu'une sensibilité plus forte au bruit.\ref{remarques_code}}
         \end{itemize} 
 
+\newpage
+
+\subsection{CLAHE}
+
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/CLAHE_before.jpg}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/effects/CLAHE_after.jpeg}
+    \end{subfigure}
+    \caption*{CLAHE 8x8 avec clip = 4.0}
+\end{figure} 
 
 
+\emph{Méthode appelante : CLAHE.CLAHE()}
 
+\emph{Scripts : cumulativeHistogram.rs, assignCLAHELuts.rs} 
+\\
 
-        
+CLAHE est une variation de l'algorithme d'égalisation d'histogramme adaptative (AHE) qui performe 
+une égalisation sur différentes cases de l'image. Le fait de diviser l'image en cases et de traiter celles-ci 
+de manière indépendante permet d'accentuer le contraste de chacune d'elle de manière locale, mettant ainsi en valeur l'entièreté de l'image.
+CLAHE, en plus d'AHE, implémente une limitation de contraste (d'où "CL" pour Contrast-Limited) qui permet d'éviter une accentuation 
+trop importante pour des zones où cela n'est pas nécessaire (exemple : ciel, plafond ou quoique ce soit de relativement uniforme).
+Pour éviter les artefacts entre chaque case, nous avons choisi la méthode de l'interpolation bilinéaire. Voici un schéma explicatif :
+\\
+
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{0.8\textwidth}
+        \includegraphics[width=1\textwidth]{report_src/CLAHE.png}
+    \end{subfigure}
+\end{figure} 
+
+La grille représente le découpage de l'image en cases. Il existe une LUT extraite de l'histogramme cumulé pour chaque case,
+seulement cette LUT est valable uniquement pour le centre de la case (en noir sur le schéma ci-dessus). 
+En rouge (dans les coins), on n'effectue pas d'intrepolation, la valeur du pixel est directement celle de la LUT. En vert, 
+on applique une interpolation linéaire, et en bleu une interpolation bilinéaire. Dans chaque cas, on interpole entre les valeurs
+données par les LUT voisines pour la valeur du pixel courant.
+\\
+
+Notre implémentation offre deux paramètres que l'utilisateur modifie à l'aide de seekbars :
+\begin{itemize}
+    \item{dimension de la grille de découpage, allant de 3x3 à 8x8 (8x8 étant le maximum recommandé)}
+    \item{clip limit : waiting for Ricardo..}
+\end{itemize}
+
+\subsubsection{Remarques et améliorations}
+
+Notre algorithme calcule et assigne les LUTs de chaque région de manière séquentielle. Il est en théorie possible d'appliquer CLAHE en parallèle
+sur chaque région, seulement RenderScript rend la tâche difficile. En effet, le calcul d'histogramme cumulé s'effectue par un "reduction kernel" et il n'est 
+pas possible de lancer en parallèle de tels scripts. Nous avons donc choisi d'implémenter deux boucles parcourant toutes les cases,
+la première calculant la LUT résultante de l'histogramme cumulé et la deuxième assignant ces LUTs aux pixels par le biais de l'interpolation bilinéaire.
+\\
+
+Nous avons conscience que la présence de CLAHE dans notre application n'est pas forcément vendeur pour le grand public 
+et que l'utilisateur moyen ne recherche pas spécialement cet "effet", cependant nous avons choisi de l'implémenter pour sa popularité dans le domaine
+de l'imagerie médicale, de la photographie sous-marine, et également car son implémentation constituait un challenge technique intéressant.
