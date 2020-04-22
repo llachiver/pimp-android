@@ -287,7 +287,7 @@ le reste des pixels en échelle de gris en convertissant les couleurs de chaque 
 
     \subsubsection*{Padding} \label{padding}
 
-        Pour éviter l'effet conséquent de la convolution qui est la perte de bords, on applique un padding par extension depuis renderscript.
+        Pour éviter l'effet conséquent de la convolution qui est la perte de bords, on applique un padding par extension en recopiant les pixels des côtés vers les zones vides depuis renderscript.
         \begin{figure}[!h]
             \centering
             \begin{subfigure}[b]{0.3\textwidth}
@@ -514,7 +514,7 @@ données par les LUT voisines pour la valeur du pixel courant.
 Notre implémentation offre deux paramètres que l'utilisateur modifie à l'aide de seekbars :
 \begin{itemize}
     \item{dimension de la grille de découpage, allant de 3x3 à 8x8 (8x8 étant le maximum recommandé)}
-    \item{clip limit : waiting for Ricardo..}
+    \item{clip limit : limite de contraste utilisée dans l'algorithme en allant de 0 à 4.}
 \end{itemize}
 
 \subsubsection{Remarques et améliorations}
